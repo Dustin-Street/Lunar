@@ -18,7 +18,7 @@ export default function UnauthenticatedView({ isLoading = false }) {
     }
 
     return (
-        <div className="grid items-center min-h-screen px-4 bg-[url(images/mountains1.png)] bg-no-repeat bg-cover gap-10 position-fixed">
+        <div className="grid items-center min-h-screen px-4 bg-[url(images/mountains.png)] bg-no-repeat bg-cover gap-10 position-fixed">
             <div className="text-amber-100 text-center border-4 border-blue-200 rounded-lg p-10 max-w-md justify-self-center bg-linear-to-r from-gray-600 via-gray-700 to-gray-900">
                 <h1 className="md:text-3xl sm:text-2xl">
                     Create an account to get started or log in if you already have an account

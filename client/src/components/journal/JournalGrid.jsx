@@ -7,7 +7,7 @@ import JournalCreateForm from "./JournalCreateForm";
  */
 export default function JournalGrid({ journals, Delete, Edit, Create }) {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 backdrop-blur-2xl place-items-center min-h-screen px-6 py-10 bg-[url(images/mountains1.png)] bg-no-repeat bg-cover gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 backdrop-blur-2xl place-items-center min-h-screen px-6 py-10 bg-[url(images/mountains.png)] bg-no-repeat bg-cover gap-10">
             {journals.map(journal => (
                 <JournalCard 
                     key={journal._id}

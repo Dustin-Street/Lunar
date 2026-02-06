@@ -27,7 +27,7 @@ export default function Home() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-[url(/images/booksUpscale2)] bg-cover bg-center px-4 py-8 flex flex-col gap-8 items-center">
+    <div className="min-h-screen bg-[url(/images/mountains.png)] bg-cover bg-center px-4 py-8 flex flex-col gap-8 items-center">
 
       {/* Intro */}
       <div className="bg-gray-700/60 rounded-2xl p-6 max-w-3xl text-center text-white shadow-lg shadow-blue-200">
