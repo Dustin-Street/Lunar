@@ -1,9 +1,9 @@
 # Insight - Personal Journal Application
 
-A full-stack web application for secure, personal journaling with user authentication, real-time journal management, and creative interface. Some images are AI Generated as placeholder, I intend to refrence these later an create or commission these myself before any real Deployment.
+A full-stack web application for secure, personal journaling with user authentication, real-time journal management, and creative interface. Some images are AI Generated as placeholder, I intend to refrence these later an create or commission these myself before any real Deployment. Very early development, still using this for learning and furthing my Web Development skills.
 
 ## Quick Links
-- [Setup Instructions](docs/SETUP.md) - Get the app running locally
+- [Setup Instructions](docs/SETUP.md) - Get the app running locally (No Deployment yet...)
 - [API Reference](docs/API.md) - Complete endpoint documentation
 - [Troubleshooting Guide](docs/TROUBLESHOOTING.md) - Common issues & solutions
 - [Error Handling](docs/ERROR_HANDLING.md) - Understanding error responses
@@ -12,7 +12,7 @@ A full-stack web application for secure, personal journaling with user authentic
 
 ## Features
 
-✅ **User Authentication** - Secure signup/login with JWT tokens and refresh token rotation
+✅ **User Authentication** - Secure signup/login with JWT tokens and refresh token rotation for security 
 ✅ **Journal Management** - Create, read, update, and delete journals (CRUD)
 ✅ **Responsive UI** - Built with React + Tailwind CSS To later be mobile friendly with React Native
 ✅ **Token-Based Security** - JWT with automatic token refresh handling
