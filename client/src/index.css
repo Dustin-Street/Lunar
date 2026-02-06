@@ -1,0 +1,5 @@
+@import "tailwindcss";   
+#buttonHome:hover{
+    background-color: #2563eb; /* Tailwind's blue-600 */
+    transition: background-color 0.3s ease;
+}

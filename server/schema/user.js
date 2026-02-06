@@ -1,0 +1,57 @@
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+const Schema = mongoose.Schema;
+
+const date = new Date();
+
+const Session = new Schema({
+  refreshToken: {
+    type: String,
+    default: ""
+  }
+});
+
+const UserSchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  username: {
+    type: String
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  active: {
+    type: Boolean,
+    default: true
+  },
+  journals: [{ type: Schema.Types.ObjectId, ref: 'Journal' }],
+  refreshToken: [Session],
+  dateCreated: {
+    type: String,
+    default: date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
+  }
+});
+
+// Hash password before saving
+UserSchema.pre('save', async function() {
+  // Only hash if password is modified
+  if (!this.isModified('password')) return;
+  
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Method to compare password
+UserSchema.methods.comparePassword = async function(candidatePassword) {
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (err) {
+    throw err;
+  }
+};
+
+export default mongoose.model("User", UserSchema);
