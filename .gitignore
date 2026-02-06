@@ -13,7 +13,7 @@ node_modules
 *.svg
 *.ico
 *.webp
-!docs/assets/images/*.png
+!insight/docs/assets/images/*.png
 
 
 # Logs
