@@ -5,6 +5,8 @@ import { useAuth } from "../context/AuthContext"
 import { useFlashMessage } from "../context/FlashMessageContext";
 import axios from 'axios';
 
+//logout functionality lives in Navbar.jsx 
+
 export default function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');

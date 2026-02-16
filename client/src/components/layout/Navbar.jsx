@@ -1,4 +1,5 @@
 import { Navigate, NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useFlashMessage } from "../context/FlashMessageContext";
 import { useState } from "react";
@@ -8,11 +9,13 @@ export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setFlashMessage } = useFlashMessage();
+  const navigate = useNavigate();
 
 
 
   const LogoutMessage = () => {
     logout();
+    navigate('/')
     setFlashMessage("You have been logged out successfully ");
 
   };

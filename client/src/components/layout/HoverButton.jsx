@@ -5,7 +5,8 @@ export default function HoverButton({
     colorAfter = 'white',
     buttonText = 'Click Me',
     onClick = () => {},
-    position = 'center' // 'left', 'center', 'right'
+    position = 'center', // 'left', 'center', 'right'
+    transform = 'leftToRight'
 }) {
     const [isHovered, setIsHovered] = useState(false);
 
@@ -15,17 +16,30 @@ export default function HoverButton({
                 return 'left-0 rounded-tr-lg';
             case 'right':
                 return 'right-0 rounded-tl-lg';
+            case 'top':
+                return 'top-0 rounded-b-xl transform -translate-x-1/2'    
             case 'center':
             default:
                 return 'left-1/2 transform -translate-x-1/2';
+
         }
     };
+
+    const transformClasses = () => {
+        switch(transform){
+            case 'leftToRight': 
+                return 
+        }
+
+    }
 
     // Convert Tailwind color names to CSS values
     const colorMap = {
         'red-400': '#f87171',
         'blue-400': '#60a5fa',
         'blue-500': '#3b82f6',
+        'green-400': '#34d399',
+        'gray-500': '#9ca3af',
         'white': '#ffffff'
     };
 
@@ -55,8 +69,9 @@ export default function HoverButton({
                     ease-in-out
                     overflow-hidden
                     cursor-pointer
-                    h-16 w-32
-                    md:${isHovered ? 'h-12 w-40' : 'h-4 w-24'}
+                    h-14 w-1/2
+                    ${isHovered ? 'translate-y-0' : 'translate-y-0.5'}
+                    
                 `}
             >
                 <div className={`
@@ -75,7 +90,7 @@ export default function HoverButton({
                             onClick();
                         }}
                         style={{ backgroundColor: bgColor, color: textColor }}
-                        className="px-4 py-2 text-sm md:text-base rounded-lg hover:opacity-80 active:opacity-70 font-semibold transition-opacity touch-manipulation"
+                        className="p-20 text-sm md:text-base rounded-lg hover:opacity-80 active:opacity-70 font-semibold transition-opacity touch-manipulation"
                     >
                         {buttonText}
                     </button>

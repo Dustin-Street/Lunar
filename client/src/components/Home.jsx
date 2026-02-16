@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[url(/images/mountains.png)] bg-cover bg-center px-4 py-8 flex flex-col gap-8 items-center">
 
-      {/* Intro */}
+      
       <div className="bg-gray-700/60 rounded-2xl p-6 max-w-3xl text-center text-white shadow-lg shadow-blue-200">
         <h3 className="text-lg md:text-2xl lg:text-3xl text-amber-100 font-serif text-center">
           Insight is a simple journaling application where customization and the user come first.

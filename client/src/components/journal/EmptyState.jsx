@@ -7,10 +7,12 @@ import JournalCreateForm from "./JournalCreateForm";
 export default function EmptyState({ onCreate }) {
     return (
         <div className="grid items-center min-h-screen px-4 bg-[url(images/mountains.png)] bg-no-repeat bg-cover gap-10">
-            <h1 className="text-2xl text-amber-100 justify-self-center text-center">
-                Create a new journal to get started
-            </h1>
-            <JournalCreateForm 
+            <div className="bg-gray-700/80 rounded-2xl p-6 max-w-3xl text-center text-white shadow-lg shadow-blue-200 justify-self-center border-2 border-blue-200">
+                <p className=" md:text-2xl lg:text-3xl text-amber-100 font-serif text-center ">
+                    Create a Journal to get started
+                </p>
+            </div>
+            <JournalCreateForm
                 onSubmit={onCreate}
                 className="justify-self-center px-8 sm:px-12 md:px-20 py-20 md:max-w-md min-w-sm"
             />

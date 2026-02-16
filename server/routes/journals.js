@@ -9,30 +9,45 @@ import axios from 'axios'
 const router = express.Router();
 
 //Journal
-router.post('/createJournal', async (req, res, next) => {
+router.get('/journalEntry', async (req, res, next) => {
     try {
-       const { title, userID } = req.body;
-       console.log('Creating journal for userID:', userID, 'with title:', title);
-       
-       const newJournal = new Journal({ title : title, userID: userID });
-
-       const savedJournal = await newJournal.save();
-
-       // Add the new journal to the user's journals array
-       await User.findByIdAndUpdate(userID, { $push: { journals: savedJournal._id } });
-
-       res.status(201).json(savedJournal);
-
+        const { page = 1, limit = 100 } = req.query;
+        const options = {
+            page: parseInt(page, 10),
+            limit: parseInt(limit, 10),
+            sort: { createdAt: -1 }
+        };
+        const result = await Journal.paginate({}, options);
+        res.status(200).json(result);
     } catch (error) {
         next(error);
     }
 });
 
-router.get('/:userId', async (req, res, next) => {
+router.post('/createJournal', async (req, res, next) => {
+    try {
+        const { title, userID } = req.body;
+        console.log('Creating journal for userID:', userID, 'with title:', title);
+
+        const newJournal = new Journal({ title: title, userID: userID });
+
+        const savedJournal = await newJournal.save();
+
+        // Add the new journal to the user's journals array
+        await User.findByIdAndUpdate(userID, { $push: { journals: savedJournal._id } });
+
+        res.status(201).json(savedJournal);
+
+    } catch (error) {
+        next(error);
+    }
+});
+//get journals //http://localhost:5050/journals/user/${userID}
+router.get('/user/:userId', async (req, res, next) => {
     try {
         const { userId } = req.params;
         console.log('Fetching journals for userID:', userId);
-        
+
         const user = await User.findById(userId).populate("journals");
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -42,21 +57,35 @@ router.get('/:userId', async (req, res, next) => {
         next(error)
     }
 })
-
-router.get('/journals/:id', async (req, res, next) => {
+//edit
+router.put('/:id', async (req, res, next) => {
+    const { id } = req.params;
+    const { title } = req.body;
+    console.log(`hit route - ID :${id} with title of ${title}`)
     try {
-        const { id } = req.params;
-        const journal = await Journal.findById(id);
-        if (!journal) {
-            return res.status(404).json({ message: 'No journals found' });
-        }
-        res.status(200).json(journal);
-    } catch (error) {
-        next(error);
-    }
-});
 
-router.delete('/journals/:id', async (req, res, next) => {
+        const updatedJournal = await Journal.findByIdAndUpdate(
+            id,
+            {title : title},
+            { new: true }
+        )
+        console.log(`${updatedJournal} -> being sent to client`)
+
+        if (!updatedJournal) {
+            return res.status(404).json({ message: "Journal not found" });
+        }
+
+        res.status(200).json(updatedJournal);
+
+
+    } catch (error) {
+        next(error)
+    }
+})
+
+
+//`http://localhost:5050/journals/journals/${journalId}`
+router.delete('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const deletedJournal = await Journal.findByIdAndDelete(id);
@@ -70,21 +99,19 @@ router.delete('/journals/:id', async (req, res, next) => {
     }
 });
 
-//JournalEntry
-router.get('/journalEntry', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
     try {
-        const { page = 1, limit = 100} = req.query;
-        const options = {
-            page: parseInt(page, 10),
-            limit: parseInt(limit, 10),
-            sort: { createdAt: -1 }
-        };
-        const result = await Journal.paginate({}, options);
-        res.status(200).json(result);
+        const { id } = req.params;
+        const journal = await Journal.findById(id);
+        if (!journal) {
+            return res.status(404).json({ message: 'No journals found' });
+        }
+        res.status(200).json(journal);
     } catch (error) {
         next(error);
     }
 });
+
 
 
 

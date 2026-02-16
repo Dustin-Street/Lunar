@@ -67,7 +67,11 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use(passport.initialize());
 
-
+//logger to debug front-end to backend routing
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
 
 //route handling
 app.use('/journals', journalRoutes);
@@ -75,6 +79,8 @@ app.use('/quotes', quotesRoute);
 app.use('/account', userRoute);
 
 //error handling middleware
+
+
 
 
 

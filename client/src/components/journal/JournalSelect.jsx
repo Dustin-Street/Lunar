@@ -11,14 +11,10 @@ import UnauthenticatedView from "./UnauthenticatedView";
  */
 export default function JournalSelect() {
     const { isAuthenticated, loading: authLoading } = useAuth();
-    const { journals, loading, createJournal, deleteJournal } = useJournals();
+    const { journals, loading, createJournal, deleteJournal, editJournal, uploadImage} = useJournals();
     const navigate = useNavigate();
 
-    // Handle journal editing - navigate to edit page
-    const handleEditJournal = (journalId) => {
-        navigate(`/editJournal/${journalId}`);
-    };
-
+    
     // Show loading state while authentication is being verified
     if (authLoading) {
         return <UnauthenticatedView isLoading={true} />;
@@ -48,10 +44,12 @@ export default function JournalSelect() {
     // Show journal grid with all journals
     return (
         <JournalGrid 
+        //passing down from UseJounral Hook
             journals={journals}
             Delete={deleteJournal}
-            Edit={handleEditJournal}
+            Edit={editJournal}
             Create={createJournal}
+            Upload={uploadImage}
         />
     );
 }

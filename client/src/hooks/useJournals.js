@@ -26,7 +26,7 @@ export function useJournals() {
             console.log('Fetching journals for user ID:', userID);
             try {
                 setLoading(true);
-                const response = await axios.get(`http://localhost:5050/journals/${userID}`, {
+                const response = await axios.get(`http://localhost:5050/journals/user/${userID}`, {
                     withCredentials: true,
                 });
                 const data = response.data;
@@ -62,11 +62,11 @@ export function useJournals() {
         try {
             // Don't set loading state during creation to avoid re-rendering entire grid
             const response = await axios.post(
-                `http://localhost:5050/journals/createJournal`, 
-                { title, userID: user.id }, 
+                `http://localhost:5050/journals/createJournal`,
+                { title, userID: user.id },
                 { withCredentials: true }
             );
-            
+
             if (response.data) {
                 setFlashMessage('Journal created successfully');
                 setJournals(prevJournals => [...prevJournals, response.data]);
@@ -87,16 +87,16 @@ export function useJournals() {
     const deleteJournal = useCallback((journalId) => {
         setDuration(7000);
         setFlashMessage(`Are you sure you want to delete that? This action cannot be undone.`);
-        
+
         setToggleButton(true, 'Confirm Delete', async () => {
             try {
                 const response = await axios.delete(
-                    `http://localhost:5050/journals/journals/${journalId}`,
+                    `http://localhost:5050/journals/${journalId}`,
                     { withCredentials: true }
                 );
-                
+
                 if (response.data.success) {
-                    setJournals(prevJournals => 
+                    setJournals(prevJournals =>
                         prevJournals.filter(journal => journal._id !== journalId)
                     );
                     setDuration(3000);
@@ -115,16 +115,23 @@ export function useJournals() {
         });
     }, [setFlashMessage, setToggleButton, setDuration]);
 
+    /**
+     * @param {string} journalId - the ID of the journal to edit
+     * @param {string} newTitle - the new journal title to replace the old title
+     */
+
     const editJournal = useCallback(async (journalId, newTitle) => {
         try {
-            const response = await axios.put("http://localhost:5050/journals/journals/" + journalId,
-            { title: newTitle },
-            { withCredentials: true });
+            setFlashMessage(`Changing to ${newTitle}`)
+            const response = await axios.put(`http://localhost:5050/journals/${journalId}`,
+                { title: newTitle },
+                { withCredentials: true });
             if (response.data) {
-                setJournals(prevJournals => 
+                setJournals(prevJournals =>
                     prevJournals.map(journal => journal._id === journalId ? response.data : journal)
                 );
-                setFlashMessage('Journal updated successfully');
+                setFlashMessage(`Journal updated successfully`, 3000);
+                setToggleButton(false);
                 return true;
             }
             return false;
@@ -135,10 +142,40 @@ export function useJournals() {
         }
     }, [setFlashMessage]);
 
+      /**
+     * @param {string} journalId - the ID of the journal to edit
+     * @param {string} newImage - the new journal background Image to replace the old background Image
+     */
+    const uploadImage = useCallback(async (journalId, newImage) => {
+
+        try {
+            const response = await axios.put(`http://localhost:5050/journals/${journalId}`,
+                { title: newImage },
+                { withCredentials: true })
+            if (response.data) {
+                setJournals(prevJournals =>
+                    prevJournals.map(journal => journal._id === journalId ? response.data : journal)
+                );
+                setFlashMessage('Background Successfully Changed', 3000)
+                setToggleButton(false);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error updating image property in backend')
+            setFlashMessage(`Error updating journal, Supported types : PNG - JPG`)
+            return false;
+
+        }
+
+    }, [setFlashMessage])
+
     return {
         journals,
         loading,
         createJournal,
-        deleteJournal
+        deleteJournal,
+        editJournal,
+        uploadImage
     };
 }
