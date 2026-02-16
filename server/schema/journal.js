@@ -11,8 +11,16 @@ const JournalSchema = new Schema(
       type: String,
       default: date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
     },
-    userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    background : {type: {
+      type: String, 
+      enum: ['Hex', 'Url']},
 
+    },
+    value: {
+      type: String,
+
+    }
   }
 
 );
