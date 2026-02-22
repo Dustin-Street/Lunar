@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider, } from "react-router-dom";
 import './index.css'
 
 //routes
-import JournalEntry from "./components/journal/JournalEntry.jsx";
 import JournalSelect from "./components/journal/JournalSelect.jsx";
 import JournalOverview from './components/journal/JournalOverview.jsx';
 
@@ -45,16 +44,6 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
-      },
-    ],
-  },
-  {
-    path: "/journalEntry",
-    element: <App />,
-    children: [
-      {
-        path: "/journalEntry",
-        element: <JournalEntry />,
       },
     ],
   },

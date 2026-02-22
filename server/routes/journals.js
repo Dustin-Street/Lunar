@@ -13,7 +13,6 @@ const router = express.Router();
 router.get("/journalOverview/:journalId", async (req, res, next) => {
   try {
     const { journalId } = req.params;
-    console.log("Fetching journal for userID:", journalId);
 
     //query the journal object
     const journal = await Journal.findById(journalId);
@@ -22,14 +21,26 @@ router.get("/journalOverview/:journalId", async (req, res, next) => {
     }
 
     //then query the journal paginated pages assosiated
-    const { page = 1, limit = 100 } = req.query;
-    const options = {
-      page: parseInt(page, 10),
-      limit: parseInt(limit, 10),
-      sort: { createdAt: -1 },
-    };
-    const result = await Journal.paginate({}, options);
-    res.status(200).json({ docs: journal, pages: result });
+    const { page = 1, limit = 10 } = req.query;
+
+    const entries = await JournalEntry.paginate(
+      { journalID: journalId },
+      {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        sort: { dateCreated: -1 },
+      },
+    );
+
+    res.json({
+      journal,
+      entries: {
+        docs: entries.docs,
+        totalPages: entries.totalPages,
+        currentPage: entries.page,
+        totalDocs: entries.totalDocs,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -68,25 +79,31 @@ router.post("/createJournal", async (req, res, next) => {
   }
 });
 
-router.post('/createEntry', async (req, res, next) =>{
-try {
-  const {pages, mood, userID, journalId} = req.body;
-  console.log(`pages : ${pages}, mood : ${mood}, userID : ${userID}, journalId : ${journalId}`)
+router.post("/createEntry", async (req, res, next) => {
+  try {
+    const { pages, mood, userID, journalId } = req.body;
 
-  const newEntry = new JournalEntry({pages: pages, mood: mood, userID : userID, journalID : journalId})
+    const newEntry = new JournalEntry({
+      pages,
+      mood,
+      userID,
+      journalID: journalId, // Ensure field name matches schema
+    });
 
-  const savedEntry = await newEntry.save();
+    const savedEntry = await newEntry.save();
 
-  //bind to journal that is bound to user
-  await Journal.findByIdAndUpdate(journalId, {
-     $push: {entries: savedEntry._id}
-  });
+    // Update journal
+    await Journal.findByIdAndUpdate(
+      journalId,
+      { $push: { entries: savedEntry._id } },
+      { new: true }, // Return updated document
+    );
 
-} catch (error) {
-  next(error)
-}
-})
-
+    res.status(200).json({ savedEntry });
+  } catch (error) {
+    next(error);
+  }
+});
 //edit
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;

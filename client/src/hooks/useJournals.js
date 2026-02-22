@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "../components/context/AuthContext";
 import { useFlashMessage } from "../components/context/FlashMessageContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Custom hook for managing journal-related state and operations
@@ -78,8 +78,10 @@ export function useJournals() {
           },
         );
         const data = response.data;
-        setJournal(data.docs || {});
-        setJournalEntries(data.results || []);
+        setJournal(data.journal);
+  
+        setJournalEntries(data.entries?.docs);
+        console.log(data.entries.docs)
       } catch (error) {
         setFlashMessage("Error fetching journal");
         console.error("Error fetching journal : ", error);
@@ -145,42 +147,46 @@ export function useJournals() {
    * @returns {Promise<boolean>} - Success status
    */
   const createEntry = useCallback(
-    async (pages, mood, journalId) => {
-      console.log(pages, mood, journalId);
-
-      //handle if user is no longer authorized
+    async ({ mood, pages, journalId }) => {
       if (!user?.id) {
         setFlashMessage("One moment please, we are verifying your account...");
         setTimeout(() => {
-          navigate("/")(
-            setFlashMessage(
-              "Redirected because account could not be verified for account safety",
-            ),
+          navigate("/");
+          setFlashMessage(
+            "Redirected because account could not be verified for account safety",
           );
         }, 3000);
         return;
       }
 
-      console.log("cleared auth");
-      try {
-        console.log("in try block start");
+      if (!pages || pages.length === 0) {
+        setFlashMessage("Entry must have at least one page!");
+        return false;
+      }
 
+      try {
         const response = await axios.post(
-          `http://localhost:5050/journals/createEntry`,
-          { pages: pages, mood: mood, userID: user.id, journalId: journalId },
+          "http://localhost:5050/journals/createEntry",
+          {
+            mood: mood,
+            pages: pages,
+            journalId: journalId,
+            userID: user.id,
+          },
           { withCredentials: true },
         );
 
         if (response.data) {
-          console.log(response.data);
+          console.log("hit resonse.data sucess");
           setFlashMessage("Entry added successfully");
-          setJournalEntries((prevEntries) => [...prevEntries, response.data]);
+          setJournalEntries(prev => Array.isArray(prev) ? [...prev, response.data] : [response.data]);   
           return true;
         }
+
         return false;
       } catch (error) {
-        console.error("Error updating Entry:", error);
-        setFlashMessage("Error updating Entry");
+        console.error("Error creating entry:", error);
+        setFlashMessage("Error creating entry");
         return false;
       }
     },

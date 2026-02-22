@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useJournals } from "../../hooks/useJournals";
+import JournalEntryCard from "../layout/JournalEntryCard";
 
 //page to view a journals individual pages / entries
 
@@ -15,23 +16,31 @@ export default function JournalOverview() {
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [pages, setPages] = useState(journal.pages || [""]);
-  const [pageImages, setPageImages] = ([""])
+  const [pageImages, setPageImages] = [""];
 
-   //mood is an enumeration ['happy', 'sad', 'neutral', 'angry', 'excited'] 
-  const [mood, setMood] = useState('neutral')
- 
+  //mood is an enumeration that accepts - ['happy', 'sad', 'neutral', 'angry', 'excited']
+  const [mood, setMood] = useState("neutral");
+
   //payload for backend
   const JournalEntryPayload = {
-    mood: mood,
+    mood,
     pages: pages.map((pageText, index) => ({
-    pageNumber: index + 1,
-    text: pageText,
-    images : pageImages[index] || [] //implement later for image URLs to be placed in journals
+      pageNumber: index + 1,
+      text: pageText,
+      images: pageImages[index] || [],
     })),
-    journalId : journal._id
-    //userID required but handle in useJournals.js hook 
-  }
- 
+    journalId: journal._id,
+  };
+
+  //fetch journal
+  useEffect(() => {
+    fetchSingleJournal(id);
+  }, [id, journalEntries]);
+
+
+  const changeEntry = useCallback(()=> {
+    
+  }, [pages])
   //retreive journal from request query string / params
 
   const openSideBar = () => {
@@ -46,9 +55,7 @@ export default function JournalOverview() {
     const currentState = e.target.value;
 
     setPages((prev) =>
-      prev.map((page, i) =>
-        i === currentPageIndex ? currentState : page,
-      ),
+      prev.map((page, i) => (i === currentPageIndex ? currentState : page)),
     );
   };
 
@@ -60,13 +67,15 @@ export default function JournalOverview() {
   const handlePageChangeDown = useCallback(() => {
     setCurrentPageIndex((prev) => prev - 1);
   }, [currentPageIndex]);
+
+  //creation logic
   const handleCreateEntry = useCallback(() => {
     createEntry(JournalEntryPayload);
-  }, [createEntry, pages, journal]);
-
-  useEffect(() => {
-    fetchSingleJournal(id);
-  }, [id]);
+    setPages([""]);
+    setPageImages([""]);
+    setCurrentPageIndex(0);
+    setMood("neutral");
+  }, [createEntry, pages, mood, journal._id]);
 
   return (
     <div className="flex">
@@ -79,9 +88,12 @@ export default function JournalOverview() {
             : "hidden"
         }
       >
+        <div name='entryGrid' className="grid-cols-2">
+          <JournalEntryCard journalEntries={journalEntries} changeEntry={changeEntry}/>
+        </div>
         <button
           onClick={openSideBar}
-          className="text-center text-2xl bg-gray-600 text-blue-200 border lg:left-0 lg:top-0 border-blue-200 p-4 shadow-blue-100 shadow-2xs rounded-t-lg fixed bottom-0 left-5/12 hover:bg-gray-700 hover:text-blue-400 hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
+          className="text-center text-2xl bg-gray-600 text-blue-200 border md:left-0 border-blue-200 p-4 shadow-blue-100 shadow-2xs rounded-t-lg fixed bottom-0 left-5/12 hover:bg-gray-700 hover:text-blue-400 hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
         >
           Back
         </button>

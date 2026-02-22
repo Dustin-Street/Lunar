@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
+
 
 const { Schema } = mongoose;
 const date = new Date();
@@ -25,7 +25,7 @@ const JournalSchema = new Schema(
 
 );
 
-JournalSchema.plugin(mongoosePaginate);
+
 
 const Journal = mongoose.model('Journal', JournalSchema);
 
