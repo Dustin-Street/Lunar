@@ -2,39 +2,45 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "../components/context/AuthContext";
 import { useFlashMessage } from "../components/context/FlashMessageContext";
+import { Navigate, useNavigate } from "react-router-dom";
 
 /**
  * Custom hook for managing journal-related state and operations
  * Encapsulates all journal CRUD operations and data fetching logic
  */
 export function useJournals() {
+  //many journals
   const [journals, setJournals] = useState([]);
-  const [journalTitles, setJournalTitles] = useState("");
+
+  //single journal call
+  const [journal, setJournal] = useState({});
+  const [journalEntries, setJournalEntries] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { setFlashMessage, setToggleButton, setDuration } = useFlashMessage();
 
+  const navigate = useNavigate();
+
   // Fetch journals when user is available
   useEffect(() => {
     if (!user?.id) {
-      setLoading(false);
+      setFlashMessage("One moment please, we are verifying your account...");
       return;
     }
 
     async function fetchUserJournals() {
       const userID = user.id;
-      console.log("Fetching journals for user ID:", userID);
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:5050/journals/user/${userID}`,
+          `http://localhost:5050/journals/journalSelect/${userID}`,
           {
             withCredentials: true,
           },
         );
         const data = response.data;
         setJournals(data.docs || []);
-        setJournalTitles(data.journalTitle || "");
       } catch (error) {
         setFlashMessage("Error fetching journals");
         console.error("Error fetching journals:", error);
@@ -46,6 +52,44 @@ export function useJournals() {
     fetchUserJournals();
   }, [user?.id, setFlashMessage]);
 
+  //if authenticated return a individual journal
+
+  const fetchSingleJournal = useCallback(
+    async (journalId) => {
+      console.log("Fetching journal with ID:", journalId);
+      if (!user?.id) {
+        setFlashMessage("One moment please, we are verifying your account...");
+        setTimeout(() => {
+          navigate("/")(
+            setFlashMessage(
+              "Redirected because account could not be verified for account safety",
+            ),
+          );
+        }, 3000);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `http://localhost:5050/journals/JournalOverview/${journalId}`,
+          {
+            withCredentials: true,
+          },
+        );
+        const data = response.data;
+        setJournal(data.docs || {});
+        setJournalEntries(data.results || []);
+      } catch (error) {
+        setFlashMessage("Error fetching journal");
+        console.error("Error fetching journal : ", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user, setFlashMessage],
+  );
+
   /**
    * Creates a new journal
    * @param {string} title - The journal title
@@ -54,8 +98,15 @@ export function useJournals() {
   const createJournal = useCallback(
     async (title) => {
       if (!user?.id) {
-        setFlashMessage("One moment please, we are verifying your account");
-        return false;
+        setFlashMessage("One moment please, we are verifying your account...");
+        setTimeout(() => {
+          navigate("/")(
+            setFlashMessage(
+              "Redirected because account could not be verified for account safety",
+            ),
+          );
+        }, 3000);
+        return;
       }
 
       if (title.trim() === "") {
@@ -80,6 +131,56 @@ export function useJournals() {
       } catch (error) {
         console.error("Error creating journal:", error);
         setFlashMessage("Error creating journal");
+        return false;
+      }
+    },
+    [user, setFlashMessage],
+  );
+
+  /**
+   * Creates a new journal
+   * @param {string} content - content of the indevidual pages
+   * @param {string} userID - The user Id assosiated with the journal at creation
+   * @param {string} journalId - the journal id assosiated with the entry at creation queried from the query string req.param
+   * @returns {Promise<boolean>} - Success status
+   */
+  const createEntry = useCallback(
+    async (pages, mood, journalId) => {
+      console.log(pages, mood, journalId);
+
+      //handle if user is no longer authorized
+      if (!user?.id) {
+        setFlashMessage("One moment please, we are verifying your account...");
+        setTimeout(() => {
+          navigate("/")(
+            setFlashMessage(
+              "Redirected because account could not be verified for account safety",
+            ),
+          );
+        }, 3000);
+        return;
+      }
+
+      console.log("cleared auth");
+      try {
+        console.log("in try block start");
+
+        const response = await axios.post(
+          `http://localhost:5050/journals/createEntry`,
+          { pages: pages, mood: mood, userID: user.id, journalId: journalId },
+          { withCredentials: true },
+        );
+
+        if (response.data) {
+          console.log(response.data);
+          setFlashMessage("Entry added successfully");
+          setJournalEntries((prevEntries) => [...prevEntries, response.data]);
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error("Error updating Entry:", error);
+        setFlashMessage("Error updating Entry");
         return false;
       }
     },
@@ -168,18 +269,16 @@ export function useJournals() {
   //expects a string can be a Hex code as well to be stored in DB
   const uploadImage = useCallback(
     async (journalId, newBackground, method) => {
-    
-        //schema expects type : String enum ['Url' , 'Hex'], Value : 'url or hex value'
+      //schema expects type : String enum ['Url' , 'Hex'], Value : 'url or hex value'
       try {
         const response = await axios.put(
           `http://localhost:5050/journals/${journalId}`,
-          { type : method, value: newBackground},
+          { type: method, value: newBackground },
           { withCredentials: true },
         );
         if (response.data) {
           setJournals((prevJournals) =>
             prevJournals.map((journal) =>
-                
               journal._id === journalId ? response.data : journal,
             ),
           );
@@ -190,7 +289,9 @@ export function useJournals() {
         return false;
       } catch (error) {
         console.error("Error updating background");
-        setFlashMessage(`Error updating journal, Supported types : PNG - JPG`);
+        setFlashMessage(
+          `Error updating journal, Supported types : PNG - JPG file size limit of 10MB`,
+        );
         return false;
       }
     },
@@ -199,10 +300,14 @@ export function useJournals() {
 
   return {
     journals,
+    journal,
+    journalEntries,
     loading,
     createJournal,
     deleteJournal,
     editJournal,
     uploadImage,
+    fetchSingleJournal,
+    createEntry,
   };
 }

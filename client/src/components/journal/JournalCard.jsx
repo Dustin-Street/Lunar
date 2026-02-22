@@ -26,15 +26,16 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
   const [image, setImage] = useState("");
   const [border, setborder] = useState("");
 
+  //file selector options for image upload
   const { filesContent, errors, openFilePicker, loading } = useFilePicker({
     accept: ".jpg,.png,.pdf", // Specify allowed file types
     multiple: false, // Allow multiple file selection
     onFilesSuccessfullySelected: ({ filesContent }) => {
       handleBackgroundChangeImage(filesContent);
     },
-    onFilesRejected : ({}) =>{
-        setFlashMessage('Image upload failed, try again')
-    }
+    onFilesRejected: ({}) => {
+      setFlashMessage("Image upload failed, try again");
+    },
   });
 
   const navigate = useNavigate();
@@ -78,6 +79,7 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
     setShowError(false);
   }, [onEdit, journal._id, title]);
 
+  //handle navigating to Journal entries / overview
   const handleNavigate = useCallback(() => {
     navigate(`/journalOverview/${journal._id}`);
   }, [navigate, journal._id]);
@@ -112,6 +114,9 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
     //store the Color as sting in Schema => journal => image instead on URL
     //expected in backend - type : enum ['Hex','Url'] - value : 'hex string or Url string'
     onImageUpload(journal._id, "Hex", image);
+    setInChangeBackgroundColor(false);
+    setInChangeBackground(false);
+    setInEdit(false);
   });
 
   const enterChangeBackgroundColor = useCallback(() => {

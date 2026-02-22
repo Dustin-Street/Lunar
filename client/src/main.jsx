@@ -6,6 +6,8 @@ import './index.css'
 //routes
 import JournalEntry from "./components/journal/JournalEntry.jsx";
 import JournalSelect from "./components/journal/JournalSelect.jsx";
+import JournalOverview from './components/journal/JournalOverview.jsx';
+
 import Signup from "./components/account/Signup.jsx";
 import Home from './components/Home';
 import Login from './components/account/Login.jsx';
@@ -63,6 +65,16 @@ const router = createBrowserRouter([
       {
         path: "/journalSelect",
         element: <JournalSelect />,
+      },
+    ],
+  },
+  {
+    path: "/journalOverview",
+    element: <App />,
+    children: [
+      {
+        path: ":id",
+        element: <JournalOverview />,
       },
     ],
   },

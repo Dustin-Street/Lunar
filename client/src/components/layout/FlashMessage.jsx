@@ -47,7 +47,7 @@ export default function FlashMessage({
                 ${visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-2 scale-95"}
             `}
         >
-            <div className="rounded-xl bg-gray-600 border-4 border-blue-200 px-5 py-3 text-amber-100 shadow-xl backdrop-blur flex items-center gap-3">
+            <div className="rounded-xl bg-gray-600 border-4 border-blue-200 px-5 py-3 text-amber-100 shadow-xl backdrop-blur flex items-center gap-3 flex-col">
                 
                 <span className="text-center flex-1">{newMessage}</span>
 

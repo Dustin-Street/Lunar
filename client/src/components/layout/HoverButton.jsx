@@ -40,7 +40,6 @@ export default function HoverButton({
     "red-400": "#f87171",
     "green-400": "#34d399",
     white: "#ffffff",
-    "gray-600": "#4b5563",
     "gray-50": "#f9fafb",
     "gray-100": "#f3f4f6",
     "gray-200": "#e5e7eb",

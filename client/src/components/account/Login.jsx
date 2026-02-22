@@ -55,7 +55,7 @@ export default function Login() {
 
     return (
         <div>
-            <div className="@container grid grid-col-1 justify-center h-dvh items-center bg-[url(images/booksUpscale2.jpg)] bg-center bg-no-repeat bg-cover lg:bg-blue-200">
+            <div className="@container grid grid-col-1 justify-center h-dvh items-center bg-linear-to-br from-gray-700 to-gray-900 bg-cover lg:bg-blue-200">
                 <div className="flash-slot h-14">
                     {message && <FlashMessage newMessage={message} />}
                 </div>
