@@ -140,7 +140,7 @@ export function useJournals() {
   );
 
   /**
-   * Creates a new journal
+   * Creates a new journal Entry
    * @param {string} content - content of the indevidual pages
    * @param {string} userID - The user Id assosiated with the journal at creation
    * @param {string} journalId - the journal id assosiated with the entry at creation queried from the query string req.param
@@ -163,6 +163,7 @@ export function useJournals() {
         setFlashMessage("Entry must have at least one page!");
         return false;
       }
+
 
       try {
         const response = await axios.post(
@@ -192,6 +193,62 @@ export function useJournals() {
     },
     [user, setFlashMessage],
   );
+
+   /**
+   * edit a journal entry
+   * @param {string} content - content of the indevidual pages
+   * @param {string} userID - The user Id assosiated with the journal at creation
+   * @param {string} journalId - the journal id assosiated with the entry at creation queried from the query string req.param
+   * @returns {Promise<boolean>} - Success status
+   */
+  const editEntry = useCallback(
+    async ({ mood, pages, journalEntryId }) => {
+      if (!user?.id) {
+        setFlashMessage("One moment please, we are verifying your account...");
+        setTimeout(() => {
+          navigate("/");
+          setFlashMessage(
+            "Redirected because account could not be verified for account safety",
+          );
+        }, 3000);
+        return;
+      }
+
+      if (!pages || pages.length === 0) {
+        setFlashMessage("Entry must have at least one page!");
+        return false;
+      }
+
+
+      try {
+        const response = await axios.put(
+          "http://localhost:5050/journals/editEntry",
+          {
+            mood: mood,
+            pages: pages,
+            journalEntryId: journalEntryId,
+            userID: user.id,
+          },
+          { withCredentials: true },
+        );
+
+        if (response.data) {
+          console.log("hit resonse.data sucesss");
+          setFlashMessage("Entry edit successful");
+          setJournalEntries(prev => Array.isArray(prev) ? [...prev, response.data] : [response.data]);   
+          return true;
+        }
+
+        return false;
+      } catch (error) {
+        console.error("Error editting entry:", error);
+        setFlashMessage("Error editting entry");
+        return false;
+      }
+    },
+    [user, setFlashMessage],
+  );
+
 
   /**
    * Deletes a journal with user confirmation
@@ -315,5 +372,6 @@ export function useJournals() {
     uploadImage,
     fetchSingleJournal,
     createEntry,
+    editEntry,
   };
 }

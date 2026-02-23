@@ -33,7 +33,7 @@ export default function JournalCreateForm({ onSubmit, className = "" }) {
     };
 
     return (
-        <div className={`grid place-items-center group border-4 border-blue-200 bg-linear-to-r from-gray-600 via-gray-700 to-gray-900 px-12 py-40 text-amber-100 font-medium rounded-lg w-full max-w-xs sm:max-w-sm ${className}`}>
+        <div className={`grid text-center place-items-center group border-4 border-blue-200 bg-linear-to-r from-gray-600 via-gray-700 to-gray-900 px-12 py-40 text-amber-100 font-medium rounded-lg w-full max-w-xs sm:max-w-sm ${className}`}>
             <input
                 name="title"
                 type="text"

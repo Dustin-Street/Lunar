@@ -180,7 +180,7 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
              hover:shadow-blue-400 transition-shadow`}
       {...(!InEdit && { onClick: handleNavigate })}
     >
-      <h3 className="mb-6 text-lg sm:text-xl">
+      <h3 className="mb-6 text-lg sm:text-xl text-center">
         {InEdit ? (
           <input
             name="title"

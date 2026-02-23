@@ -21,7 +21,7 @@ router.get("/journalOverview/:journalId", async (req, res, next) => {
     }
 
     //then query the journal paginated pages assosiated
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 15 } = req.query;
 
     const entries = await JournalEntry.paginate(
       { journalID: journalId },
@@ -87,7 +87,7 @@ router.post("/createEntry", async (req, res, next) => {
       pages,
       mood,
       userID,
-      journalID: journalId, // Ensure field name matches schema
+      journalID: journalId, 
     });
 
     const savedEntry = await newEntry.save();
@@ -105,6 +105,28 @@ router.post("/createEntry", async (req, res, next) => {
   }
 });
 //edit
+
+router.put("/editEntry", async (req, res, next) => {
+  try {
+    const { pages, mood, userID, journalEntryId } = req.body;
+    console.log(pages, mood, userID, journalEntryId)
+    const updatedEntry = await JournalEntry.findByIdAndUpdate(journalEntryId,
+      {pages : pages, mood: mood, userID},
+      {new: true}
+    )
+    console.log(updatedEntry)
+    
+    if (!updatedEntry) {
+      return res.status(404).json({ message: "Journal or Entry not found" });
+    }
+
+    res.status(200).json(updatedEntry)
+    
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
   const { title } = req.body;
