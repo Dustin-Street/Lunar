@@ -4,6 +4,7 @@ import FlashMessage from "../layout/FlashMessage";
 import { useAuth } from "../context/AuthContext"
 import { useFlashMessage } from "../context/FlashMessageContext";
 import axios from 'axios';
+import { API_BASE_URL } from "../../utils/api";
 
 //logout functionality lives in Navbar.jsx 
 
@@ -25,7 +26,7 @@ export default function Login() {
 
         try {
             const response = await axios.post(
-                "http://localhost:5050/account/login",
+                `${API_BASE_URL}/account/login`,
                 { email, password },
                 {
                     headers: { "Content-Type": "application/json" },
@@ -55,7 +56,7 @@ export default function Login() {
 
     return (
         <div>
-            <div className="@container grid grid-col-1 justify-center h-dvh items-center bg-linear-to-br from-gray-700 to-gray-900 bg-cover lg:bg-blue-200">
+            <div className="@container grid grid-col-1 justify-center h-dvh items-center bg-[url(/images/starrysky2.jpg)] bg-cover lg:bg-blue-200">
                 <div className="flash-slot h-14">
                     {message && <FlashMessage newMessage={message} />}
                 </div>

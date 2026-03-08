@@ -25,12 +25,12 @@ export default function Navbar() {
           {/* Logo & Brand */}
           <div className="flex items-center">
             <NavLink to="/" id="navlink" className="inline-block">
-              <img className="max-w-8 ms-5 me-5" src="images/icon.png" alt="" />
+              <img className="max-w-8 ms-5 me-5 " src="images/Lunarsight.svg" alt="" />
             </NavLink>
             <NavLink className="inline-block align-top" to="/">
-              <h2 className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl hover:text-blue-400 hover:translate-y-0.5 font-semibold tracking-wide">
-                Insight
-              </h2>
+              <h1 class="bg-linear-to-r from-blue-200 to-amber-100 bg-clip-text text-transparent text-2xl md:text-2xl lg:text-2xl font-bold text-shadow-bold shadow-2xl hover:saturate-400 hover:translate-y-0.5">
+                LunarSight
+              </h1>
             </NavLink>
           </div>
 
@@ -125,7 +125,6 @@ export default function Navbar() {
                     Journal
                   </h2>
                 </NavLink>
-
                 <NavLink
                   to="/signup"
                   onClick={() => setIsMenuOpen(false)}
@@ -146,11 +145,22 @@ export default function Navbar() {
                     Login
                   </h2>
                 </NavLink>
+
+                <NavLink
+                  to="/app-policy"
+                  onClick={() => setIsMenuOpen(false)}
+                  id="navlink"
+                  className="block hover:shadow-2xl shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
+                >
+                  <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
+                    App Policy
+                  </h2>
+                </NavLink>
               </>
             )}
 
             {isAuthenticated && (
-               <div className="px-5 space-y-6 mt-0 bg-gray-800 border-t border-blue-300 justify-items-center">
+              <div className="px-5 space-y-6 mt-0 mb-3 bg-gray-800 border-t border-blue-300 justify-items-center">
                 <NavLink
                   to="/journalSelect"
                   onClick={() => setIsMenuOpen(false)}
@@ -161,7 +171,6 @@ export default function Navbar() {
                     Journal
                   </h2>
                 </NavLink>
-
                 <NavLink
                   to="/Account"
                   onClick={() => setIsMenuOpen(false)}
@@ -185,6 +194,16 @@ export default function Navbar() {
                     Logout
                   </h2>
                 </button>
+                <NavLink
+                  to="/app-policy"
+                  onClick={() => setIsMenuOpen(false)}
+                  id="navlink"
+                  className="block hover:shadow-2xl px-4 py-3 bg-transparent rounded-2xl shadow-blue-200 group translate-y-0.5"
+                >
+                  <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
+                    App Policy
+                  </h2>
+                </NavLink>
               </div>
             )}
           </div>

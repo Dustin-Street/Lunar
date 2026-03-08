@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../components/context/AuthContext";
 import { useFlashMessage } from "../components/context/FlashMessageContext";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../utils/api";
 
 /**
  * Custom hook for managing journal-related state and operations
@@ -34,7 +35,7 @@ export function useJournals() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:5050/journals/journalSelect/${userID}`,
+          `${API_BASE_URL}/journals/journalSelect/${userID}`,
           {
             withCredentials: true,
           },
@@ -72,7 +73,7 @@ export function useJournals() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:5050/journals/JournalOverview/${journalId}`,
+          `${API_BASE_URL}/journals/JournalOverview/${journalId}`,
           {
             withCredentials: true,
           },
@@ -119,7 +120,7 @@ export function useJournals() {
       try {
         // Don't set loading state during creation to avoid re-rendering entire grid
         const response = await axios.post(
-          `http://localhost:5050/journals/createJournal`,
+          `${API_BASE_URL}/journals/createJournal`,
           { title, userID: user.id },
           { withCredentials: true },
         );
@@ -167,7 +168,7 @@ export function useJournals() {
 
       try {
         const response = await axios.post(
-          "http://localhost:5050/journals/createEntry",
+          `${API_BASE_URL}/journals/createEntry`,
           {
             mood: mood,
             pages: pages,
@@ -222,7 +223,7 @@ export function useJournals() {
 
       try {
         const response = await axios.put(
-          "http://localhost:5050/journals/editEntry",
+          `${API_BASE_URL}/journals/editEntry`,
           {
             mood: mood,
             pages: pages,
@@ -264,7 +265,7 @@ export function useJournals() {
       setToggleButton(true, "Confirm Delete", async () => {
         try {
           const response = await axios.delete(
-            `http://localhost:5050/journals/${journalId}`,
+            `${API_BASE_URL}/journals/${journalId}`,
             { withCredentials: true },
           );
 
@@ -300,7 +301,7 @@ export function useJournals() {
       try {
         setFlashMessage(`Changing to ${newTitle}`);
         const response = await axios.put(
-          `http://localhost:5050/journals/${journalId}`,
+          `${API_BASE_URL}/journals/${journalId}`,
           { title: newTitle },
           { withCredentials: true },
         );
@@ -335,7 +336,7 @@ export function useJournals() {
       //schema expects type : String enum ['Url' , 'Hex'], Value : 'url or hex value'
       try {
         const response = await axios.put(
-          `http://localhost:5050/journals/${journalId}`,
+          `${API_BASE_URL}/journals/${journalId}`,
           { type: method, value: newBackground },
           { withCredentials: true },
         );

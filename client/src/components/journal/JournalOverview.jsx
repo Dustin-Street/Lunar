@@ -7,8 +7,14 @@ import JournalEntryCard from "../layout/JournalEntryCard";
 //page to view a journals individual pages / entries
 
 export default function JournalOverview() {
-  const { loading, journal, journalEntries, fetchSingleJournal, createEntry, editEntry } =
-    useJournals();
+  const {
+    loading,
+    journal,
+    journalEntries,
+    fetchSingleJournal,
+    createEntry,
+    editEntry,
+  } = useJournals();
 
   const { id } = useParams();
 
@@ -55,13 +61,12 @@ export default function JournalOverview() {
     setActiveEntrySelected(entry);
     console.log("triggered!");
 
-    setPages(entry.pages);
+    setPages(entry.pages.map((p) => p.text));
 
     setSideBarOpen(false);
     setCreateToEdit(true);
   }, []);
 
- 
   //retreive journal from request query string / params
 
   const openSideBar = () => {
@@ -97,14 +102,13 @@ export default function JournalOverview() {
     setMood("neutral");
   }, [createEntry, pages, mood, journal._id]);
   //edit logic
-   const handleEditEntry = useCallback(() => {
-    editEntry(JournalEditEntryPayload)
+  const handleEditEntry = useCallback(() => {
+    editEntry(JournalEditEntryPayload);
     setPages([""]);
     setPageImages([""]);
     setMood("neutral"); //placeholder in development still
-    setCreateToEdit(false)
-  }, [editEntry, pages, mood, journal._id])
-
+    setCreateToEdit(false);
+  }, [editEntry, pages, mood, journal._id]);
 
   return (
     <div className="flex h-[calc(100vh-3rem)] overflow-hidden">
@@ -200,7 +204,7 @@ export default function JournalOverview() {
 
         <div name="JournalEntry" className="flex h-7/8">
           <textarea
-            value={pages?.[0]?.text}
+            value={pages[currentPageIndex]}
             onChange={handleChange}
             inputMode="text"
             name="textInput"

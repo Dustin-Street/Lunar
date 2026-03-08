@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../../utils/api";
 
 
 const AuthContext = createContext(null);
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const res = await axios.get(
-        "http://localhost:5050/account/me",
+        `${API_BASE_URL}/account/me`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   const refreshToken = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:5050/account/refreshToken",
+        `${API_BASE_URL}/account/refreshToken`,
         {},
         { withCredentials: true }
       );
@@ -56,7 +57,7 @@ export const AuthProvider = ({ children }) => {
 
         // Get user info with new token
         const userRes = await axios.get(
-          "http://localhost:5050/account/me",
+          `${API_BASE_URL}/account/me`,
           {
             headers: { Authorization: `Bearer ${res.data.token}` },
             withCredentials: true

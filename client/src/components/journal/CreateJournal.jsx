@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_BASE_URL } from "../../utils/api";
 
 
 
@@ -20,7 +21,7 @@ export default async function handleCreateJournal({ user, title, setShowError, s
     }
     try {
         setLoading(true);
-        const response = await axios.post(`http://localhost:5050/journals/createJournal`, { title, userID: user.id }, {
+        const response = await axios.post(`${API_BASE_URL}/journals/createJournal`, { title, userID: user.id }, {
             withCredentials: true,
         })
         setLoading(false);

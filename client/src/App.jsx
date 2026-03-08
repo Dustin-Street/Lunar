@@ -1,6 +1,7 @@
 import './App.css'
 import { FlashMessageProvider, useFlashMessage, } from './components/context/FlashMessageContext'
 import FlashMessage from './components/layout/FlashMessage'
+import Footer from './components/layout/footer'
 import Navbar from './components/layout/Navbar'
 import { Outlet } from 'react-router-dom'
 
@@ -17,6 +18,7 @@ function AppContent() {
         </div>
       )}
       <Outlet />
+      <Footer />
     </>
   );
 }

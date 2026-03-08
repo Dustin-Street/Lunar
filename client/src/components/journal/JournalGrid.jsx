@@ -9,8 +9,9 @@ export default function JournalGrid({ journals, Delete, Edit, Create, Upload }) 
     return (
 
         //passing down from Journal Select -> journalCard
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 backdrop-blur-2xl place-items-center min-h-screen px-6 py-10 bg-linear-to-br from-gray-700 to-gray-900 gap-10">
-            {journals.map(journal => (
+       <div className="fixed inset-0 bg-[url('/images/journaldeepnight2.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-lg">
+        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 place-items-center px-6 py-10 gap-10 overflow-y-auto h-screen">
+   {journals.map(journal => (
                 <JournalCard 
                     key={journal._id}
                     journal={journal}
@@ -23,6 +24,12 @@ export default function JournalGrid({ journals, Delete, Edit, Create, Upload }) 
                 onSubmit={Create}
                 className="self-center"
             />
-        </div>
+</div>
+       </div>
+
+
+
+           
+        
     );
 }

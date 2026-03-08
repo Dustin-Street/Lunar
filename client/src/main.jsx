@@ -10,6 +10,7 @@ import JournalOverview from './components/journal/JournalOverview.jsx';
 import Signup from "./components/account/Signup.jsx";
 import Home from './components/Home';
 import Login from './components/account/Login.jsx';
+import AppPolicy from './components/AppPolicy.jsx';
 import App from './App.jsx';
 import ErrorPage from './components/error/ErrorPage.jsx';
 import { AuthProvider } from "./components/context/AuthContext.jsx";
@@ -44,6 +45,16 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+    ],
+  },
+  {
+    path: "/app-policy",
+    element: <App />,
+    children: [
+      {
+        path: "/app-policy",
+        element: <AppPolicy />,
       },
     ],
   },

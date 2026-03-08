@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import FlashMessage from "../layout/FlashMessage";
 import { useFlashMessage } from "../context/FlashMessageContext";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../../utils/api";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -30,7 +31,7 @@ export default function Signup() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5050/account/createUser",
+        `${API_BASE_URL}/account/createUser`,
         userData,
         axiosOptions,
       );
@@ -56,7 +57,7 @@ export default function Signup() {
       className="
     min-h-screen
     grid place-items-center
-    bg-[url('/images/booksUpscale2.jpg')]
+    bg-[url('/images/starrysky2.jpg')]
     bg-center bg-no-repeat bg-cover
     px-4
   "
