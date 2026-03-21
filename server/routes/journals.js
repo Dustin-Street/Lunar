@@ -87,7 +87,7 @@ router.post("/createEntry", async (req, res, next) => {
       pages,
       mood,
       userID,
-      journalID: journalId, 
+      journalID: journalId,
     });
 
     const savedEntry = await newEntry.save();
@@ -109,23 +109,23 @@ router.post("/createEntry", async (req, res, next) => {
 router.put("/editEntry", async (req, res, next) => {
   try {
     const { pages, mood, userID, journalEntryId } = req.body;
-    console.log(pages, mood, userID, journalEntryId)
-    const updatedEntry = await JournalEntry.findByIdAndUpdate(journalEntryId,
-      {pages : pages, mood: mood, userID},
-      {new: true}
-    )
-    console.log(updatedEntry)
-    
+    console.log(pages, mood, userID, journalEntryId);
+    const updatedEntry = await JournalEntry.findByIdAndUpdate(
+      journalEntryId,
+      { pages: pages, mood: mood, userID },
+      { new: true },
+    );
+    console.log(updatedEntry);
+
     if (!updatedEntry) {
       return res.status(404).json({ message: "Journal or Entry not found" });
     }
 
-    res.status(200).json(updatedEntry)
-    
+    res.status(200).json(updatedEntry);
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
@@ -163,6 +163,35 @@ router.delete("/:id", async (req, res, next) => {
     res
       .status(200)
       .json({ message: "Journal deleted successfully", success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+//delete entry
+router.delete("/deleteEntry/:journalEntryId", async (req, res, next) => {
+  try {
+    console.log(
+      "delete entry route hit, with journalEntryId:",
+      req.params.journalEntryId,
+    );
+    const { journalEntryId } = req.params;
+
+    const deletedEntry = await JournalEntry.findByIdAndDelete(journalEntryId);
+
+    if (!deletedEntry) {
+      return res
+        .status(404)
+        .json({ error: "Journal Entry not found", success: false });
+    }
+
+    await Journal.findByIdAndUpdate(
+      deletedEntry.journalID,
+      { $pull: { entries: deletedEntry._id } },
+      { new: true },
+    );
+    res
+      .status(200)
+      .json({ message: "Journal Entry deleted successfully", success: true });
   } catch (error) {
     next(error);
   }

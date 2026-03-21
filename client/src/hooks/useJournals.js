@@ -234,7 +234,6 @@ export function useJournals() {
         );
 
         if (response.data) {
-          console.log("hit resonse.data sucesss");
           setFlashMessage("Entry edit successful");
           setJournalEntries(prev => Array.isArray(prev) ? [...prev, response.data] : [response.data]);   
           return true;
@@ -244,6 +243,47 @@ export function useJournals() {
       } catch (error) {
         console.error("Error editting entry:", error);
         setFlashMessage("Error editting entry");
+        return false;
+      }
+    },
+    [user, setFlashMessage],
+  );
+
+  const deleteEntry = useCallback(
+    async ({journalEntryId}) => {
+      if (!user?.id) {
+        setFlashMessage("One moment please, we are verifying your account...");
+        setTimeout(() => {
+          navigate("/");
+          setFlashMessage(
+            "Redirected because account could not be verified for account safety",
+          );
+        }, 3000);
+        return;
+      }
+
+      try {
+        const response = await axios.delete(
+          `${API_BASE_URL}/journals/deleteEntry/${journalEntryId}`,
+          {
+            userID: user.id
+          },
+          {
+            withCredentials: true
+          }
+        );
+
+        if (response.data) {
+          console.log("Entry deleted successfully");
+          setFlashMessage("Entry deleted successfully");
+          setJournalEntries(prev => Array.isArray(prev) ? prev.filter(entry => entry._id !== journalEntryId) : []);
+          return true;
+        }
+
+        return false;
+      } catch (error) {
+        console.error("Error deleting entry:", error);
+        setFlashMessage("Error deleting entry");
         return false;
       }
     },
@@ -374,5 +414,6 @@ export function useJournals() {
     fetchSingleJournal,
     createEntry,
     editEntry,
+    deleteEntry
   };
 }

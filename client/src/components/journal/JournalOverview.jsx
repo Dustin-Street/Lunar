@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useJournals } from "../../hooks/useJournals";
-import JournalEntryCard from "../layout/JournalEntryCard";
+import JournalEntryCard from "./JournalEntryCard";
 
 //page to view a journals individual pages / entries
 
@@ -14,6 +14,7 @@ export default function JournalOverview() {
     fetchSingleJournal,
     createEntry,
     editEntry,
+    deleteEntry,
   } = useJournals();
 
   const { id } = useParams();
@@ -51,6 +52,10 @@ export default function JournalOverview() {
     journalEntryId: activeEntrySelected._id,
   };
 
+  const JournalEntryDeletePayload = {
+    journalEntryId: activeEntrySelected._id,
+  };
+
   //fetch journal
   useEffect(() => {
     fetchSingleJournal(id);
@@ -59,7 +64,6 @@ export default function JournalOverview() {
   //change the entry from the indevidual entry card side panel
   const changeEntry = useCallback((entry) => {
     setActiveEntrySelected(entry);
-    console.log("triggered!");
 
     setPages(entry.pages.map((p) => p.text));
 
@@ -68,7 +72,7 @@ export default function JournalOverview() {
   }, []);
 
   //retreive journal from request query string / params
-
+  //should set the navbar to close the mobile navigation and open the side panel on entry selection so it doesnt impede vision
   const openSideBar = () => {
     if (sideBarOpened) {
       setSideBarOpen(false);
@@ -109,6 +113,14 @@ export default function JournalOverview() {
     setMood("neutral"); //placeholder in development still
     setCreateToEdit(false);
   }, [editEntry, pages, mood, journal._id]);
+  //delete logic
+  const handledeleteEntry = useCallback(() => {
+    deleteEntry(JournalEntryDeletePayload);
+    setPages([""]);
+    setPageImages([""]);
+    setMood("neutral");
+    setCreateToEdit(false);
+  }, [deleteEntry, pages, mood, journal._id]);
 
   return (
     <div className="flex h-[calc(100vh-3rem)] overflow-hidden">
@@ -126,6 +138,7 @@ export default function JournalOverview() {
           <JournalEntryCard
             journalEntries={journalEntries}
             changeEntry={changeEntry}
+            deleteEntry={deleteEntry}
           />
         </div>
         <button
@@ -155,6 +168,14 @@ export default function JournalOverview() {
             hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
               >
                 Edit
+              </button>
+              <button
+                onClick={handledeleteEntry}
+                className="text-center text-2xl bg-red-300 text-white border border-red-600 p-4 md:mx-2
+           shadow-red-200 shadow-2xs rounded-b-lg relative lg:left-1/8 md:left-2/8 sm:left-3/8 left-20 z-10 hover:bg-red-400 hover:text-white
+            hover:border-red-400 hover:shadow-sm hover:shadow-red-200 hover:cursor-grab"
+              >
+                Delete
               </button>
             </>
           ) : (
@@ -211,8 +232,8 @@ export default function JournalOverview() {
             id="textInput"
             className={
               sideBarOpened
-                ? "border-2 border-amber-100 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-neutral-300 p-3 justify-self-center lg:my-20 my-20 mx-8"
-                : "border-2 border-amber-100 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-neutral-300 p-3 lg:mx-70 md:mx-40 mt-10 mb-20 mx-5"
+                ? "border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
+                : "border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
             }
           ></textarea>
         </div>

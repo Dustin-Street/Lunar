@@ -25,11 +25,11 @@ export default function Navbar() {
           {/* Logo & Brand */}
           <div className="flex items-center">
             <NavLink to="/" id="navlink" className="inline-block">
-              <img className="max-w-8 ms-5 me-5 " src="images/Lunarsight.svg" alt="" />
+              <img className="max-w-8 ms-5 me-5 " src="images/LunarLogo.svg" alt="" />
             </NavLink>
             <NavLink className="inline-block align-top" to="/">
               <h1 class="bg-linear-to-r from-blue-200 to-amber-100 bg-clip-text text-transparent text-2xl md:text-2xl lg:text-2xl font-bold text-shadow-bold shadow-2xl hover:saturate-400 hover:translate-y-0.5">
-                LunarSight
+                Lunar
               </h1>
             </NavLink>
           </div>
@@ -119,7 +119,7 @@ export default function Navbar() {
                   to="/JournalSelect"
                   onClick={() => setIsMenuOpen(false)}
                   id="navlink"
-                  className="block hover:shadow-2xl shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
+                  className="block  shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
                 >
                   <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
                     Journal
@@ -129,7 +129,7 @@ export default function Navbar() {
                   to="/signup"
                   onClick={() => setIsMenuOpen(false)}
                   id="navlink"
-                  className="block hover:shadow-2xl shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
+                  className="block  shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
                 >
                   <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
                     Signup
@@ -139,7 +139,7 @@ export default function Navbar() {
                   to="/login"
                   onClick={() => setIsMenuOpen(false)}
                   id="navlink"
-                  className="block hover:shadow-2xl shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
+                  className="block  shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
                 >
                   <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
                     Login
@@ -150,9 +150,9 @@ export default function Navbar() {
                   to="/app-policy"
                   onClick={() => setIsMenuOpen(false)}
                   id="navlink"
-                  className="block hover:shadow-2xl shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
+                  className="block  shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
                 >
-                  <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
+                  <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5 mb-4">
                     App Policy
                   </h2>
                 </NavLink>
@@ -165,7 +165,7 @@ export default function Navbar() {
                   to="/journalSelect"
                   onClick={() => setIsMenuOpen(false)}
                   id="navlink"
-                  className="block hover:shadow-2xl px-4 py-3 bg-transparent rounded-2xl shadow-blue-200 group translate-y-0.5"
+                  className="block px-4 py-3 bg-transparent rounded-2xl shadow-blue-200 group translate-y-0.5"
                 >
                   <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
                     Journal
@@ -175,7 +175,7 @@ export default function Navbar() {
                   to="/Account"
                   onClick={() => setIsMenuOpen(false)}
                   id="navlink"
-                  className="block hover:shadow-2xl px-4 py-3 bg-transparent rounded-2xl shadow-blue-200 group translate-y-0.5"
+                  className="block px-4 py-3 bg-transparent rounded-2xl shadow-blue-200 group translate-y-0.5"
                 >
                   <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
                     Account
@@ -187,7 +187,7 @@ export default function Navbar() {
                     LogoutMessage();
                   }}
                   id="navlink"
-                  className="block hover:shadow-2xl shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
+                  className="block  shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
                 >
                   {" "}
                   <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
@@ -198,7 +198,7 @@ export default function Navbar() {
                   to="/app-policy"
                   onClick={() => setIsMenuOpen(false)}
                   id="navlink"
-                  className="block hover:shadow-2xl px-4 py-3 bg-transparent rounded-2xl shadow-blue-200 group translate-y-0.5"
+                  className="block px-4 py-3 bg-transparent rounded-2xl shadow-blue-200 group translate-y-0.5"
                 >
                   <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
                     App Policy

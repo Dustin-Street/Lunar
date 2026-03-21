@@ -1,5 +1,8 @@
 //card that shows on JournalOverview to view older enties to be selected
-export default function JournalEntryCard({ journalEntries, changeEntry }) {
+export default function JournalEntryCard({
+  journalEntries,
+  changeEntry,
+}) {
   return (
     <div name="JournalEntryCard" className="grid-col">
       <div>
