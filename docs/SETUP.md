@@ -221,8 +221,8 @@ You should see the Insight application home page.
 - **Backend Terminal**: Look for logs showing your requests
 
 ### If you see a 401 error:
-- Make sure your token is being saved in localStorage/sessionStorage
-- Check that the `Authorization` header is being sent
+- Confirm your browser has an active refresh-token cookie (HttpOnly)
+- Check that the `Authorization` header is being sent by the app
 - See [Troubleshooting Guide](TROUBLESHOOTING.md)
 
 ---

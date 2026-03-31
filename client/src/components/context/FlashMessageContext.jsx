@@ -1,52 +1,56 @@
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 
-
 const FlashMessageContext = createContext(null);
 
 export const FlashMessageProvider = ({ children }) => {
   const [message, setMessage] = useState(null);
+  const [messageId, setMessageId] = useState(0);
   const [durationTime, setDurationTime] = useState(3000);
   const [buttonText, setButtonText] = useState("Click Me");
   const [showButton, setShowButton] = useState(false);
-  const [onClick, setOnClick] = useState(() => { });
+  const [onClick, setOnClick] = useState(() => {});
 
-
-  const setToggleButton = useCallback((buttonNeeded, buttonText = "Click Me", onClick = () => { }) => {
-    /**
-     * @param {boolean} buttonNeeded - Whether to show the button
-     * @param {string} buttonText - Text to display on the button
-     * @param {function} onClick - Click handler function
-     */
+  /**
+   * Toggles the flash message button and configures its behavior.
+   * @param {boolean} buttonNeeded - Whether the button should be shown.
+   * @param {string} [buttonText="Click Me"] - Text displayed on the button.
+   * @param {function} [onClick=()=>{}] - Handler for button click.
+   */
+  const setToggleButton = useCallback((buttonNeeded, buttonText = "Click Me", onClick = () => {}) => {
     setShowButton(buttonNeeded);
     setButtonText(buttonText);
     setOnClick(() => onClick);
   }, []);
 
+  /**
+   * Sets how long the flash message stays visible.
+   * @param {number} time - Duration in milliseconds.
+   */
   const setDuration = useCallback((time) => {
-    /**
-     * @param {number} time - Duration in milliseconds
-     */
     setDurationTime(time);
   }, []);
 
+  /**
+   * Returns whether the flash message button is currently enabled.
+   * @returns {boolean}
+   */
   const getButtonStatus = useCallback(() => {
-    /** 
-     * @returns {boolean} - Returns whether the button should be shown
-     */
     return showButton;
   }, [showButton]);
 
+  /**
+   * Sets the flash message text.
+   * @param {string} text - Message to display.
+   */
   const setFlashMessage = useCallback((text) => {
-    /**
-     * @param {string} text - The message text to display
-     */
     setMessage(text);
+    setMessageId(prev => prev + 1);
   }, []);
 
+  /**
+   * Clears the flash message and resets all button/duration settings.
+   */
   const clearFlashMessage = useCallback(() => {
-    /**
-     * Clears the current flash message
-     */
     setMessage(null);
     setShowButton(false);
     setButtonText("Click Me");
@@ -54,18 +58,32 @@ export const FlashMessageProvider = ({ children }) => {
     setDurationTime(3000);
   }, []);
 
-  // Memoize context value to prevent unnecessary re-renders
-  const contextValue = useMemo(() => ({
-    message, 
-    setFlashMessage, 
-    clearFlashMessage, 
-    setToggleButton, 
-    getButtonStatus, 
-    buttonText, 
-    onClick, 
-    durationTime, 
-    setDuration
-  }), [message, setFlashMessage, clearFlashMessage, setToggleButton, getButtonStatus, buttonText, onClick, durationTime, setDuration]);
+  const contextValue = useMemo(
+    () => ({
+      message,
+      messageId,
+      setFlashMessage,
+      clearFlashMessage,
+      setToggleButton,
+      getButtonStatus,
+      buttonText,
+      onClick,
+      durationTime,
+      setDuration,
+    }),
+    [
+      message,
+      messageId,
+      setFlashMessage,
+      clearFlashMessage,
+      setToggleButton,
+      getButtonStatus,
+      buttonText,
+      onClick,
+      durationTime,
+      setDuration,
+    ]
+  );
 
   return (
     <FlashMessageContext.Provider value={contextValue}>

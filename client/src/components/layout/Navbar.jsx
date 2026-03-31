@@ -28,7 +28,7 @@ export default function Navbar() {
               <img className="max-w-8 ms-5 me-5 " src="images/LunarLogo.svg" alt="" />
             </NavLink>
             <NavLink className="inline-block align-top" to="/">
-              <h1 class="bg-linear-to-r from-blue-200 to-amber-100 bg-clip-text text-transparent text-2xl md:text-2xl lg:text-2xl font-bold text-shadow-bold shadow-2xl hover:saturate-400 hover:translate-y-0.5">
+              <h1 className="bg-linear-to-r from-blue-200 to-amber-100 bg-clip-text text-transparent text-2xl md:text-2xl lg:text-2xl font-bold text-shadow-bold shadow-2xl hover:saturate-400 hover:translate-y-0.5">
                 Lunar
               </h1>
             </NavLink>

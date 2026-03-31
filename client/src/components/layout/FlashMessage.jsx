@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 
 export default function FlashMessage({
     newMessage,
+    messageId,
     duration = 3000,
     buttonNeeded = false,
     buttonText = "Click Me",
@@ -32,7 +33,7 @@ export default function FlashMessage({
         }, duration);
 
         return () => clearTimeout(timer);
-    }, [newMessage, duration]);
+    }, [newMessage, messageId, duration]);
 
     const handleCancel = () => {
         setVisible(false);

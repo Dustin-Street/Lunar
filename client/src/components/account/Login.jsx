@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FlashMessage from "../layout/FlashMessage";
-import { useAuth } from "../context/AuthContext";
-import { useFlashMessage } from "../context/FlashMessageContext";
+import useAccount from "../../hooks/useAccount";
 import axios from "axios";
 import { API_BASE_URL } from "../../utils/api";
 
@@ -12,64 +10,18 @@ export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const { login } = useAuth();
-  const { setFlashMessage } = useFlashMessage();
-
-  const resetForm = () => {
-    setEmail("");
-    setPassword("");
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        `${API_BASE_URL}/account/login`,
-        { email, password },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        },
-      );
-
-      if (response.data.success && response.data.token) {
-        // Store the token
-        localStorage.setItem("token", response.data.token);
-
-        // Call login from AuthContext if available
-        if (login) {
-          login(
-            {
-              id: response.data.user._id,
-              username: response.data.user.username,
-              email: response.data.user.email,
-            },
-            response.data.token,
-          );
-        }
-        resetForm();
-        navigate("/journalSelect").then(() => {
-          setFlashMessage(
-            "Login successful, " + response.data.user.username + "!",
-          );
-        });
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      setMessage(err.response?.data?.message || "Login failed");
-    }
-  };
+  const { userLogin } = useAccount();
 
   return (
     <div>
       <div className="@container grid grid-col-1 justify-center h-dvh items-center bg-[url(/images/starrysky2.jpg)] bg-cover bg-no-repeat lg:bg-blue-200">
         <div className="flash-slot h-14">
-          {message && <FlashMessage newMessage={message} />}
         </div>
         <form
-          onSubmit={handleLogin}
+          onSubmit={(event) => {
+            event.preventDefault();
+            userLogin(email, password);
+          }}
           id="formSignup"
           className="border-3 p-17 rounded-2xl border-blue-200 bg-gray-700 max-w-105"
         >

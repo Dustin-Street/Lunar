@@ -48,14 +48,16 @@ router.get("/journalOverview/:journalId", async (req, res, next) => {
 router.get("/journalSelect/:userId", async (req, res, next) => {
   try {
     const { userId } = req.params;
-    console.log("Fetching journals for userID:", userId);
 
-    const user = await User.findById(userId).populate("journals");
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json({ docs: user.journals });
+
+    const userWithJournals = await User.findById(userId).populate("journals");
+    res.status(200).json({ docs: userWithJournals.journals });
   } catch (error) {
+    console.error("Error in journalSelect:", error);
     next(error);
   }
 });

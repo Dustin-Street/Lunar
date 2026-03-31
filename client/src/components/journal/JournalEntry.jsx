@@ -19,7 +19,6 @@ export default function JournalEntry() {
 
     const SaveEntry = () => {
         //save journal entry to database
-        console.log("Journal Entry Saved:", journalEntry);
         setBorderColor("green-500");
     }
 

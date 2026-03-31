@@ -259,8 +259,9 @@ const handleLogin = async (email, password) => {
 
     // Success
     const { token } = response.data;
-    localStorage.setItem('token', token);
-    // Redirect to dashboard
+    // In this app tokens are handled in-memory through AuthContext
+    // and refresh tokens are stored as HttpOnly cookies.
+    // Do not persist access tokens in localStorage/sessionStorage.
     window.location.href = '/dashboard';
 
   } catch (err) {

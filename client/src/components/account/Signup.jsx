@@ -1,56 +1,14 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import FlashMessage from "../layout/FlashMessage";
 import { useFlashMessage } from "../context/FlashMessageContext";
 import { useAuth } from "../context/AuthContext";
-import { API_BASE_URL } from "../../utils/api";
+import useAccount from "../../hooks/useAccount";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [message, setMessage] = useState("");
-  const { login } = useAuth();
-  const navigate = useNavigate();
-  const { setFlashMessage } = useFlashMessage();
-
-  const resetForm = () => {
-    setEmail("");
-    setPassword("");
-    setUsername("");
-  };
-
-  const handleSubmitSignUp = async (event) => {
-    event.preventDefault();
-    const userData = { email, username, password };
-    const axiosOptions = {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    };
-
-    try {
-      const response = await axios.post(
-        `${API_BASE_URL}/account/createUser`,
-        userData,
-        axiosOptions,
-      );
-      console.log(response);
-      login(response.data.user, response.data.token);
-      navigate("/").then(() => {
-        setFlashMessage(
-          "Signup successful, " + response.data.user.username + "!",
-        );
-      });
-      resetForm();
-    } catch (error) {
-      console.log(error?.response?.data?.message || error?.message || error);
-      const serverMsg =
-        error?.response?.data?.message || error?.response?.data?.error;
-
-      setMessage(serverMsg || error?.message || "Signup failed, try again...");
-    }
-  };
+  const { userSignup } = useAccount();
 
   return (
     <div
@@ -62,12 +20,11 @@ export default function Signup() {
     px-4
   "
     >
-      <div className={message ? "h-14" : "h-0"}>
-        {message && <FlashMessage newMessage={message} />}
-      </div>
-
       <form
-        onSubmit={handleSubmitSignUp}
+        onSubmit={(event) => {
+          event.preventDefault();
+          userSignup(email, username, password);
+        }}
         id="formSignup"
         className=" border-3 p-17 rounded-2xl border-blue-200 bg-gray-700 max-w-105 w-105 "
       >

@@ -100,10 +100,12 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
 **Debug Steps:**
 ```javascript
 // In browser console
-const token = localStorage.getItem('token');
-console.log('Token:', token);
-console.log('Token length:', token?.length);
-console.log('Has Bearer prefix?', token?.startsWith('eyJ'));
+// Access tokens are stored in-memory in AuthContext in this app,
+// not in localStorage. For debugging, inspect Network request headers.
+// const token = localStorage.getItem('token');
+// console.log('Token:', token);
+// console.log('Token length:', token?.length);
+// console.log('Has Bearer prefix?', token?.startsWith('eyJ'));
 ```
 
 ---

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../utils/api";
-
+import logger from "../../utils/logger";
 
 const AuthContext = createContext(null);
 
@@ -17,27 +17,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const verifyUser = async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+    setLoading(true);
 
     try {
-      const res = await axios.get(
-        `${API_BASE_URL}/account/me`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          withCredentials: true
-        }
-      );
-
-      setUser(res.data.user);
-    } catch (err) {
-      // token expired → try refresh
+      // Try to rehydrate user from refresh token cookie only;
+      // avoid storing access token in localStorage.
       await refreshToken();
+    } catch (err) {
+      logger.warn("verifyUser failed:", err);
+      logout();
     } finally {
       setLoading(false);
     }
@@ -66,6 +54,7 @@ export const AuthProvider = ({ children }) => {
         setUser(userRes.data.user);
       }
     } catch (err) {
+      logger.error("Refresh token failed:", err);
       // Refresh token failed or expired - clear everything
       logout();
     }
@@ -87,6 +76,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        accessToken,
         loading,
         login,
         logout,

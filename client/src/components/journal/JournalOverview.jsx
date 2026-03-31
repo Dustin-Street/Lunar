@@ -230,6 +230,7 @@ export default function JournalOverview() {
             inputMode="text"
             name="textInput"
             id="textInput"
+            spellCheck={true}
             className={
               sideBarOpened
                 ? "border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"

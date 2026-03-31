@@ -4,6 +4,7 @@ import { useAuth } from "../components/context/AuthContext";
 import { useFlashMessage } from "../components/context/FlashMessageContext";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../utils/api";
+import logger from "../utils/logger";
 
 /**
  * Custom hook for managing journal-related state and operations
@@ -17,55 +18,57 @@ export function useJournals() {
   const [journal, setJournal] = useState({});
   const [journalEntries, setJournalEntries] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { user, accessToken } = useAuth();
   const { setFlashMessage, setToggleButton, setDuration } = useFlashMessage();
 
   const navigate = useNavigate();
 
   // Fetch journals when user is available
   useEffect(() => {
-    if (!user?.id) {
+    if (!user?._id) {
       setFlashMessage("One moment please, we are verifying your account...");
+      setLoading(false);
       return;
     }
 
     async function fetchUserJournals() {
-      const userID = user.id;
+      const userID = user._id;
       try {
         setLoading(true);
         const response = await axios.get(
           `${API_BASE_URL}/journals/journalSelect/${userID}`,
           {
             withCredentials: true,
+            timeout: 10000,
           },
         );
         const data = response.data;
         setJournals(data.docs || []);
       } catch (error) {
+        logger.error("Error fetching journals:", error);
         setFlashMessage("Error fetching journals");
-        console.error("Error fetching journals:", error);
       } finally {
         setLoading(false);
       }
     }
 
     fetchUserJournals();
-  }, [user?.id, setFlashMessage]);
+  }, [user?._id, accessToken, setFlashMessage]);
 
   //if authenticated return a individual journal
 
   const fetchSingleJournal = useCallback(
     async (journalId) => {
-      console.log("Fetching journal with ID:", journalId);
-      if (!user?.id) {
+      if (!user?._id) {
         setFlashMessage("One moment please, we are verifying your account...");
         setTimeout(() => {
-          navigate("/")(
+          navigate("/");
+          (logger(info, "user redirected due to unauthorized"),
             setFlashMessage(
               "Redirected because account could not be verified for account safety",
-            ),
-          );
+            ));
+          setLoading(false);
         }, 3000);
         return;
       }
@@ -76,13 +79,15 @@ export function useJournals() {
           `${API_BASE_URL}/journals/JournalOverview/${journalId}`,
           {
             withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           },
         );
         const data = response.data;
         setJournal(data.journal);
-  
+
         setJournalEntries(data.entries?.docs);
-        console.log(data.entries.docs)
       } catch (error) {
         setFlashMessage("Error fetching journal");
         console.error("Error fetching journal : ", error);
@@ -90,7 +95,7 @@ export function useJournals() {
         setLoading(false);
       }
     },
-    [user, setFlashMessage],
+    [user, accessToken, setFlashMessage],
   );
 
   /**
@@ -100,13 +105,12 @@ export function useJournals() {
    */
   const createJournal = useCallback(
     async (title) => {
-      if (!user?.id) {
+      if (!user?._id) {
         setFlashMessage("One moment please, we are verifying your account...");
         setTimeout(() => {
-          navigate("/")(
-            setFlashMessage(
-              "Redirected because account could not be verified for account safety",
-            ),
+          navigate("/");
+          setFlashMessage(
+            "Redirected because account could not be verified for account safety",
           );
         }, 3000);
         return;
@@ -121,8 +125,13 @@ export function useJournals() {
         // Don't set loading state during creation to avoid re-rendering entire grid
         const response = await axios.post(
           `${API_BASE_URL}/journals/createJournal`,
-          { title, userID: user.id },
-          { withCredentials: true },
+          { title, userID: user._id },
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         );
 
         if (response.data) {
@@ -137,7 +146,7 @@ export function useJournals() {
         return false;
       }
     },
-    [user, setFlashMessage],
+    [user, accessToken, setFlashMessage],
   );
 
   /**
@@ -149,7 +158,7 @@ export function useJournals() {
    */
   const createEntry = useCallback(
     async ({ mood, pages, journalId }) => {
-      if (!user?.id) {
+      if (!user?._id) {
         setFlashMessage("One moment please, we are verifying your account...");
         setTimeout(() => {
           navigate("/");
@@ -165,7 +174,6 @@ export function useJournals() {
         return false;
       }
 
-
       try {
         const response = await axios.post(
           `${API_BASE_URL}/journals/createEntry`,
@@ -173,15 +181,21 @@ export function useJournals() {
             mood: mood,
             pages: pages,
             journalId: journalId,
-            userID: user.id,
+            userID: user._id,
           },
-          { withCredentials: true },
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         );
 
         if (response.data) {
-          console.log("hit resonse.data sucess");
           setFlashMessage("Entry added successfully");
-          setJournalEntries(prev => Array.isArray(prev) ? [...prev, response.data] : [response.data]);   
+          setJournalEntries((prev) =>
+            Array.isArray(prev) ? [...prev, response.data] : [response.data],
+          );
           return true;
         }
 
@@ -192,10 +206,10 @@ export function useJournals() {
         return false;
       }
     },
-    [user, setFlashMessage],
+    [user, accessToken, setFlashMessage],
   );
 
-   /**
+  /**
    * edit a journal entry
    * @param {string} content - content of the indevidual pages
    * @param {string} userID - The user Id assosiated with the journal at creation
@@ -204,7 +218,7 @@ export function useJournals() {
    */
   const editEntry = useCallback(
     async ({ mood, pages, journalEntryId }) => {
-      if (!user?.id) {
+      if (!user?._id) {
         setFlashMessage("One moment please, we are verifying your account...");
         setTimeout(() => {
           navigate("/");
@@ -220,7 +234,6 @@ export function useJournals() {
         return false;
       }
 
-
       try {
         const response = await axios.put(
           `${API_BASE_URL}/journals/editEntry`,
@@ -228,14 +241,21 @@ export function useJournals() {
             mood: mood,
             pages: pages,
             journalEntryId: journalEntryId,
-            userID: user.id,
+            userID: user._id,
           },
-          { withCredentials: true },
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         );
 
         if (response.data) {
           setFlashMessage("Entry edit successful");
-          setJournalEntries(prev => Array.isArray(prev) ? [...prev, response.data] : [response.data]);   
+          setJournalEntries((prev) =>
+            Array.isArray(prev) ? [...prev, response.data] : [response.data],
+          );
           return true;
         }
 
@@ -246,12 +266,12 @@ export function useJournals() {
         return false;
       }
     },
-    [user, setFlashMessage],
+    [user, accessToken, setFlashMessage],
   );
 
   const deleteEntry = useCallback(
-    async ({journalEntryId}) => {
-      if (!user?.id) {
+    async ({ journalEntryId }) => {
+      if (!user?._id) {
         setFlashMessage("One moment please, we are verifying your account...");
         setTimeout(() => {
           navigate("/");
@@ -266,17 +286,21 @@ export function useJournals() {
         const response = await axios.delete(
           `${API_BASE_URL}/journals/deleteEntry/${journalEntryId}`,
           {
-            userID: user.id
+            data: { userID: user._id },
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           },
-          {
-            withCredentials: true
-          }
         );
 
         if (response.data) {
-          console.log("Entry deleted successfully");
           setFlashMessage("Entry deleted successfully");
-          setJournalEntries(prev => Array.isArray(prev) ? prev.filter(entry => entry._id !== journalEntryId) : []);
+          setJournalEntries((prev) =>
+            Array.isArray(prev)
+              ? prev.filter((entry) => entry._id !== journalEntryId)
+              : [],
+          );
           return true;
         }
 
@@ -287,9 +311,8 @@ export function useJournals() {
         return false;
       }
     },
-    [user, setFlashMessage],
+    [user, accessToken, setFlashMessage],
   );
-
 
   /**
    * Deletes a journal with user confirmation
@@ -306,7 +329,12 @@ export function useJournals() {
         try {
           const response = await axios.delete(
             `${API_BASE_URL}/journals/${journalId}`,
-            { withCredentials: true },
+            {
+              withCredentials: true,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            },
           );
 
           if (response.data.success) {
@@ -328,7 +356,7 @@ export function useJournals() {
         }
       });
     },
-    [setFlashMessage, setToggleButton, setDuration],
+    [setFlashMessage, setToggleButton, setDuration, accessToken],
   );
 
   /**
@@ -343,7 +371,12 @@ export function useJournals() {
         const response = await axios.put(
           `${API_BASE_URL}/journals/${journalId}`,
           { title: newTitle },
-          { withCredentials: true },
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         );
         if (response.data) {
           setJournals((prevJournals) =>
@@ -362,7 +395,7 @@ export function useJournals() {
         return false;
       }
     },
-    [setFlashMessage],
+    [setFlashMessage, accessToken],
   );
 
   /**
@@ -378,7 +411,12 @@ export function useJournals() {
         const response = await axios.put(
           `${API_BASE_URL}/journals/${journalId}`,
           { type: method, value: newBackground },
-          { withCredentials: true },
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         );
         if (response.data) {
           setJournals((prevJournals) =>
@@ -414,6 +452,6 @@ export function useJournals() {
     fetchSingleJournal,
     createEntry,
     editEntry,
-    deleteEntry
+    deleteEntry,
   };
 }
