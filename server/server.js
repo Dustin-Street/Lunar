@@ -29,8 +29,8 @@ import journalRoutes from "./routes/journals.js";
 import quotesRoute from "./routes/quotes.js";
 import userRoute from "./routes/user.js";
 import adminRoutes from "./routes/admin.js";
-import ErrorLog from "./schema/errorLog.js";
-import User from "./schema/user.js";
+
+import { notFoundHandler, errorHandler } from "./middleware/errorHandler.js";
 
 //env variables
 const PORT = process.env.PORT || 5050;
@@ -58,7 +58,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 //cookie parser and body parser
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
@@ -78,40 +78,9 @@ app.use("/quotes", quotesRoute);
 app.use("/account", userRoute);
 app.use("/admin", adminRoutes);
 
-//error handling middleware
-
-//error logging that is attached to user accounts - accessable via admin accounts / planned Dashboard for Support requests tools and data / also need highest level account to manage admin permissions
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-});
-
-app.use(async (err, req, res, next) => {
-  const errorRecord = {
-    user: req.userId || null,
-    route: req.originalUrl,
-    method: req.method,
-    status: err.status || 500,
-    message: err.message || "Internal server error",
-    stack: req.app.get("env") === "production" ? undefined : err.stack,
-    context: {
-      query: req.query,
-      body: req.body,
-    },
-  };
-
-  try {
-    const savedError = await ErrorLog.create(errorRecord);
-    if (req.userId) {
-      await User.findByIdAndUpdate(req.userId, {
-        $push: { accountErrors: savedError._id },
-      });
-    }
-  } catch (e) {
-    console.error("Error logging failure:", e);
-  }
-
-  console.error(err);
-  if (res.headersSent) return;
-  res.status(errorRecord.status).json({ message: errorRecord.message });
 });

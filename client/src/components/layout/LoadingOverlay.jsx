@@ -1,3 +1,11 @@
+/**
+ * 
+ * @param message : the text in the card body
+ * 
+ * @returns text defined in message to the card if some needed other than loading...
+ */
+
+
 export default function LoadingOverlay({ message = "Loading..." }) {
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm bg-linear-30 from-gray-700 to-gray-900 opacity-85">

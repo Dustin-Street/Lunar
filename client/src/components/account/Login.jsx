@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAccount from "../../hooks/useAccount";
-import axios from "axios";
-import { API_BASE_URL } from "../../utils/api";
 
 //logout functionality lives in Navbar.jsx
 
@@ -15,8 +13,6 @@ export default function Login() {
   return (
     <div>
       <div className="@container grid grid-col-1 justify-center h-dvh items-center bg-[url(/images/starrysky2.jpg)] bg-cover bg-no-repeat lg:bg-blue-200">
-        <div className="flash-slot h-14">
-        </div>
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -28,7 +24,6 @@ export default function Login() {
           <h1 className="text-3xl text-amber-100 justify-self-center translate-y-1 font-semibold font-serif">
             Login
           </h1>
-
           <div>
             <div className="my-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
               <input
@@ -42,7 +37,6 @@ export default function Login() {
               />
             </div>
           </div>
-
           <div>
             <div className="my-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
               <input
@@ -57,13 +51,29 @@ export default function Login() {
               />
             </div>
           </div>
-
           <button
             className="p-3 block rounded-2xl border-3 justify-self-center border-blue-200 bg-blue-300 hover:text-yellow-100 hover:bg-blue-200 hover:shadow-lg transform hover:-translate-y-px hover:shadow-cyan-100"
             type="submit"
           >
             Login
           </button>
+          <p className="mt-4 text-amber-100 text text-center">
+            Don't have an account yet?{" "}
+            <a
+              href="/signup"
+              className="text-blue-200 hover:underline hover:text-blue-300"
+            >
+              Sign up
+            </a>
+          </p>
+          <p className="mt-4 text-amber-100 text text-center">
+            <a
+              href="/accountRecovery"
+              className="text-blue-200 hover:underline hover:text-blue-300"
+            >
+              Forgot your password or email?
+            </a>
+          </p>
         </form>
       </div>
     </div>

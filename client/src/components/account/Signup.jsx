@@ -80,6 +80,12 @@ export default function Signup() {
         >
           Signup
         </button>
+        <p className="mt-4 text-amber-100 text text-center">
+          already have an account?{" "}
+          <a href="/login" className="text-blue-200 hover:underline hover:text-blue-300">
+            Login
+          </a>
+        </p>
       </form>
     </div>
   );

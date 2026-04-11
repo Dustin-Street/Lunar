@@ -25,7 +25,11 @@ export default function Navbar() {
           {/* Logo & Brand */}
           <div className="flex items-center">
             <NavLink to="/" id="navlink" className="inline-block">
-              <img className="max-w-8 ms-5 me-5 " src="images/LunarLogo.svg" alt="" />
+              <img
+                className="max-w-8 ms-5 me-5 "
+                src="images/LunarLogo.svg"
+                alt=""
+              />
             </NavLink>
             <NavLink className="inline-block align-top" to="/">
               <h1 className="bg-linear-to-r from-blue-200 to-amber-100 bg-clip-text text-transparent text-2xl md:text-2xl lg:text-2xl font-bold text-shadow-bold shadow-2xl hover:saturate-400 hover:translate-y-0.5">
@@ -35,11 +39,19 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Navigation - Hidden on Mobile */}
-          <NavLink to="/journalSelect" id="navlink" className="hidden md:block">
-            <h2 className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl hover:text-blue-400 hover:translate-y-0.5">
-              Journal
-            </h2>
-          </NavLink>
+          {isAuthenticated && (
+            <div className="hidden md:flex items-centerrounded-4xl my-1">
+              <NavLink
+                to="/journalSelect"
+                id="navlink"
+                className="mx-9 inline-block"
+              >
+                <h2 className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl hover:text-blue-400 hover:translate-y-0.5">
+                  Journal
+                </h2>
+              </NavLink>
+            </div>
+          )}
 
           {/* Desktop Auth - Hidden on Mobile */}
           <div className="hidden md:flex items-center border-s-5 border-yellow-100 rounded-4xl my-1">
@@ -65,7 +77,18 @@ export default function Navbar() {
               <>
                 <NavLink
                   to="/account"
-                  className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl me-5 ms-5 inline-block align-middle"
+                  className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl me-5 ms-5 inline-block align-middle  hover:translate-y-0.5 hover:text-blue-400"
+                >
+                  <img
+                    src={user.profile?.profileImage || "images/ProfileNoBG.png"}
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full mr-2 inline-block justify-content-center border-2 border-blue-300 shadow-2xl"
+                  />
+                </NavLink>
+
+                <NavLink
+                  to="/account"
+                  className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl me-5 ms-5 inline-block align-middle  hover:translate-y-0.5 hover:text-blue-400"
                 >
                   {user.username}
                 </NavLink>
@@ -115,16 +138,6 @@ export default function Navbar() {
           <div className="px-5 space-y-6 mt-0 bg-gray-800 border-t border-blue-300 justify-items-center">
             {!isAuthenticated && (
               <>
-                <NavLink
-                  to="/JournalSelect"
-                  onClick={() => setIsMenuOpen(false)}
-                  id="navlink"
-                  className="block  shadow-blue-200 px-4 py-3 bg-transparent rounded-2xl group"
-                >
-                  <h2 className="text-amber-100 text-[1.2em] text-shadow-bold shadow-2xl group-hover:text-amber-200 hover:translate-y-0.5">
-                    Journal
-                  </h2>
-                </NavLink>
                 <NavLink
                   to="/signup"
                   onClick={() => setIsMenuOpen(false)}

@@ -1,74 +1,144 @@
-import { createContext, useContext, useEffect, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../../utils/api";
 import logger from "../../utils/logger";
+import { useFlashMessage } from "./FlashMessageContext";
+import LoadingOverlay from "../layout/LoadingOverlay";
+
+/**
+ * Authentication context for managing user session state, access tokens,
+ * refresh logic, and login/logout operations throughout the application.
+ *
+ * @typedef {Object} AuthContextValue
+ * @property {Object|null} user - The authenticated user's data (id, email, username, profile).
+ * @property {string|null} accessToken - The current JWT access token stored in memory.
+ * @property {boolean} loading - Whether authentication state is being initialized or refreshed.
+ * @property {Function} login - Logs in a user and stores their token and expiry.
+ * @property {Function} logout - Logs out the user and clears all auth state.
+ * @property {boolean} isAuthenticated - True if a user object is present.
+ */
 
 const AuthContext = createContext(null);
 
+/**
+ * Provides authentication state and actions to the application.
+ *
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - Components that should have access to authentication state.
+ * @returns {JSX.Element} AuthProvider component wrapping the application.
+ */
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState(null);
-  const [tokenExpiry, setTokenExpiry] = useState(null);
 
-  // Verify user on app load
+  /**
+   * Runs once on app load to verify the user's session using the refresh token cookie.
+   * Avoids storing access tokens in localStorage for security.
+   *
+   * @returns {Promise<void>}
+   */
   useEffect(() => {
+    const verifyUser = async () => {
+      setLoading(true);
+
+      try {
+        await refreshToken();
+      } catch (err) {
+        logger("warning", "user Error : ", err);
+        logout();
+      } finally {
+        setLoading(false);
+      }
+    };
+
     verifyUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const verifyUser = async () => {
-    setLoading(true);
-
-    try {
-      // Try to rehydrate user from refresh token cookie only;
-      // avoid storing access token in localStorage.
-      await refreshToken();
-    } catch (err) {
-      logger.warn("verifyUser failed:", err);
-      logout();
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  /**
+   * Attempts to refresh the user's access token using the HTTP-only refresh token cookie.
+   * If successful, updates access token, expiry, and fetches the authenticated user's data.
+   * If refresh fails, logs out the user.
+   *
+   * @returns {Promise<void>}
+   */
   const refreshToken = async () => {
     try {
       const res = await axios.post(
         `${API_BASE_URL}/account/refreshToken`,
         {},
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        },
       );
 
       if (res.data.success && res.data.token) {
         setAccessToken(res.data.token);
-        setTokenExpiry(Date.now() + res.data.expiresIn * 1000);
 
-        // Get user info with new token
-        const userRes = await axios.get(
-          `${API_BASE_URL}/account/me`,
-          {
-            headers: { Authorization: `Bearer ${res.data.token}` },
-            withCredentials: true
-          }
-        );
+        // Fetch user info with new access token
+        const userRes = await axios.get(`${API_BASE_URL}/account/me`, {
+          headers: { Authorization: `Bearer ${res.data.token}` },
+          withCredentials: true,
+        });
+
         setUser(userRes.data.user);
+        console.log(
+          "Token refreshed successfully, user data updated:",
+          userRes.data.user,
+        );
       }
     } catch (err) {
-      logger.error("Refresh token failed:", err);
-      // Refresh token failed or expired - clear everything
+      logger("error", "Refresh token failed:", err);
       logout();
     }
   };
 
+  /**
+   * Logs in a user by storing their user object, access token, and expiry timestamp.
+   *
+   * @param {Object} params
+   * @param {Object} params.user - The authenticated user's data.
+   * @param {string} params.token - The JWT access token.
+   * @param {number} params.expiresIn - Token expiry time in seconds.
+   * @returns {void}
+   */
   const login = (user, token, expiresIn) => {
-    setAccessToken(token);  // Memory only, no localStorage
-    setTokenExpiry(Date.now() + expiresIn * 1000);  // Calculate expiry timestamp
-    setUser(user);// save user data for context API calls
+    console.log("login() received:", { user, token, expiresIn });
+
+    setAccessToken(token);
+    setUser(user);
+    console.log("User logged in:", user);
   };
 
+  /**
+   * Logs out the user by clearing all authentication-related state.
+   *
+   * @returns {void}
+   */
   const logout = () => {
+    try {
+      axios.post(
+        `${API_BASE_URL}/account/logout`,
+        {},
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      );
+    } catch (err) {
+      logger("error", "Logout error:", err);
+    }
     setAccessToken(null);
-    setTokenExpiry(null);
     setUser(null);
   };
 
@@ -80,7 +150,8 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         logout,
-        isAuthenticated: !!user
+        isAuthenticated: !!user,
+        isAuthorized: !loading && !!user,
       }}
     >
       {children}
@@ -88,4 +159,131 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+/**
+ * Hook for accessing authentication state and actions.
+ *
+ * @returns {AuthContextValue} The authentication context value.
+ */
 export const useAuth = () => useContext(AuthContext);
+
+export const useAuthGuard = ({
+  redirectPath = "/login",
+  pendingMessage = "One moment please, we are verifying your account...",
+  redirectMessage = "Redirected for account safety",
+} = {}) => {
+  const { loading, isAuthorized } = useAuth();
+  const navigate = useNavigate();
+  const { setFlashMessage } = useFlashMessage();
+  const messageShownRef = useRef(false);
+
+  return useCallback(() => {
+    if (loading) {
+      if (!messageShownRef.current) {
+        setFlashMessage(pendingMessage);
+        messageShownRef.current = true;
+      }
+      return false;
+    }
+
+    if (!isAuthorized) {
+      if (!messageShownRef.current) {
+        setFlashMessage(redirectMessage);
+        messageShownRef.current = true;
+      }
+      navigate(redirectPath, { replace: true });
+      return false;
+    }
+
+    return true;
+  }, [
+    loading,
+    isAuthorized,
+    navigate,
+    setFlashMessage,
+    pendingMessage,
+    redirectMessage,
+    redirectPath,
+  ]);
+};
+
+export const AuthGuard = ({
+  children,
+  redirectPath = "/login",
+  pendingMessage = "One moment please, we are verifying your account...",
+  redirectMessage = "Redirected for account safety",
+}) => {
+  const { loading, isAuthorized } = useAuth();
+  const navigate = useNavigate();
+  const { setFlashMessage } = useFlashMessage();
+  const redirectShownRef = useRef(false);
+  const [flashFailed, setFlashFailed] = useState(false);
+  const messageShownRef = useRef(false);
+
+  const tryFlash = useCallback(
+    (message) => {
+      if (flashFailed) {
+        return false;
+      }
+
+      try {
+        setFlashMessage(message);
+        return true;
+      } catch (err) {
+        logger("error", "FlashMessage failed:", err);
+        setFlashFailed(true);
+        return false;
+      }
+    },
+    [flashFailed, setFlashMessage],
+  );
+
+  useEffect(() => {
+    if (loading && !messageShownRef.current) {
+      const timer = setTimeout(() => {
+        tryFlash(pendingMessage);
+      });
+
+      messageShownRef.current = true;
+
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [loading, pendingMessage, tryFlash]);
+
+  useEffect(() => {
+    if (!loading && !isAuthorized && !redirectShownRef.current) {
+      const timer = setTimeout(() => {
+        tryFlash(redirectMessage);
+        navigate(redirectPath, { replace: true });
+      });
+
+      redirectShownRef.current = true;
+
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [
+    loading,
+    isAuthorized,
+    navigate,
+    redirectPath,
+    redirectMessage,
+    tryFlash,
+  ]);
+
+  if (loading) {
+    return (
+      <LoadingOverlay message={flashFailed ? pendingMessage : "Loading..."} />
+    );
+  }
+
+  if (!isAuthorized) {
+    return (
+      <LoadingOverlay
+        message={flashFailed ? redirectMessage : "Redirecting..."}
+      />
+    );
+  }
+
+  return <>{children}</>;
+};

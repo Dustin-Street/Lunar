@@ -15,6 +15,7 @@ import App from "./App.jsx";
 import ErrorPage from "./components/error/ErrorPage.jsx";
 import Account from "./components/account/Account.jsx";
 import { AuthProvider } from "./components/context/AuthContext.jsx";
+import AccountRecovery from "./components/account/AccountRecovery.jsx";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,16 @@ const router = createBrowserRouter([
       {
         path: ":id",
         element: <JournalOverview />,
+      },
+    ],
+  },
+  {
+    path: "/accountRecovery",
+    element: <App />,
+    children: [
+      {
+        path: "/accountRecovery",
+        element: <AccountRecovery />,
       },
     ],
   },

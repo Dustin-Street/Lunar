@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { useAuth } from "../components/context/AuthContext";
+import { useAuth, useAuthGuard } from "../components/context/AuthContext";
 import { useFlashMessage } from "../components/context/FlashMessageContext";
-import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../utils/api";
 import logger from "../utils/logger";
 
@@ -20,14 +19,17 @@ export function useJournals() {
 
   const [loading, setLoading] = useState(false);
   const { user, accessToken } = useAuth();
+  const ensureAuth = useAuthGuard({ redirectPath: "/login" });
   const { setFlashMessage, setToggleButton, setDuration } = useFlashMessage();
-
-  const navigate = useNavigate();
 
   // Fetch journals when user is available
   useEffect(() => {
-    if (!user?._id) {
-      setFlashMessage("One moment please, we are verifying your account...");
+    if (!ensureAuth()) {
+      setLoading(false);
+      return;
+    }
+
+    if (!accessToken) {
       setLoading(false);
       return;
     }
@@ -54,24 +56,14 @@ export function useJournals() {
     }
 
     fetchUserJournals();
-  }, [user?._id, accessToken, setFlashMessage]);
+  }, [ensureAuth, accessToken, setFlashMessage, user?._id]);
 
   //if authenticated return a individual journal
 
   const fetchSingleJournal = useCallback(
     async (journalId) => {
-      if (!user?._id) {
-        setFlashMessage("One moment please, we are verifying your account...");
-        setTimeout(() => {
-          navigate("/");
-          (logger(info, "user redirected due to unauthorized"),
-            setFlashMessage(
-              "Redirected because account could not be verified for account safety",
-            ));
-          setLoading(false);
-        }, 3000);
-        return;
-      }
+      if (!ensureAuth()) return;
+      if (!accessToken) return;
 
       try {
         setLoading(true);
@@ -95,7 +87,7 @@ export function useJournals() {
         setLoading(false);
       }
     },
-    [user, accessToken, setFlashMessage],
+    [ensureAuth, accessToken, setFlashMessage],
   );
 
   /**
@@ -105,16 +97,8 @@ export function useJournals() {
    */
   const createJournal = useCallback(
     async (title) => {
-      if (!user?._id) {
-        setFlashMessage("One moment please, we are verifying your account...");
-        setTimeout(() => {
-          navigate("/");
-          setFlashMessage(
-            "Redirected because account could not be verified for account safety",
-          );
-        }, 3000);
-        return;
-      }
+      if (!ensureAuth()) return;
+      if (!accessToken) return;
 
       if (title.trim() === "") {
         setFlashMessage("Journal title cannot be empty");
@@ -146,7 +130,7 @@ export function useJournals() {
         return false;
       }
     },
-    [user, accessToken, setFlashMessage],
+    [ensureAuth, accessToken, setFlashMessage, user?._id],
   );
 
   /**
@@ -158,16 +142,8 @@ export function useJournals() {
    */
   const createEntry = useCallback(
     async ({ mood, pages, journalId }) => {
-      if (!user?._id) {
-        setFlashMessage("One moment please, we are verifying your account...");
-        setTimeout(() => {
-          navigate("/");
-          setFlashMessage(
-            "Redirected because account could not be verified for account safety",
-          );
-        }, 3000);
-        return;
-      }
+      if (!ensureAuth()) return;
+      if (!accessToken) return;
 
       if (!pages || pages.length === 0) {
         setFlashMessage("Entry must have at least one page!");
@@ -206,7 +182,7 @@ export function useJournals() {
         return false;
       }
     },
-    [user, accessToken, setFlashMessage],
+    [ensureAuth, accessToken, setFlashMessage, user?._id],
   );
 
   /**
@@ -218,16 +194,8 @@ export function useJournals() {
    */
   const editEntry = useCallback(
     async ({ mood, pages, journalEntryId }) => {
-      if (!user?._id) {
-        setFlashMessage("One moment please, we are verifying your account...");
-        setTimeout(() => {
-          navigate("/");
-          setFlashMessage(
-            "Redirected because account could not be verified for account safety",
-          );
-        }, 3000);
-        return;
-      }
+      if (!ensureAuth()) return;
+      if (!accessToken) return;
 
       if (!pages || pages.length === 0) {
         setFlashMessage("Entry must have at least one page!");
@@ -266,21 +234,13 @@ export function useJournals() {
         return false;
       }
     },
-    [user, accessToken, setFlashMessage],
+    [ensureAuth, accessToken, setFlashMessage, user?._id],
   );
 
   const deleteEntry = useCallback(
     async ({ journalEntryId }) => {
-      if (!user?._id) {
-        setFlashMessage("One moment please, we are verifying your account...");
-        setTimeout(() => {
-          navigate("/");
-          setFlashMessage(
-            "Redirected because account could not be verified for account safety",
-          );
-        }, 3000);
-        return;
-      }
+      if (!ensureAuth()) return;
+      if (!accessToken) return;
 
       try {
         const response = await axios.delete(
@@ -311,7 +271,7 @@ export function useJournals() {
         return false;
       }
     },
-    [user, accessToken, setFlashMessage],
+    [ensureAuth, accessToken, setFlashMessage, user?._id],
   );
 
   /**
@@ -395,7 +355,7 @@ export function useJournals() {
         return false;
       }
     },
-    [setFlashMessage, accessToken],
+    [setFlashMessage, setToggleButton, accessToken],
   );
 
   /**
@@ -430,14 +390,14 @@ export function useJournals() {
         }
         return false;
       } catch (error) {
-        console.error("Error updating background");
+        console.error("Error updating background", error);
         setFlashMessage(
           `Error updating journal, Supported types : PNG - JPG file size limit of 10MB`,
         );
         return false;
       }
     },
-    [setFlashMessage],
+    [setFlashMessage, setToggleButton, accessToken],
   );
 
   return {

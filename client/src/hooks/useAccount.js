@@ -5,31 +5,46 @@ import { useNavigate } from "react-router-dom";
 import { useFlashMessage } from "../components/context/FlashMessageContext";
 import { useAuth } from "../components/context/AuthContext";
 import { API_BASE_URL } from "../utils/api";
+import { binaryStringToFile } from "../utils/binaryStringToFile";
+import { validateImage } from "../utils/validateImage";
+import { memeTypeCheck } from "../utils/memeTypeCheck";
 
 export default function useAccount() {
-  const [error, setError] = useState(null);
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-
   const { login } = useAuth();
-  const { user } = useAuth();
+  const { user, accessToken } = useAuth();
+  const [userAccountSettings, setUserAccountSettings] = useState({});
   const navigate = useNavigate();
   const { setFlashMessage } = useFlashMessage();
 
   //pull user data to view and update profile information READ
   const fetchUserAccount = useCallback(async () => {
-    try {
-      if (!user) {
-      }
-    } catch (err) {
-      console.error("Fetch user account error:", err);
-      setError(
-        err.response?.data?.message || "Failed to fetch account details",
-      );
+    if (!user || !accessToken) {
+      setLoading(false);
+      return;
     }
-  }, []);
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${API_BASE_URL}/account/requestSettings`,
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      // setting user account setting from user schema -> need to add more details to user schema for subscription and profile settings
+      if (setUserAccountSettings(response.data)) {
+        console.log("User account settings fetched successfully");
+      }
+      // whatever you want to do with the data
+    } catch (err) {
+      console.log("Fetch user account error:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [user, accessToken]);
 
   useEffect(() => {
     fetchUserAccount();
@@ -62,7 +77,9 @@ export default function useAccount() {
       const serverMsg =
         error?.response?.data?.message || error?.response?.data?.error;
 
-      setFlashMessage(serverMsg || error?.message || "Signup failed, try again...");
+      setFlashMessage(
+        serverMsg || error?.message || "Signup failed, try again...",
+      );
     } finally {
       setLoading(false);
     }
@@ -83,11 +100,16 @@ export default function useAccount() {
 
       if (response.data.success) {
         if (login) {
-          login({
-            _id: response.data.user._id,
-            username: response.data.user.username,
-            email: response.data.user.email,
-          });
+          login(
+            {
+              _id: response.data.user._id,
+              username: response.data.user.username,
+              email: response.data.user.email,
+              profile: response.data.user.profile,
+            },
+            response.data.token,
+            response.data.expiresIn,
+          );
         }
 
         navigate("/journalSelect").then(() => {
@@ -102,18 +124,24 @@ export default function useAccount() {
     }
   };
 
-  const changePassword = async (userid) => {
+  const changePassword = async (oldPassword, newPassword) => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${API_BASE_URL}/account/password-reset-request/${userid}`,
+
+      const response = await axios.patch(
+        `${API_BASE_URL}/account/change-password`,
+        { oldPassword: oldPassword, newPassword: newPassword },
         {
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
       );
 
       setFlashMessage(response.data.message);
     } catch (error) {
+      console.log(error, "from catch");
       const serverMsg =
         error?.response?.data?.message || error?.response?.data?.error;
 
@@ -125,16 +153,127 @@ export default function useAccount() {
     }
   };
 
+  const changeEmail = async (oldEmail, newEmail) => {
+    try {
+      setLoading(true);
+      const response = await axios.patch(
+        `${API_BASE_URL}/account/change-email`,
+        { oldEmail: oldEmail, newEmail: newEmail },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      setFlashMessage(response.data.message);
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      setFlashMessage(
+        serverMsg || error?.message || "Email change failed...try again",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //still need to finish this logic !
+  const resetPassword = async (email) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/account/request-password-reset`,
+      );
+      if (response)
+        setFlashMessage(
+          response?.message || "Sent reset instructions to email",
+        );
+      setLoading(true);
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      setFlashMessage(
+        serverMsg || error?.message || "password change failed...try again",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const changeProfileImage = async (image) => {
+    if (!image) {
+      setFlashMessage("No file selected.");
+      return;
+    }
+    console.log("binary to file:", image);
+
+    const file = binaryStringToFile(image);
+    console.log("File converted from binary string:", file);
+    const fileSizeMB = file.size / 1024 / 1024;
+
+    //chec the meme type of the file and if it is not a meme type, return an error message
+    if (!memeTypeCheck(file)) {
+      setFlashMessage(
+        `Unsupported file type. Supported types are - .PNG .JPG .PDF`,
+      );
+      return;
+    }
+
+    if (fileSizeMB > 5) {
+      setFlashMessage(validateImage(file));
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      console.log("FormData prepared for upload:", formData.get("image"));
+
+      const response = await axios.post(
+        `${API_BASE_URL}/account/profileImageUpload`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      setFlashMessage(response?.data?.message || "Image uploaded successfully");
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      setFlashMessage(
+        serverMsg || error?.message || "Image upload failed...try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteAccountRequest = async () => {};
+
   //pull user data to view and update profile information READ
 
   //delete account DELETE
 
   return {
     user,
-    error,
     loading,
+    resetPassword,
+    deleteAccountRequest,
     setLoading,
     changePassword,
+    changeEmail,
+    changeProfileImage,
     userSignup,
     userLogin,
   };
