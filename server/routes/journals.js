@@ -6,10 +6,12 @@ import User from "../schema/user.js";
 import Error from "../schema/error.js";
 import axios from "axios";
 import JournalEntry from "../schema/journalEntry.js";
+import authenticateToken from "../authentication/authenticateToken.js";
+import user from "../schema/user.js";
 
 const router = express.Router();
 
-//Journal
+//Journal should remove or add the page functionality to the app for better sync
 router.get("/journalOverview/:journalId", async (req, res, next) => {
   try {
     const { journalId } = req.params;
@@ -45,9 +47,9 @@ router.get("/journalOverview/:journalId", async (req, res, next) => {
     next(error);
   }
 });
-router.get("/journalSelect/:userId", async (req, res, next) => {
+router.get("/journalSelect", authenticateToken, async (req, res, next) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.id;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -61,17 +63,18 @@ router.get("/journalSelect/:userId", async (req, res, next) => {
     next(error);
   }
 });
-router.post("/createJournal", async (req, res, next) => {
+router.post("/createJournal", authenticateToken, async (req, res, next) => {
   try {
-    const { title, userID } = req.body;
-    console.log("Creating journal for userID:", userID, "with title:", title);
+    const { title } = req.body;
+    const userId = req.user.id;
+    console.log("Creating journal for userID:", userId, "with title:", title);
 
-    const newJournal = new Journal({ title: title, userID: userID });
+    const newJournal = new Journal({ title: title, userID: userId });
 
     const savedJournal = await newJournal.save();
 
     // Add the new journal to the user's journals array
-    await User.findByIdAndUpdate(userID, {
+    await User.findByIdAndUpdate(userId, {
       $push: { journals: savedJournal._id },
     });
 
@@ -81,14 +84,15 @@ router.post("/createJournal", async (req, res, next) => {
   }
 });
 
-router.post("/createEntry", async (req, res, next) => {
+router.post("/createEntry", authenticateToken, async (req, res, next) => {
   try {
-    const { pages, mood, userID, journalId } = req.body;
+    const { pages, mood, journalId } = req.body;
+    const userId = req.user.id;
 
     const newEntry = new JournalEntry({
       pages,
       mood,
-      userID,
+      userId: userId,
       journalID: journalId,
     });
 
@@ -100,7 +104,7 @@ router.post("/createEntry", async (req, res, next) => {
       { $push: { entries: savedEntry._id } },
       { new: true }, // Return updated document
     );
-
+  
     res.status(200).json({ savedEntry });
   } catch (error) {
     next(error);
@@ -108,13 +112,14 @@ router.post("/createEntry", async (req, res, next) => {
 });
 //edit
 
-router.put("/editEntry", async (req, res, next) => {
+router.put("/editEntry", authenticateToken, async (req, res, next) => {
   try {
-    const { pages, mood, userID, journalEntryId } = req.body;
-    console.log(pages, mood, userID, journalEntryId);
+    const { pages, mood, journalEntryId } = req.body;
+    const userId = req.user.id;
+
     const updatedEntry = await JournalEntry.findByIdAndUpdate(
       journalEntryId,
-      { pages: pages, mood: mood, userID },
+      { pages: pages, mood: mood, userID: userId },
       { new: true },
     );
     console.log(updatedEntry);
@@ -151,7 +156,6 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-//`http://localhost:5050/journals/journals/${journalId}`
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -172,10 +176,6 @@ router.delete("/:id", async (req, res, next) => {
 //delete entry
 router.delete("/deleteEntry/:journalEntryId", async (req, res, next) => {
   try {
-    console.log(
-      "delete entry route hit, with journalEntryId:",
-      req.params.journalEntryId,
-    );
     const { journalEntryId } = req.params;
 
     const deletedEntry = await JournalEntry.findByIdAndDelete(journalEntryId);

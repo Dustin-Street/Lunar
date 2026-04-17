@@ -39,10 +39,11 @@ export function useJournals() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${API_BASE_URL}/journals/journalSelect/${userID}`,
+          `${API_BASE_URL}/journals/journalSelect`,
           {
             withCredentials: true,
             timeout: 10000,
+            headers: { Authorization: `Bearer ${accessToken}` },
           },
         );
         const data = response.data;
@@ -109,7 +110,7 @@ export function useJournals() {
         // Don't set loading state during creation to avoid re-rendering entire grid
         const response = await axios.post(
           `${API_BASE_URL}/journals/createJournal`,
-          { title, userID: user._id },
+          { title },
           {
             withCredentials: true,
             headers: {
@@ -157,7 +158,7 @@ export function useJournals() {
             mood: mood,
             pages: pages,
             journalId: journalId,
-            userID: user._id,
+            //user object get sent through the authorization accessToken
           },
           {
             withCredentials: true,
@@ -209,7 +210,7 @@ export function useJournals() {
             mood: mood,
             pages: pages,
             journalEntryId: journalEntryId,
-            userID: user._id,
+            //userid get send through the Authorization header accessToken
           },
           {
             withCredentials: true,
@@ -246,7 +247,6 @@ export function useJournals() {
         const response = await axios.delete(
           `${API_BASE_URL}/journals/deleteEntry/${journalEntryId}`,
           {
-            data: { userID: user._id },
             withCredentials: true,
             headers: {
               Authorization: `Bearer ${accessToken}`,

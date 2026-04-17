@@ -52,7 +52,7 @@ export default function Login() {
             </div>
           </div>
           <button
-            className="p-3 block rounded-2xl border-3 justify-self-center border-blue-200 bg-blue-300 hover:text-yellow-100 hover:bg-blue-200 hover:shadow-lg transform hover:-translate-y-px hover:shadow-cyan-100"
+            className="p-3 block rounded-2xl border-3 justify-self-center border-blue-200 bg-blue-400 hover:text-white hover:border-amber-200 hover:shadow-lg transform hover:-translate-y-px my-8 mx-4"
             type="submit"
           >
             Login

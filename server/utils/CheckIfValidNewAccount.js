@@ -1,65 +1,83 @@
 import createHttpError from "http-errors";
 import User from "../schema/user.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 
-export async function CheckIfValidNewAccount(username, email, password) {
+/**
+ * Checks if the provided email, username, and password are valid for creating a new account.
+ * Validations include:
+ * - Email and password must be provided.
+ * - Email must be in a valid format.
+ * - Password must be at least 6 characters long.
+ * - Username must be provided and at least 2 characters long.
+ * - Email must not already be registered.
+ * - Username must not already be taken.
+ * @param {string} email - The email address to validate.
+ * @param {string} username - The username to validate.
+ * @param {string} password - The password to validate.
+ * @throws Will throw an error in a try block for safe error handling if any validation fails.
+ */
+
+export const CheckIfValidNewAccount = async (username, email, password) => {
   if (!email || !password) {
-    throw createHttpError(400, "Email and password are required");
-  }
+    createHttpError(400, "Email and password are required");
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    throw createHttpError(400, "Please enter a valid email address");
-  }
+    const normalizedUsername = username.trim();
 
-  if (password.length < 6) {
-    throw createHttpError(400, "Password must be at least 6 characters long");
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw createHttpError(400, "Please enter a valid email address");
+    }
 
-  if (!username || username.trim().length === 0) {
-    throw createHttpError(400, "Username is required");
-  }
+    if (password.length < 6) {
+      throw createHttpError(400, "Password must be at least 6 characters long");
+    }
 
-  if (username.length < 2) {
-    throw createHttpError(400, "Username must be at least 2 characters long");
-  }
+    if (!username || username.trim().length === 0) {
+      throw createHttpError(400, "Username is required");
+    }
 
-  const normalizedUsername = username.trim();
+    
 
-  let existingEmail;
-  try {
-    existingEmail = await User.findOne({ email });
-  } catch (dbError) {
-    console.error("Database error during email check:", dbError);
-    throw createHttpError(
-      500,
-      "Server error during registration. Please try again.",
-    );
-  }
+    if (username.length < 2) {
+      throw createHttpError(400, "Username must be at least 2 characters long");
+    }
 
-  if (existingEmail) {
-    throw createHttpError(
-      409,
-      "That email is already registered with an account",
-    );
-  }
+    let existingEmail;
+    try {
+      existingEmail = await User.findOne({ email });
+    } catch (dbError) {
+      console.error("Database error during email check:", dbError);
+      throw createHttpError(
+        500,
+        "Server error during registration. Please try again.",
+      );
+    }
 
-  let usernameCount;
-  try {
-    usernameCount = await User.countDocuments({
-      username: normalizedUsername,
-    });
-  } catch (dbError) {
-    console.error("Database error during username check:", dbError);
-    throw createHttpError(
-      500,
-      "Server error during registration. Please try again.",
-    );
-  }
+    if (existingEmail) {
+      throw createHttpError(
+        409,
+        "That email is already registered with an account",
+      );
+    }
 
-  if (usernameCount > 0) {
-    throw createHttpError(
-      409,
-      "That username is already taken. Please choose a different one",
-    );
+    let usernameCount;
+    try {
+      usernameCount = await User.countDocuments({
+        username: normalizedUsername,
+      });
+    } catch (dbError) {
+      console.error("Database error during username check:", dbError);
+      throw createHttpError(
+        500,
+        "Server error during registration. Please try again.",
+      );
+    }
+
+    if (usernameCount > 0) {
+      throw createHttpError(
+        409,
+        "That username is already taken. Please choose a different one",
+      );
+    }
   }
-}
+};

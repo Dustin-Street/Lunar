@@ -77,7 +77,7 @@ export default function Navbar() {
               <>
                 <NavLink
                   to="/account"
-                  className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl me-5 ms-5 inline-block align-middle  hover:translate-y-0.5 hover:text-blue-400"
+                  className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl ms-4 inline-block align-middle hover:translate-y-0.5 hover:text-blue-400"
                 >
                   <img
                     src={user.profile?.profileImage || "images/ProfileNoBG.png"}
@@ -103,30 +103,69 @@ export default function Navbar() {
                 </button>
               </>
             )}
+            {/* Hamburger Menu Button - Visible on Mobile Only or small screens */}
           </div>
+          {isAuthenticated && (
+            <div className="md:hidden overflow-hidden transition-all duration-300 ease-in-out align items-center flex">
+              <NavLink
+                to="/account"
+                className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl me-8 inline-block align-middle active:traslate-y-px hover:text-blue-400 "
+              >
+                <img
+                  src={user.profile?.profileImage || "images/ProfileNoBG.png"}
+                  alt="Profile"
+                  className="w-8 h-8 rounded-full mr-2 inline-block justify-content-center border-2 border-blue-300 shadow-2xl"
+                />
+              </NavLink>
 
-          {/* Hamburger Menu Button - Visible on Mobile Only or small screens */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-blue-300 hover:text-blue-400 focus:outline-none me-5"
-            aria-label="Toggle menu"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              {isMenuOpen ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden text-blue-300 hover:text-blue-400 focus:outline-none me-5"
+                aria-label="Toggle menu"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  {isMenuOpen ? (
+                    <path d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+            </div>
+          )}
+          {!isAuthenticated && (
+            <div className="md:hidden overflow-hidden transition-all duration-300 ease-in-out">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden text-blue-300 hover:text-blue-400 focus:outline-none me-5"
+                aria-label="Toggle menu"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  {isMenuOpen ? (
+                    <path d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Tray - Collapsible */}

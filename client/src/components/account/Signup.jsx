@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useFlashMessage } from "../context/FlashMessageContext";
-import { useAuth } from "../context/AuthContext";
 import useAccount from "../../hooks/useAccount";
 
 export default function Signup() {
@@ -75,14 +72,17 @@ export default function Signup() {
           </div>
         </div>
         <button
-          className=" p-3 block rounded-2xl border-3 justify-self-center border-blue-200 bg-blue-300 hover:bg-blue-200 transform hover:-translate-y-px hover:shadow-cyan-100"
+          className="p-3 block rounded-2xl border-3 justify-self-center border-blue-200 bg-blue-400 hover:text-white hover:border-amber-200 hover:shadow-lg transform hover:-translate-y-px my-8 mx-4"
           type="submit"
         >
-          Signup
+          Sign Up
         </button>
         <p className="mt-4 text-amber-100 text text-center">
           already have an account?{" "}
-          <a href="/login" className="text-blue-200 hover:underline hover:text-blue-300">
+          <a
+            href="/login"
+            className="text-blue-200 hover:underline hover:text-blue-300"
+          >
             Login
           </a>
         </p>

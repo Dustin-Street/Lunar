@@ -1,13 +1,31 @@
+//server
 import express from "express";
 import User from "../schema/user.js";
-import authenticateToken from "../authentication/authenticateToken.js";
-import forgotPasswordChange from "../email/forgotPasswordChange.js";
+import Journal from "../schema/journal.js";
+import JournalEntry from "../schema/journalEntry.js";
+
+//middleware
 import asyncHandler from "../middleware/asyncHandler.js";
-import { createHttpError } from "../utils/httpError.js";
-import { upload } from "../middleware/upload.js";
+
+//authentication
+import authenticateToken from "../authentication/authenticateToken.js";
 import { buildJwtPayload } from "../authentication/jwtBuild.js";
-import { CheckIfValidNewAccount } from "../utils/CheckIfValidNewAccount.js";
+
+//utility function
+import forgotPasswordChange from "../email/forgotPasswordChange.js";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { upload } from "../utils/upload.js";
+import { CheckIfValidNewAccount } from "../utils/CheckIfValidNewAccount.js";
+import { createHttpError } from "../utils/httpError.js";
+import { computeCommonDay } from "../utils/computeCommonDay.js";
+import { computeCommonMood } from "../utils/computeCommonMood.js";
+import { computeMonthlyEntries } from "../utils/computeMonthlyEntries.js";
+
+//R2 storage for images
+import { profileImageValidation } from "../utils/profileImageValidation.js";
+import { uploadToR2 } from "../utils/uploadTor2.js";
+import { r2 } from "../utils/r2Client.js";
+import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 
 const router = express.Router();
 
@@ -39,36 +57,87 @@ router.get(
   }),
 );
 
+router.get(
+  "/requestStatistics",
+  authenticateToken,
+  asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId).populate({
+      path: "journals",
+      populate: { path: "entries" },
+    });
+    if (!user) {
+      throw createHttpError(404, "User not found");
+    }
+    if (user.journals.length === 0) {
+      return;
+    }
+    const allEntries = user.journals.flatMap((j) => j.entries);
+
+    const stats = {
+      monthlyEntries: computeMonthlyEntries(allEntries),
+      commonMood: computeCommonMood(allEntries),
+      commonDay: computeCommonDay(allEntries),
+    };
+
+    await User.findByIdAndUpdate(userId, { statistics: stats });
+    return res.status(200).json({
+      success: true,
+      statistics: {
+        statistics: user.statistics,
+      },
+    });
+  }),
+);
+
 router.post(
   "/createUser",
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req, res, next) => {
     const { password, username } = req.body;
     const email = req.body.email?.toLowerCase?.();
 
-    await CheckIfValidNewAccount(username, email, password);
+    try {
+      await CheckIfValidNewAccount(email, username, password);
+    } catch (validationError) {
+      return next(validationError);
+    }
 
-    const user = new User({ email, username: normalizedUsername, password });
+    const normalizedUsername = username.trim();
+
+    const user = new User({
+      email: email,
+      username: normalizedUsername,
+      password: password,
+    });
 
     try {
       await user.save();
     } catch (saveError) {
       console.error("Error saving user:", saveError);
+      next(saveError);
       if (saveError.code === 11000) {
         if (saveError.keyPattern?.username) {
-          throw createHttpError(
-            409,
-            "That username is already taken. Please choose a different one",
+          return next(
+            createHttpError(
+              409,
+              "That username is already taken. Please choose a different one",
+            ),
           );
         }
         if (saveError.keyPattern?.email) {
-          throw createHttpError(
-            409,
-            "That email is already registered with an account",
+          return next(
+            createHttpError(
+              409,
+              "That email is already registered with an account",
+            ),
           );
         }
-        throw createHttpError(
-          409,
-          "This information is already registered. Please try different details",
+        return next(
+          createHttpError(
+            409,
+            "This information is already registered. Please try different details",
+          ),
         );
       }
 
@@ -205,6 +274,7 @@ router.get(
         journals: user.journals,
         profile: user.profile,
         dateCreated: user.dateCreated,
+        statistics: user.statistics,
       },
     });
   }),
@@ -286,6 +356,7 @@ router.post(
               profile: user.profile,
               journals: user.journals,
               dateCreated: user.dateCreated,
+              statistics: user.statistics,
             },
           });
         } catch (saveErr) {
@@ -465,9 +536,7 @@ router.patch(
   }),
 );
 
-import { profileImageValidation } from "../utils/profileImageValidation.js";
-import { uploadToR2 } from "../utils/uploadTor2.js";
-import { r2 } from "../utils/r2Client.js";
+//need to fix an error with upload having broken images in R2
 
 router.post(
   "/profileImageUpload",
@@ -534,7 +603,7 @@ router.post(
 
 // delete account route and remember to delete all journals associated with the user as well as tokens and cookies
 
-router.delete("/requestDelete", authenticateToken, async (req, res) => {
+router.delete("/requestDeleteAccount", authenticateToken, async (req, res) => {
   const userId = req.user.id;
   try {
     const user = await User.findById(userId);
@@ -543,26 +612,32 @@ router.delete("/requestDelete", authenticateToken, async (req, res) => {
     }
 
     //also delete all jornals and images in r2 associated with the user here as well
-    user.journals.forEach(async (journalId) => {
-      //delete journal
-      await Journal.findByIdAndDelete(journalId);
-    });
+    for (const journalId of user.journals) {
+      // 1. Delete all entries belonging to this journal
+      await JournalEntry.deleteMany({ journalID: journalId });
 
+      // 2. Delete the journal itself
+      await Journal.findByIdAndDelete(journalId);
+    }
+
+    //delete user profile picture for the R2 bucket
     try {
-      r2.listObjectsV2({
-        Bucket: process.env.R2_BUCKET_NAME,
-        Prefix: `${userId}/`,
-      }).then(async (data) => {
-        const objects = data.Contents || [];
-        for (const obj of objects) {
-          await r2.send(
-            new DeleteObjectCommand({
-              Bucket: process.env.R2_BUCKET_NAME,
-              Key: obj.Key,
-            }),
-          );
-        }
-      });
+      // Use await to properly handle the async operation
+      const data = await r2.send(
+        new ListObjectsV2Command({
+          Bucket: process.env.R2_BUCKET_NAME,
+          Prefix: `${userId}/`,
+        }),
+      );
+      const objects = data.Contents || [];
+      for (const obj of objects) {
+        await r2.send(
+          new DeleteObjectCommand({
+            Bucket: process.env.R2_BUCKET_NAME,
+            Key: obj.Key,
+          }),
+        );
+      }
     } catch (error) {
       throw createHttpError(500, "Internal Server error:" + error.message);
     }

@@ -11,7 +11,7 @@ import { memeTypeCheck } from "../utils/memeTypeCheck";
 
 export default function useAccount() {
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const { user, accessToken } = useAuth();
   const [userAccountSettings, setUserAccountSettings] = useState({});
   const navigate = useNavigate();
@@ -259,7 +259,34 @@ export default function useAccount() {
     }
   };
 
-  const deleteAccountRequest = async () => {};
+  const requestDeleteAccount = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.delete(
+        `${API_BASE_URL}/account/requestDeleteAccount`,
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      logout();
+      navigate("/");
+      setFlashMessage(
+        response?.data?.message || "Account Deleted successfully",
+      );
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      setFlashMessage(
+        serverMsg || error?.message || "Image upload failed...try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //pull user data to view and update profile information READ
 
@@ -269,7 +296,7 @@ export default function useAccount() {
     user,
     loading,
     resetPassword,
-    deleteAccountRequest,
+    requestDeleteAccount,
     setLoading,
     changePassword,
     changeEmail,

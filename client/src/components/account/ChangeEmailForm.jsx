@@ -23,66 +23,56 @@ export default function PasswordChangeForm({
   };
 
   return (
-    <div className="">
+    <div>
       <form
+        className="flex flex-col items-center"
         onSubmit={(e) => {
+          e.preventDefault();
           if (checkIfValidEmail(newEmail)) {
             e.preventDefault();
             changeEmail(oldEmail, newEmail);
             clearForm();
-            setButtonState((prevState) => ({
-              ...prevState,
-              [1]: false,
-            }));
+            setButtonState((prev) => ({ ...prev, 1: false }));
           }
         }}
       >
-        <h2 className="text-2xl mb-4">Change Email</h2>
+        <h2 className="text-2xl mb-4 self-start">Change Email</h2>
 
-        <div className="">
-          <input
-            type="email"
-            placeholder="Current Email"
-            autoComplete="none"
-            className="w-full md:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200"
-            value={oldEmail}
-            onChange={(e) => {
-              setOldEmail(e.target.value);
-            }}
-          />
-        </div>
+        <input
+          type="email"
+          placeholder="Current Email"
+          autoComplete="none"
+          className="w-full md:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 
+                 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          value={oldEmail}
+          onChange={(e) => setOldEmail(e.target.value)}
+        />
 
-        <div className="">
-          <input
-            type="email"
-            placeholder="New Email"
-            autoComplete="none"
-            className="w-full md:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200"
-            value={newEmail}
-            onChange={(e) => {
-              setNewEmail(e.target.value);
-            }}
-          />
-        </div>
+        <input
+          type="email"
+          placeholder="New Email"
+          autoComplete="none"
+          className="w-full md:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 
+                 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          value={newEmail}
+          onChange={(e) => setNewEmail(e.target.value)}
+        />
 
         <button
           type="submit"
-          className="w-full bg-blue-200 text-black p-3 rounded-lg hover:bg-blue-400 hover:text-amber-100 transition duration-200 md:w-1/2 md:block justify-self-center"
+          className="w-full md:w-1/2 bg-blue-200 text-black p-3 rounded-lg 
+                 hover:bg-blue-400 hover:text-amber-100 transition duration-200"
         >
           Change Email
         </button>
+
         <button
           type="button"
-          className="w-full bg-gray-200 text-gray-800 p-3 rounded-lg hover:bg-gray-400  hover:text-amber-100 transition duration-200 mt-1 md:w-1/2 md:block justify-self-center"
-          onClick={(e) => {
-            console.log("clicked cancel");
-            e.preventDefault();
-            e.stopPropagation();
+          className="w-full md:w-1/2 bg-gray-200 text-gray-800 p-3 rounded-lg 
+                 hover:bg-gray-400 hover:text-amber-100 transition duration-200 mt-1"
+          onClick={() => {
             clearForm();
-            setButtonState((prevState) => ({
-              ...prevState,
-              [1]: false,
-            }));
+            setButtonState((prev) => ({ ...prev, 1: false }));
           }}
         >
           Cancel

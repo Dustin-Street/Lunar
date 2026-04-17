@@ -92,10 +92,6 @@ export const AuthProvider = ({ children }) => {
         });
 
         setUser(userRes.data.user);
-        console.log(
-          "Token refreshed successfully, user data updated:",
-          userRes.data.user,
-        );
       }
     } catch (err) {
       logger("error", "Refresh token failed:", err);

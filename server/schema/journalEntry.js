@@ -43,6 +43,10 @@ const JournalEntrySchema = new Schema({
       // Example output: "2/22/2026, 2:30 PM"
     },
   },
+  rawDate: {
+    type: Date,
+    default: Date.now,
+  },
   mood: { type: String, enum: ["happy", "sad", "neutral", "angry", "excited"] },
   pages: { type: [PageSchema], default: [], required: true },
   journalID: { type: mongoose.Schema.Types.ObjectId, ref: "Journal" },

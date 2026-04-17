@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import "./Home.css";
 import { useAuth } from "./context/AuthContext";
 import LoginSignupCard from "./layout/LoginSignupCard";
@@ -6,84 +7,117 @@ import UserOverviewCard from "./layout/UserOverviewCard";
 import LoudingOverlay from "./layout/LoadingOverlay";
 import { API_BASE_URL } from "../utils/api";
 import LoadingOverlay from "./layout/LoadingOverlay";
+import { useFlashMessage } from "./context/FlashMessageContext";
 
 export default function Home() {
   const [quote, setQuote] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user, isAuthenticated } = useAuth();
+  const [loadingStats, setLoadingStats] = useState(false);
+  const [statistics, setStatistics] = useState();
+  const { user, isAuthenticated, accessToken } = useAuth();
 
   useEffect(() => {
     async function getInitialQuote() {
       try {
-        const response = await fetch(`${API_BASE_URL}/quotes/quote`);
-        const data = await response.json();
-        setQuote(data);
-        setLoading(false);
+        setLoading(true);
+        const response = await axios.get(`${API_BASE_URL}/quotes/quote`);
+        setQuote(response.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     }
     getInitialQuote();
   }, []);
 
+  useEffect(() => {
+    if (!accessToken) return;
+    async function updateAndGetUserStatistics() {
+      try {
+        setLoadingStats(true);
+        setLoading(true);
+        const response = await axios.get(
+          `${API_BASE_URL}/account/requestStatistics`,
+          {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${accessToken}` },
+          },
+        );
+        setStatistics(response.data.statistics);
+      } catch (error) {
+        console.error(error);
+        useFlashMessage("error receiving your Activity report");
+      } finally {
+        setLoading(false);
+        setLoadingStats(false);
+      }
+    }
+    updateAndGetUserStatistics();
+  }, [accessToken]);
+
   const random = quote.length ? Math.floor(Math.random() * quote.length) : 0;
+  console.log(statistics);
 
   return (
     <>
       {loading ? (
-        <div className="min-h-screen bg-[url(/images/crecentToFull.jpg)] bg-cover bg-center px-4 py-8 flex items-center justify-center">
+        <div className="min-h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat flex items-center justify-center">
           <LoadingOverlay />
         </div>
       ) : (
-        <div className="min-h-screen bg-[url(/images/crecentToFull.jpg)] bg-cover bg-center px-4 py-8 flex flex-col gap-8 items-center">
-          {/* Intro Card */}
-          <div className="bg-gray-700/78 rounded-2xl p-6 max-w-3xl text-center text-white shadow-sm shadow-blue-200">
-            <h3 className="text-lg md:text-2xl lg:text-3xl text-amber-100 font-serif animate-fadeIn">
-              Lunar is a journaling application where you can reflect on your
-              day. This is a Beta or prototype, and is not intended to be viewed
-              as a final product. Still in early development, and a work in
-              progress. We hope you enjoy using it, and we welcome any feedback
-              you may have.
+        <div className="min-h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat text-white px-4 py-12 space-y-20">
+          {/* HERO SECTION */}
+          <div className="bg-gray-800/70 rounded-2xl p-8 max-w-3xl mx-auto mb-2 mt-2 max-h-screen shadow-md shadow-blue-200 space-y-2">
+            <section className="flex flex-col items-center text-center space-y-6">
+              <h1 className="text-3xl md:text-5xl font-serif text-amber-100 animate-fadeIn">
+                Welcome to Lunar
+              </h1>
+
+              <p className="max-w-2xl text-blue-200 text-lg leading-relaxed">
+                A calm, private space to reflect, grow, and understand your day.
+                free to use by everyone.
+              </p>
+
+              {!isAuthenticated ? (
+                <LoginSignupCard />
+              ) : (
+                <UserOverviewCard
+                  stats={statistics}
+                  user={user}
+                  statisticsloading={loadingStats}
+                />
+              )}
+            </section>
+          </div>
+
+          {/* SUPPORT SECTION */}
+          <section className="bg-gray-800/70 rounded-2xl p-8 max-w-3xl mx-auto my-2 shadow-md text-center shadow-blue-200 space-y-4">
+            <p className="text-blue-200 leading-relaxed">
+              Lunar is free to use — but it isn’t free to build or maintain. If
+              you find value in Lunar, consider supporting the project by
+              donating.
+            </p>
+
+            <p className="text-blue-200 leading-relaxed">
+              Ads help cover operational costs so core features stay free. Your
+              support helps us continue improving the platform.
+            </p>
+
+            <p className="text-amber-100 font-serif">
+              Thank you for being part of our community.
+            </p>
+          </section>
+
+          {/* QUOTE SECTION */}
+          <section className="bg-gray-800/70 rounded-2xl p-6 max-w-xl mx-auto mt-1 text-center shadow-md shadow-blue-200 animate-fadeIn">
+            <h3 className="text-xl md:text-2xl font-serif text-amber-100">
+              {quote[random]?.text}
             </h3>
-          </div>
-
-          {/* Features */}
-          <div>
-            <h2 className="bg-gray-700/78 rounded-2xl p-6 max-w-2xl text-center text-amber-100 shadow-sm shadow-blue-200 animate-fadeIn md:text-xl lg:text-2xl font-serif md:w-full">
-              <span className="text-amber-200">Key Features:</span>
-              <br />
-              <ul>
-                <li className="mt-2">Daily journaling with mood tracking</li>
-                <li className="mt-2">
-                  Optional - AI-powered insights and analytics companion
-                </li>
-                <li className="mt-2">Secure and private data storage</li>
-              </ul>
-            </h2>
-          </div>
-
-          {/* Auth or User Card */}
-          {!isAuthenticated ? (
-            <LoginSignupCard />
-          ) : (
-            <UserOverviewCard user={user} />
-          )}
-
-          {/* Quote */}
-          <div className="bg-gray-700/78 rounded-2xl p-6 max-w-2xl text-center text-white mt-auto mb-8 shadow-sm shadow-blue-200 animate-fadeIn">
-            {loading ? (
-              <span className="text-lg font-serif">Loading…</span>
-            ) : (
-              <div className="flex flex-col items-center">
-                <h3 className="text-lg md:text-xl lg:text-2xl font-serif text-amber-100 m-2">
-                  {quote[random]?.text}
-                </h3>
-                <h5 className="italic mt-3 text-sm md:text-base font-serif text-blue-200">
-                  — {quote[random]?.author}
-                </h5>
-              </div>
-            )}
-          </div>
+            <p className="italic mt-0 text-blue-200">
+              — {quote[random]?.author}
+            </p>
+          </section>
         </div>
       )}
     </>

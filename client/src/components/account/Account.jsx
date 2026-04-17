@@ -14,7 +14,7 @@ export default function Account() {
     changePassword,
     changeEmail,
     changeProfileImage,
-    deleteAccountRequest,
+    requestDeleteAccount,
   } = useAccount();
   const [buttonState, setButtonState] = useState(Array(7).fill(false));
   if (!user) {
@@ -59,11 +59,11 @@ export default function Account() {
 
   return (
     <AuthGuard>
-      <div name="accountPage" className="relative min-h-screen w-full">
+      <div name="accountPage" className="relative min-h-screen w-full mx-0">
         {loading && <LoadingOverlay message="Processing request..." />}
 
         <div
-          className={`flex flex-col relative min-h-screen w-full bg-gray-800 items-center ${loading ? "opacity-40 blur-sm pointer-events-none" : ""}`}
+          className={`flex flex-col  min-h-screen w-full bg-gray-800 items-center mx-0 ${loading ? "opacity-40 blur-sm pointer-events-none" : ""}`}
         >
           <h1 className="lg:text-3xl text-2xl text-amber-100 mb-8 font-semibold font-serif mt-10 border-b-2 border-blue-200 pb-2 ">
             {user.username}'s Account
@@ -74,11 +74,11 @@ export default function Account() {
           >
             <ul
               name="account-info-list"
-              className="space-y-6 border-3 border-blue-200 p-10 rounded-2xl shadow-2xl group "
+              className="space-y-6 border-3 border-blue-200 p-10 rounded-2xl shadow-2xl group flex-row "
             >
               <li>
                 <div
-                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20 ${buttonState[0] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
+                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[0] === true ? "border-2 shadow-sm shadow-amber-100m" : null}`}
                   onClick={
                     buttonState[0] === false ? () => ButtonStateSwitch(0) : null
                   }
@@ -97,7 +97,7 @@ export default function Account() {
               <li>
                 {/* buttonState[1] */}
                 <div
-                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20 ${buttonState[1] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
+                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[1] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
                   onClick={
                     buttonState[1] === false ? () => ButtonStateSwitch(1) : null
                   }
@@ -116,7 +116,7 @@ export default function Account() {
               <li>
                 {/* buttonState[2] */}
                 <div
-                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
+                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
                   onClick={
                     buttonState[2] === false ? () => ButtonStateSwitch(2) : null
                   }
@@ -134,21 +134,21 @@ export default function Account() {
               </li>
               <li>
                 {/* buttonState[3] */}
-                <button
-                  className="hover:saturate-200 hover:bg-gray-800 p-4 text-red-200 rounded-2xl px-20"
+                <div
+                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
                   onClick={
                     buttonState[3] === false ? () => ButtonStateSwitch(3) : null
                   }
                 >
                   {buttonState[3] ? (
                     <DeleteAccountForm
-                      deleteAccountRequest={deleteAccountRequest}
+                      requestDeleteAccount={requestDeleteAccount}
                       setButtonState={setButtonState}
                     />
                   ) : (
                     "Delete Account"
                   )}
-                </button>
+                </div>
               </li>
             </ul>
           </div>
@@ -163,57 +163,42 @@ export default function Account() {
             >
               <li>
                 {/* buttonState[4] */}
-                <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
-                  Themes
-                </button>
+                <div
+                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
+                >
+                  <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
+                    Themes
+                  </button>
+                </div>
               </li>
               <li>
                 {/* buttonState[5] */}
-                <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
-                  Notification Settings
-                </button>
+                <div
+                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
+                >
+                  <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
+                    Privacy Settings
+                  </button>
+                </div>
               </li>
               <li>
-                <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20   ">
-                  Privacy Settings
-                </button>
+                <div
+                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
+                >
+                  <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
+                    fonts
+                  </button>
+                </div>
               </li>
               <li>
                 {/* buttonState[7] */}
-                <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
-                  User Data Export
-                </button>
-              </li>
-            </ul>
-          </div>
-          <div
-            name="payment-info"
-            className="text-amber-100 lg:text-xl text-lg mb-12 md:w-3/4 w-full px-4 text-center"
-          >
-            <h2 className="mb-3 text-2xl">Payment | Subscription </h2>
-            <ul
-              name="payment-info-list"
-              className="space-y-6 border-3 border-blue-200 p-10 rounded-2xl shadow-2xl group"
-            >
-              <li>
-                <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
-                  Manage Subscription
-                </button>
-              </li>
-              <li>
-                <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
-                  Payment Methods
-                </button>
-              </li>
-              <li>
-                <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20   ">
-                  Billing History
-                </button>
-              </li>
-              <li>
-                <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20 text-red-200">
-                  Cancel Subscription
-                </button>
+                <div
+                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
+                >
+                  <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
+                    Export Data
+                  </button>
+                </div>
               </li>
             </ul>
           </div>

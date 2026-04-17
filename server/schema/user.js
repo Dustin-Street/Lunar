@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { profile } from "console";
+import { type } from "os";
 const Schema = mongoose.Schema;
 
 const date = new Date();
@@ -43,7 +44,6 @@ const UserSchema = new Schema({
   profile: {
     profileImage: {
       type: String,
-      default: `${process.env.R2_PUBLIC_URL}/ProfileNoBG.png`,
     },
     preferences: {
       theme: {
@@ -85,6 +85,29 @@ const UserSchema = new Schema({
       ":" +
       date.getMinutes(),
   },
+  statistics: {
+    //number of entries this month
+    monthlyEntries: {
+      type: Number,
+      default: 0,
+    },
+    //most common mood selected
+    commonMood: {
+      type: String,
+      default: null,
+    },
+    //most common day to journal
+    commonDay: {
+      type: String,
+      default: null,
+    },
+    //if user has no stats data
+    hasStatisitics: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   isAdmin: {
     type: Boolean,
     default: false,
@@ -94,6 +117,7 @@ const UserSchema = new Schema({
   verificationExperation: { type: Date },
 });
 
+//Methods
 // Hash password before saving
 UserSchema.pre("save", async function () {
   // Only hash if password is modified
@@ -124,5 +148,19 @@ UserSchema.methods.createVerificationCode = function () {
 
   return newCode;
 };
+
+//virtuals
+UserSchema.virtual("hasStatistics").get(function () {
+  const stats = this.statistics;
+  return (
+    stats.commonDay !== null ||
+    stats.commonMood !== null ||
+    stats.monthlyEntries > 0
+  );
+});
+
+//settings
+UserSchema.set("toJSON", { virtuals: true });
+UserSchema.set("toObject", { virtuals: true });
 
 export default mongoose.model("User", UserSchema);
