@@ -44,7 +44,7 @@ export default function Home() {
             headers: { Authorization: `Bearer ${accessToken}` },
           },
         );
-        setStatistics(response.data.statistics);
+        setStatistics(response.data.user);
       } catch (error) {
         console.error(error);
         useFlashMessage("error receiving your Activity report");
@@ -103,7 +103,6 @@ export default function Home() {
               Ads help cover operational costs so core features stay free. Your
               support helps us continue improving the platform.
             </p>
-
             <p className="text-amber-100 font-serif">
               Thank you for being part of our community.
             </p>

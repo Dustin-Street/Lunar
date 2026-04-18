@@ -84,8 +84,9 @@ router.get(
     await User.findByIdAndUpdate(userId, { statistics: stats });
     return res.status(200).json({
       success: true,
-      statistics: {
+      user: {
         statistics: user.statistics,
+        profile: user.profile,
       },
     });
   }),

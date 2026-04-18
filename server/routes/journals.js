@@ -159,6 +159,7 @@ router.put("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
+    const deleteEntires = await JournalEntry.deleteMany({journalID : id}) 
     const deletedJournal = await Journal.findByIdAndDelete(id);
     await User.updateMany({ journals: id }, { $pull: { journals: id } });
     if (!deletedJournal) {

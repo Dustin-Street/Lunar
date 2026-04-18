@@ -16,6 +16,10 @@ import ErrorPage from "./components/error/ErrorPage.jsx";
 import Account from "./components/account/Account.jsx";
 import { AuthProvider } from "./components/context/AuthContext.jsx";
 import AccountRecovery from "./components/account/AccountRecovery.jsx";
+import {
+  FlashMessageProvider,
+  useFlashMessage,
+} from "./components/context/FlashMessageContext";
 
 const router = createBrowserRouter([
   {
@@ -113,7 +117,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <AuthProvider>
-    <RouterProvider router={router} />
-  </AuthProvider>,
+  <FlashMessageProvider>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  </FlashMessageProvider>,
 );

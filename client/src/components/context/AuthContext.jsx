@@ -37,9 +37,11 @@ const AuthContext = createContext(null);
  * @returns {JSX.Element} AuthProvider component wrapping the application.
  */
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({ profile: {} }); //with  profile for profile.profileImage
+
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState(null);
+  const { setFlashMessage } = useFlashMessage();
 
   /**
    * Runs once on app load to verify the user's session using the refresh token cookie.
@@ -62,7 +64,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     verifyUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -94,6 +95,7 @@ export const AuthProvider = ({ children }) => {
         setUser(userRes.data.user);
       }
     } catch (err) {
+      setFlashMessage("Authenication Error :", err.message);
       logger("error", "Refresh token failed:", err);
       logout();
     }
@@ -142,6 +144,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         accessToken,
         loading,
         login,

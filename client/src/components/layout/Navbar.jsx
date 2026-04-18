@@ -2,20 +2,31 @@ import { Navigate, NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useFlashMessage } from "../context/FlashMessageContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Navbar.css";
 
 export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userProfileImage, setUserProfileImage] = useState();
   const { setFlashMessage } = useFlashMessage();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    function updateProfileImage() {
+      setUserProfileImage(user.profile.profileImage);
+      console.log(userProfileImage);
+    }
+    updateProfileImage();
+  }, [user]);
 
   const LogoutMessage = () => {
     logout();
     navigate("/");
     setFlashMessage("You have been logged out successfully ");
   };
+
+  console.log(user);
 
   return (
     <div className="sticky top-0 z-60 rounded-xs border-0 border-b-blue-950 space-y-0 hover:shadow-md shadow-blue-200">
@@ -40,7 +51,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation - Hidden on Mobile */}
           {isAuthenticated && (
-            <div className="hidden md:flex items-centerrounded-4xl my-1">
+            <div className="hidden md:flex items-center rounded-4xl my-1">
               <NavLink
                 to="/journalSelect"
                 id="navlink"
@@ -80,7 +91,7 @@ export default function Navbar() {
                   className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl ms-4 inline-block align-middle hover:translate-y-0.5 hover:text-blue-400"
                 >
                   <img
-                    src={user.profile?.profileImage || "images/ProfileNoBG.png"}
+                    src={user.profile.profileImage || "images/ProfileNoBG.png"}
                     alt="Profile"
                     className="w-8 h-8 rounded-full mr-2 inline-block justify-content-center border-2 border-blue-300 shadow-2xl"
                   />

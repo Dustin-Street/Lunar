@@ -204,20 +204,20 @@ export default function useAccount() {
   };
 
   const changeProfileImage = async (image) => {
+    console.log("image object before : ", image);
     if (!image) {
       setFlashMessage("No file selected.");
       return;
     }
-    console.log("binary to file:", image);
-
-    const file = binaryStringToFile(image);
-    console.log("File converted from binary string:", file);
+    const file = image;
     const fileSizeMB = file.size / 1024 / 1024;
+
+    console.log("filesize", fileSizeMB);
 
     //chec the meme type of the file and if it is not a meme type, return an error message
     if (!memeTypeCheck(file)) {
       setFlashMessage(
-        `Unsupported file type. Supported types are - .PNG .JPG .PDF`,
+        `Unsupported file type. Supported types are - .PNG .JPEG`,
       );
       return;
     }
@@ -227,9 +227,11 @@ export default function useAccount() {
       return;
     }
 
+    console.log("passed tests!");
+
     try {
       setLoading(true);
-
+      console.log("in try block");
       const formData = new FormData();
       formData.append("image", file);
 

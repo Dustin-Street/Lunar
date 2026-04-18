@@ -101,11 +101,6 @@ const UserSchema = new Schema({
       type: String,
       default: null,
     },
-    //if user has no stats data
-    hasStatisitics: {
-      type: Boolean,
-      default: false,
-    },
   },
 
   isAdmin: {
