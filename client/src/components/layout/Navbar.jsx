@@ -52,7 +52,7 @@ export default function Navbar() {
               <NavLink
                 to="/journalSelect"
                 id="navlink"
-                className="mx-9 inline-block"
+                className="absolute top-2 lg:right-49/100 md:right:1/2 inline-block"
               >
                 <h2 className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl hover:text-blue-400 hover:translate-y-0.5">
                   Journal

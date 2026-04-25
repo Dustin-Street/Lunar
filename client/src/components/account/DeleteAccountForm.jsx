@@ -6,7 +6,7 @@ export default function DeleteAccountForm({
 }) {
   const [userInputValidation, setUserInputValidation] = useState("");
   const [errorPulse, setErrorPulse] = useState(false);
-  const ValidationString = "Delete Account";
+  const ValidationString = "Delete My Account";
 
   const clearForm = () => {
     setUserInputValidation("");
@@ -32,7 +32,7 @@ export default function DeleteAccountForm({
         e.preventDefault();
       }}
     >
-      <div className="relative w-full md:w-1/2">
+      <div className="relative w-full lg:w-1/2">
         <input
           id="confirm-delete"
           type="text"
@@ -51,7 +51,7 @@ export default function DeleteAccountForm({
       ${userInputValidation ? "text-xs top-[-26px] -translate-y-1" : ""}
     `}
         >
-          Confirm by typing "Delete Account"
+          Confirm by typing "Delete My Account"
         </label>
       </div>
 
@@ -61,7 +61,7 @@ export default function DeleteAccountForm({
 
       <button
         type="button"
-        className="w-full md:w-1/2 bg-red-400 text-black p-3 rounded-lg 
+        className="w-full lg:w-1/2 bg-red-400 text-black p-3 rounded-lg 
                hover:bg-red-400 hover:text-white transition duration-200 mt-2"
         onClick={handleStringVerification}
       >
@@ -70,7 +70,7 @@ export default function DeleteAccountForm({
 
       <button
         type="button"
-        className="w-full md:w-1/2 bg-gray-200 text-gray-800 p-3 rounded-lg 
+        className="w-full lg:w-1/2 bg-gray-200 text-gray-800 p-3 rounded-lg 
                hover:bg-gray-400 hover:text-white transition duration-200 mt-1"
         onClick={() =>
           setButtonState((prev) => ({
@@ -81,7 +81,10 @@ export default function DeleteAccountForm({
       >
         Cancel
       </button>
-      <p className="text-sm text-red-400"> This cannot be undone and will delete all journals and enties</p>
+      <p className="text-sm text-red-400 mt-6 mb-0">
+        {" "}
+        This cannot be undone and will delete all journals and enties
+      </p>
     </form>
   );
 }

@@ -25,7 +25,7 @@ export default function PasswordChangeForm({
   return (
     <div>
       <form
-        className="flex flex-col items-center"
+        className="flex flex-col items-center text-center"
         onSubmit={(e) => {
           e.preventDefault();
           if (checkIfValidEmail(newEmail)) {
@@ -36,13 +36,13 @@ export default function PasswordChangeForm({
           }
         }}
       >
-        <h2 className="text-2xl mb-4 self-start">Change Email</h2>
+        <h2 className="text-2xl mb-4 self-star justift-self-center">Change Email</h2>
 
         <input
           type="email"
           placeholder="Current Email"
           autoComplete="none"
-          className="w-full md:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 
+          className="w-full lg:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 
                  focus:outline-none focus:ring-2 focus:ring-blue-200"
           value={oldEmail}
           onChange={(e) => setOldEmail(e.target.value)}
@@ -52,7 +52,7 @@ export default function PasswordChangeForm({
           type="email"
           placeholder="New Email"
           autoComplete="none"
-          className="w-full md:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 
+          className="w-full lg:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 
                  focus:outline-none focus:ring-2 focus:ring-blue-200"
           value={newEmail}
           onChange={(e) => setNewEmail(e.target.value)}
@@ -60,7 +60,7 @@ export default function PasswordChangeForm({
 
         <button
           type="submit"
-          className="w-full md:w-1/2 bg-blue-200 text-black p-3 rounded-lg 
+          className="w-full lg:w-1/2 bg-blue-200 text-black p-3 rounded-lg 
                  hover:bg-blue-400 hover:text-amber-100 transition duration-200"
         >
           Change Email
@@ -68,7 +68,7 @@ export default function PasswordChangeForm({
 
         <button
           type="button"
-          className="w-full md:w-1/2 bg-gray-200 text-gray-800 p-3 rounded-lg 
+          className="w-full lg:w-1/2 bg-gray-200 text-gray-800 p-3 rounded-lg 
                  hover:bg-gray-400 hover:text-amber-100 transition duration-200 mt-1"
           onClick={() => {
             clearForm();

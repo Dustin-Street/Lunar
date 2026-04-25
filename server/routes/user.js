@@ -54,10 +54,12 @@ router.get(
   asyncHandler(async (req, res) => {
     const userId = req.user.id;
 
+    //update
     const user = await User.findById(userId).populate({
       path: "journals",
       populate: { path: "entries" },
     });
+
     if (!user) {
       throw createHttpError(404, "User not found");
     }
@@ -74,7 +76,13 @@ router.get(
 
     await User.findByIdAndUpdate(userId, { statistics: stats });
     console.log(`sending user : ${user} `);
-    return res.status(200).json(user);
+
+    //only send the neessisary parts of the schema
+    const userStatistics = await User.findById(userId).select(
+      "-password -refreshToken",
+    );
+    console.log(`userStatistics : ${userStatistics}`);
+    return res.status(200).json(userStatistics);
   }),
 );
 
@@ -156,6 +164,7 @@ router.post(
 );
 
 import jwt from "jsonwebtoken";
+import user from "../schema/user.js";
 
 //create refreshToken route
 
@@ -540,28 +549,6 @@ router.delete("/requestDeleteAccount", authenticateToken, async (req, res) => {
 
       // 2. Delete the journal itself
       await Journal.findByIdAndDelete(journalId);
-    }
-
-    //delete user profile picture for the R2 bucket
-    try {
-      // Use await to properly handle the async operation
-      const data = await r2.send(
-        new ListObjectsV2Command({
-          Bucket: process.env.R2_BUCKET_NAME,
-          Prefix: `${userId}/`,
-        }),
-      );
-      const objects = data.Contents || [];
-      for (const obj of objects) {
-        await r2.send(
-          new DeleteObjectCommand({
-            Bucket: process.env.R2_BUCKET_NAME,
-            Key: obj.Key,
-          }),
-        );
-      }
-    } catch (error) {
-      throw createHttpError(500, "Internal Server error:" + error.message);
     }
 
     await User.findByIdAndDelete(userId);

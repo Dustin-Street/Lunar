@@ -26,16 +26,16 @@ const randomLoadingStrings = [
   "Your journals are opening their eyes…",
   "Calling your pages home…",
   "Your reflections are on their way…",
-  "Centering your journaling space…"
+  "Centering your journaling space…",
 ];
-const randomString = randomLoadingStrings[
-  Math.floor(Math.random() * randomLoadingStrings.length)]
+const randomString =
+  randomLoadingStrings[Math.floor(Math.random() * randomLoadingStrings.length)];
 
 /**
  * Main journal selection component - now simplified to orchestrate child components
  * All business logic moved to useJournals hook, all UI moved to presentational components
- * 
- * 
+ *
+ *
  */
 export default function JournalSelect() {
   const { isAuthenticated, loading: authLoading } = useAuth();
@@ -61,14 +61,12 @@ export default function JournalSelect() {
 
   // Show loading state while journals are being fetched
   if (loading) {
-    return (
-      LoadingOverlay({message: randomString})
-    );
+    return LoadingOverlay({ message: randomString });
   }
 
   // Show empty state if user has no journals
   if (journals.length === 0) {
-    return <EmptyState onCreate={createJournal} />;
+    return <EmptyState onCreate={createJournal} journals={journals} />;
   }
 
   // Show journal grid with all journals

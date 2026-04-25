@@ -1,10 +1,10 @@
-import JournalCreateForm from "./JournalCreateForm";
+import JournalCreateCard from "./JournalCreateCard";
 
 /**
  * Empty state component shown when user has no journals yet
  * Encourages user to create their first journal
  */
-export default function EmptyState({ onCreate }) {
+export default function EmptyState({ onCreate, journals }) {
     return (
         <div className="grid items-center min-h-screen px-4 bg-[url(/images/journaldeepnight.jpg)] bg-cover bg-center gap-10">
             <div className="bg-gray-700/80 rounded-2xl p-6 max-w-3xl text-center text-white shadow-lg shadow-blue-200 justify-self-center border-2 border-blue-200">
@@ -12,9 +12,10 @@ export default function EmptyState({ onCreate }) {
                     Create a Journal to get started
                 </p>
             </div>
-            <JournalCreateForm
+            <JournalCreateCard
                 onSubmit={onCreate}
-                className="justify-self-center px-8 sm:px-12 md:px-20 py-20 md:max-w-md min-w-sm"
+                className="justify-self-center px-8 sm:px-12 md:px-20 py-20 md:max-w-md mx-0"
+                journals={journals}
             />
         </div>
     );

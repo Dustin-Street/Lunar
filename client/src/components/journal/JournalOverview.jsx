@@ -199,29 +199,6 @@ export default function JournalOverview() {
             </>
           )}
         </div>
-        {/* if page incrementation and decremention is needed or wanted later */}
-        {/* <div name="pageChangeButtons">
-          {currentPageIndex === 0 ? <></> : (
-            <button
-              onClick={}
-              className="text-center text-2xl bg-gray-600 text-blue-200 border border-blue-200 p-2 mx-2
-           shadow-blue-100 shadow-2xs rounded-lg fixed z-10 bottom-1/2  hover:bg-gray-700 hover:text-blue-400
-            hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
-            >
-              {" "}
-              &#8592;{" "}
-            </button>
-          )}
-          <button
-            onClick={handlePageChangeDown}
-            className="text-center text-2xl bg-gray-600 text-blue-200 border border-blue-200 p-2 mx-2
-           shadow-blue-100 shadow-2xs rounded-lg fixed z-10 bottom-1/2 right-1  hover:bg-gray-700 hover:text-blue-400
-            hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
-          >
-            {" "}
-            &#8594;{" "}
-          </button>
-        </div> */}
 
         <div name="JournalEntry" className="flex h-7/8">
           <textarea
@@ -233,8 +210,8 @@ export default function JournalOverview() {
             spellCheck={true}
             className={
               sideBarOpened
-                ? "border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
-                : "border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
+                ? "border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center text-lg md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
+                : "border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-lg md:text-md md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
             }
           ></textarea>
         </div>

@@ -51,7 +51,7 @@ export default function Home() {
           },
         );
         console.log(`axios response : ${response.data}`);
-        setStatistics(response.data.user);
+        setStatistics(response.data);
       } catch (error) {
         console.error(error);
         useFlashMessage("error receiving your Activity report");
@@ -61,8 +61,9 @@ export default function Home() {
       }
     }
     updateAndGetUserStatistics();
-  }, [accessToken, statistics]);
+  }, [accessToken]);
 
+  console.log(`statistics : ${statistics}`)
   return (
     <>
       {loading ? (

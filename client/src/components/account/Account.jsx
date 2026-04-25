@@ -63,11 +63,11 @@ export default function Account() {
           </h1>
           <div
             name="account-info"
-            className="text-amber-100 lg:text-xl text-lg mb-12 md:w-3/4 w-full px-4 text-center"
+            className="text-amber-100 lg:text-xl text-lg mb-12 lg:w-3/4 w-full px-4 text-center"
           >
             <ul
               name="account-info-list"
-              className="space-y-6 border-3 border-blue-200 p-10 rounded-2xl shadow-2xl group flex-row "
+              className="space-y-12 border-3 border-blue-200 p-10 rounded-2xl shadow-2xl group flex-row "
             >
               <li>
                 <div
@@ -120,7 +120,7 @@ export default function Account() {
               <li>
                 {/* buttonState[3] */}
                 <div
-                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
+                  className={`hover:saturate-200 ${buttonState[3] === false ? "hover:bg-red-400" : null} hover:text-white p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100 hover:bg-gray-800" : null}`}
                   onClick={
                     buttonState[3] === false ? () => ButtonStateSwitch(3) : null
                   }

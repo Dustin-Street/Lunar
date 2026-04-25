@@ -33,12 +33,12 @@ export default function PasswordChangeForm({
       >
         <h2 className="text-2xl mb-4">Change Password</h2>
 
-        <div className="relative">
+        <div className="relative ">
           <input
             type={showoldpassword ? "text" : "password"}
             placeholder="Current Password"
             autoComplete="none"
-            className="w-full p-3 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200 md:w-1/2"
+            className="w-full p-3 mb-4 lg:ms-20 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200 lg:w-1/2"
             value={oldPassword}
             onChange={(e) => {
               setOldPassword(e.target.value);
@@ -46,7 +46,7 @@ export default function PasswordChangeForm({
           />
           <button
             type="button"
-            className="absolute inset-y-0 left-48 lg:left-304 md:left-24 px-4 flex items-center text-gray-600 hover:text-gray-700"
+            className="inline p-4 items-center text-gray-500 hover:text-amber-100 mb-4"
             onClick={() => setShowoldPassword(!showoldpassword)}
           >
             {showoldpassword ? "Hide" : "Show"}
@@ -58,7 +58,7 @@ export default function PasswordChangeForm({
             type={shownewpassword ? "text" : "password"}
             placeholder="New Password"
             autoComplete="none"
-            className="w-full p-3 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200 md:w-1/2"
+            className="w-full p-3 mb-4 rounded-lg border lg:ms-20 border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200 lg:w-1/2"
             value={newPassword}
             onChange={(e) => {
               setNewPassword(e.target.value);
@@ -66,7 +66,7 @@ export default function PasswordChangeForm({
           />
           <button
             type="button"
-            className="absolute inset-y-0 left-48 lg:left-304 md:left-224 px-4 flex items-center text-gray-600 hover:text-gray-700"
+            className="inline p-4 items-center text-gray-500 hover:text-amber-100 mb-4"
             onClick={() => setShownewPassword(!shownewpassword)}
           >
             {shownewpassword ? "Hide" : "Show"}
@@ -75,13 +75,14 @@ export default function PasswordChangeForm({
 
         <button
           type="submit"
-          className="w-full bg-blue-200 text-black p-3 rounded-lg hover:bg-blue-400 hover:text-amber-100 transition duration-200 md:w-1/2 md:block justify-self-center"
+          className="w-full lg:w-1/2 bg-blue-200 text-black p-3 rounded-lg 
+                 hover:bg-blue-400 hover:text-amber-100 transition duration-200"
         >
           Change Password
         </button>
         <button
           type="button"
-          className="w-full bg-gray-200 text-gray-800 p-3 rounded-lg hover:bg-gray-400  hover:text-amber-100 transition duration-200 mt-1 md:w-1/2 md:block justify-self-center"
+          className="w-full bg-gray-200 text-gray-800 p-3 rounded-lg hover:bg-gray-400  hover:text-amber-100 transition duration-200 mt-1 lg:w-1/2 md:block justify-self-center"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();

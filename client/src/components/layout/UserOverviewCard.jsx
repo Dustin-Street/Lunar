@@ -3,21 +3,16 @@ import LunarButton from "./LunarButton";
 import { useNavigate } from "react-router-dom";
 //must setup state that ties into useAccount Call to userStatistics
 export default function UserOverviewCard({ stats, user, statisticsloading }) {
-  const [userStatistics, setUserStatistics] = useState(stats);
   const [statsLoading, setStatsLoading] = useState(statisticsloading);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setUserStatistics(stats);
-  }, [stats]);
+  console.log(`userStatistics : ${stats}`);
 
   useEffect(() => {
     setStatsLoading(statisticsloading);
   }, [statisticsloading]);
 
-  console.log(userStatistics);
-
-  if (statsLoading && userStatistics?.statistics.hasStatistics === true) {
+  if (statsLoading && stats?.hasStatistics === true) {
     return (
       <div>
         <div className="bg-gray-700/10 rounded-lg p-6 max-w-2xl text-center justify-self-center text-amber-100 md:text-xl lg:text-lg font-serif animate-pulse">
@@ -57,7 +52,7 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
   }
   return (
     <div>
-      {userStatistics?.statistics.hasStatistics === true ? (
+      {stats?.hasStatistics === true ? (
         <div className=" bg-gray-700/10 rounded-lg p-6 max-w-2xl text-center justify-self-center text-amber-100  animate-fadeIn md:text-xl lg:text-lg font-serif">
           <h2 className="m-4 md:text-2xl lg:text-3xl">
             {user?.username || "User"}
@@ -67,21 +62,21 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
             <li className="flex justify-between items-center border px-4 py-2 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
               <span>Entries this month</span>
               <span className="text-blue-200 border px-3 py-1 rounded-2xl m-3  bg-linear-60 from-gray-700 to-gray-900">
-                {userStatistics?.statistics.monthlyEntries} Enties
+                {stats?.statistics.monthlyEntries} Enties
               </span>
             </li>
 
             <li className="flex justify-between items-center border px-4 py-3 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
               <span>Most common day</span>
               <span className="text-blue-200 border px-3 py-1 rounded-2xl m-2  bg-linear-60 from-gray-700 to-gray-900">
-                {userStatistics?.statistics.commonDay}
+                {stats?.statistics.commonDay}
               </span>
             </li>
 
             <li className="flex justify-between items-center border px-4 py-2 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
               <span>Most common mood is</span>
               <span className="text-blue-200 border px-3 py-1 rounded-2xl m-3  bg-linear-60 from-gray-700 to-gray-900">
-                {userStatistics?.statistics.commonMood}
+                {stats?.statistics.commonMood}
               </span>
             </li>
           </ul>
