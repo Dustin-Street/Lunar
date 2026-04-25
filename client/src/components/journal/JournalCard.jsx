@@ -1,6 +1,6 @@
 import { useCallback, useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFilePicker } from "use-file-picker";
+
 import { useFlashMessage } from "../context/FlashMessageContext";
 import HoverButton from "../layout/HoverButton";
 
@@ -21,22 +21,9 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
 
   //customization elements that can be editted by change background button click
   const [inChangeBackground, setInChangeBackground] = useState(false);
-  const [inChangeBackgroundImage, setInChangeBackgroundImage] = useState(false);
   const [inChangeBackgroundColor, setInChangeBackgroundColor] = useState(false);
   const [image, setImage] = useState("");
   const [border, setborder] = useState("");
-
-  //file selector options for image upload
-  const { filesContent, errors, openFilePicker, loading } = useFilePicker({
-    accept: ".jpg,.png,.pdf", // Specify allowed file types
-    multiple: false, // Allow multiple file selection
-    onFilesSuccessfullySelected: ({ filesContent }) => {
-      handleBackgroundChangeImage(filesContent);
-    },
-    onFilesRejected: ({}) => {
-      setFlashMessage("Image upload failed, try again");
-    },
-  });
 
   const navigate = useNavigate();
 
@@ -63,7 +50,6 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
     setInEdit(false);
     setInChangeBackground(false);
     setInChangeBackgroundColor(false);
-    setInChangeBackgroundImage(false);
     setTitle(journal.title);
   });
 
@@ -89,22 +75,7 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
     setInChangeBackground(true);
   });
 
-  //logic to upload an image as background
-  const handleBackgroundChangeImage = useCallback(
-    (newImage) => {
-      //expected in backend - type : enum ['Hex','Url'] - value : 'hex string or Url string'
-      onImageUpload(journal._id, "Url", newImage);
-      setInEdit(false);
-      setInChangeBackground(false);
-      setInChangeBackgroundImage(false);
-    },
-    [onImageUpload, journal._id],
-  );
 
-  const enterChangeBackgroundImage = useCallback(() => {
-    setInChangeBackgroundImage(true);
-    openFilePicker();
-  }, [openFilePicker]);
 
   const handleBackgroundChangeColor = useCallback(() => {
     if (journal.background) {
@@ -131,14 +102,6 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
       );
     }
 
-    function isImageURL(string) {
-      try {
-        new URL(string);
-        return true;
-      } catch {
-        return false;
-      }
-    }
 
     // HEX → backgroundColor
     if (isHex(background)) {
@@ -149,19 +112,6 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
         borderColor: "#bfdbfe",
       };
     }
-
-    // URL → backgroundImage
-    if (isImageURL(background)) {
-      return {
-        backgroundImage: `url(${value})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        borderRadius: "12px",
-        borderWidth: "4px",
-        borderColor: "#bfdbfe",
-      };
-    }
-
     // fallback gradient // default
     return {
       background: "linear-gradient(to right, #4b5563, #1f2937)",
@@ -213,7 +163,6 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
       >
         {InEdit ||
         inChangeBackground ||
-        inChangeBackgroundImage ||
         inChangeBackgroundColor ? (
           //Delete / cancel
           <HoverButton
@@ -262,37 +211,9 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
           />
         ) : null}
 
-        {/* image */}
-        {inChangeBackground && !inChangeBackgroundColor ? (
-          <HoverButton
-            position="top-right"
-            colorBefore="gray-800"
-            colorAfter="white"
-            buttonText="Upload Image"
-            onClick={enterChangeBackgroundImage}
-          />
-        ) : null}
-        {inChangeBackgroundImage && !inChangeBackgroundColor ? (
-          <div>
-            <HoverButton
-              position="top-left"
-              colorBefore="green-500"
-              colorAfter="white"
-              buttonText="Set background"
-              onClick={handleBackgroundChangeImage}
-            />
-            <HoverButton
-              position="top-right"
-              colorBefore="gray-800"
-              colorAfter="white"
-              buttonText="Upload Image"
-              onClick={enterChangeBackgroundImage}
-            />
-          </div>
-        ) : null}
 
         {/* color */}
-        {inChangeBackground && !inChangeBackgroundImage ? (
+        {inChangeBackground  ? (
           <HoverButton
             position="top-left"
             colorBefore="gray-800"
@@ -301,7 +222,7 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
             onClick={enterChangeBackgroundColor}
           />
         ) : null}
-        {inChangeBackgroundColor && !inChangeBackgroundImage ? (
+        {inChangeBackgroundColor ? (
           <HoverButton
             position="top-right"
             colorBefore="green-400"

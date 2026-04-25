@@ -13,22 +13,13 @@ import { buildJwtPayload } from "../authentication/jwtBuild.js";
 
 //utility function
 import forgotPasswordChange from "../email/forgotPasswordChange.js";
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { upload } from "../utils/upload.js";
 import { CheckIfValidNewAccount } from "../utils/CheckIfValidNewAccount.js";
 import { createHttpError } from "../utils/httpError.js";
 import { computeCommonDay } from "../utils/computeCommonDay.js";
 import { computeCommonMood } from "../utils/computeCommonMood.js";
 import { computeMonthlyEntries } from "../utils/computeMonthlyEntries.js";
 
-//R2 storage for images
-import { profileImageValidation } from "../utils/profileImageValidation.js";
-import { uploadToR2 } from "../utils/uploadTor2.js";
-import { r2 } from "../utils/r2Client.js";
-import { ListObjectsV2Command } from "@aws-sdk/client-s3";
-
 const router = express.Router();
-
 //authentication
 import passport from "passport";
 import {

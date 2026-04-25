@@ -41,36 +41,33 @@ const UserSchema = new Schema({
   },
   journals: [{ type: Schema.Types.ObjectId, ref: "Journal" }],
   //object for profile settings and preferences
-  profile: {
-    profileImage: {
+
+  preferences: {
+    theme: {
       type: String,
+      default: "Lunar",
     },
-    preferences: {
-      theme: {
-        type: String,
-        default: "Lunar",
+    privacySettings: {},
+    notificationSettings: {
+      emailNotifications: {
+        type: Boolean,
+        default: true,
       },
-      privacySettings: {},
-      notificationSettings: {
-        emailNotifications: {
-          type: Boolean,
-          default: true,
-        },
-        pushNotifications: {
-          type: Boolean,
-          default: true,
-        },
-        smsNotifications: {
-          type: Boolean,
-          default: false,
-        },
+      pushNotifications: {
+        type: Boolean,
+        default: true,
       },
-      UserDataExport: {
+      smsNotifications: {
         type: Boolean,
         default: false,
       },
     },
+    UserDataExport: {
+      type: Boolean,
+      default: false,
+    },
   },
+
   refreshToken: [Session],
   dateCreated: {
     type: String,
