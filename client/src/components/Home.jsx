@@ -16,6 +16,8 @@ export default function Home() {
   const [statistics, setStatistics] = useState();
   const { user, isAuthenticated, accessToken } = useAuth();
 
+  //Quote
+
   useEffect(() => {
     async function getInitialQuote() {
       try {
@@ -31,6 +33,10 @@ export default function Home() {
     getInitialQuote();
   }, []);
 
+  const random = quote.length ? Math.floor(Math.random() * quote.length) : 0;
+
+  //request updated user information to get virtual hasStatistics and the user to use statistics
+
   useEffect(() => {
     if (!accessToken) return;
     async function updateAndGetUserStatistics() {
@@ -44,6 +50,7 @@ export default function Home() {
             headers: { Authorization: `Bearer ${accessToken}` },
           },
         );
+        console.log(`axios response : ${response.data}`);
         setStatistics(response.data.user);
       } catch (error) {
         console.error(error);
@@ -54,10 +61,7 @@ export default function Home() {
       }
     }
     updateAndGetUserStatistics();
-  }, [accessToken]);
-
-  const random = quote.length ? Math.floor(Math.random() * quote.length) : 0;
-  console.log(statistics);
+  }, [accessToken, statistics]);
 
   return (
     <>

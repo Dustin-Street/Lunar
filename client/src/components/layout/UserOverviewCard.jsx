@@ -6,7 +6,6 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
   const [userStatistics, setUserStatistics] = useState(stats);
   const [statsLoading, setStatsLoading] = useState(statisticsloading);
   const navigate = useNavigate();
-  console.log(userStatistics);
 
   useEffect(() => {
     setUserStatistics(stats);
@@ -15,6 +14,8 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
   useEffect(() => {
     setStatsLoading(statisticsloading);
   }, [statisticsloading]);
+
+  console.log(userStatistics);
 
   if (statsLoading && userStatistics?.statistics.hasStatistics === true) {
     return (

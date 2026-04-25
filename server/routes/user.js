@@ -82,13 +82,8 @@ router.get(
     };
 
     await User.findByIdAndUpdate(userId, { statistics: stats });
-    return res.status(200).json({
-      success: true,
-      user: {
-        statistics: user.statistics,
-        profile: user.profile,
-      },
-    });
+    console.log(`sending user : ${user} `);
+    return res.status(200).json(user);
   }),
 );
 
@@ -339,17 +334,17 @@ router.post(
           // Send refresh token cookie
           res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
 
-          console.log(
-            `Login successful! Sending back token and user info - User: ${user.username}, Email: ${user.email}, ID: ${user._id}, Journals: ${user.journals.length} journals, }`,
-          );
-          console.log("User profile info:", user.profile);
+          // console.log(
+          //   `Login successful! Sending back token and user info - User: ${user.username}, Email: ${user.email}, ID: ${user._id}, Journals: ${user.journals.length} journals, }`,
+          // );
+          // console.log("User profile info:", user.profile);
 
           // Send access token + user info
           return res.status(200).json({
             success: true,
             message: "Login successful",
             token,
-            expiresIn: 900,
+            expiresIn: process.env.JWT_TOKEN_EXPIRY,
             user: {
               _id: user._id,
               email: user.email,
@@ -535,71 +530,6 @@ router.patch(
 
     res.json({ success: true, message: "Email updated successfully" });
   }),
-);
-
-//need to fix an error with upload having broken images in R2
-
-router.post(
-  "/profileImageUpload",
-  authenticateToken,
-  upload.single("image"),
-  async (req, res) => {
-    const userId = req.user.id;
-
-    if (req.file) {
-      const validationError = profileImageValidation(req.file);
-      if (validationError) {
-        return res.status(400).json({ message: validationError });
-      }
-
-      const user = await User.findById(userId);
-      if (!user) {
-        throw createHttpError(404, "User not found");
-      }
-
-      console.log("Received file for upload:", {
-        originalname: req.file.originalname,
-        mimetype: req.file.mimetype,
-        size: req.file.size,
-        fileBuffer: req.file.buffer,
-      });
-
-      try {
-        const imageUrl = await uploadToR2(
-          req.file.buffer,
-          req.file.mimetype,
-          userId,
-        );
-
-        // If the user already has a profile image, delete the old one from R2
-        if (imageUrl) {
-          const oldImageUrl = user.profile?.profileImage;
-          if (oldImageUrl) {
-            const oldKey = oldImageUrl.split("/").slice(-2).join("/"); // Extract the key from the URL
-            await r2.send(
-              new DeleteObjectCommand({
-                Bucket: process.env.R2_BUCKET_NAME,
-                Key: oldKey,
-              }),
-            );
-          }
-        }
-
-        // Update user's profile image URL after deleting old image if it exists
-
-        user.profile.profileImage = imageUrl;
-      } catch (error) {
-        console.error("Error uploading image to R2:", error);
-        throw createHttpError(500, "Error uploading image");
-      }
-
-      await user.save();
-      res.json({
-        message: "Successfully uploaded Profile image",
-        success: true,
-      });
-    }
-  },
 );
 
 // delete account route and remember to delete all journals associated with the user as well as tokens and cookies

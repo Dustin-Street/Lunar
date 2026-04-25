@@ -14,8 +14,7 @@ export default function Navbar() {
 
   useEffect(() => {
     function updateProfileImage() {
-      setUserProfileImage(user.profile.profileImage);
-      console.log(userProfileImage);
+      setUserProfileImage(user?.profile?.profileImage);
     }
     updateProfileImage();
   }, [user]);
@@ -25,8 +24,6 @@ export default function Navbar() {
     navigate("/");
     setFlashMessage("You have been logged out successfully ");
   };
-
-  console.log(user);
 
   return (
     <div className="sticky top-0 z-60 rounded-xs border-0 border-b-blue-950 space-y-0 hover:shadow-md shadow-blue-200">
@@ -88,17 +85,6 @@ export default function Navbar() {
               <>
                 <NavLink
                   to="/account"
-                  className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl ms-4 inline-block align-middle hover:translate-y-0.5 hover:text-blue-400"
-                >
-                  <img
-                    src={user.profile.profileImage || "images/ProfileNoBG.png"}
-                    alt="Profile"
-                    className="w-8 h-8 rounded-full mr-2 inline-block justify-content-center border-2 border-blue-300 shadow-2xl"
-                  />
-                </NavLink>
-
-                <NavLink
-                  to="/account"
                   className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl me-5 ms-5 inline-block align-middle  hover:translate-y-0.5 hover:text-blue-400"
                 >
                   {user.username}
@@ -118,17 +104,6 @@ export default function Navbar() {
           </div>
           {isAuthenticated && (
             <div className="md:hidden overflow-hidden transition-all duration-300 ease-in-out align items-center flex">
-              <NavLink
-                to="/account"
-                className="text-blue-300 text-[1.2em] text-shadow-bold shadow-2xl me-8 inline-block align-middle active:traslate-y-px hover:text-blue-400 "
-              >
-                <img
-                  src={user.profile?.profileImage || "images/ProfileNoBG.png"}
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full mr-2 inline-block justify-content-center border-2 border-blue-300 shadow-2xl"
-                />
-              </NavLink>
-
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden text-blue-300 hover:text-blue-400 focus:outline-none me-5"

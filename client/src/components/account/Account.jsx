@@ -4,18 +4,11 @@ import useAccount from "../../hooks/useAccount";
 import LoadingOverlay from "../layout/LoadingOverlay";
 import ChangePasswordForm from "./ChangePasswordForm";
 import ChangeEmailForm from "./ChangeEmailForm";
-import ManageProfilePanel from "./ManageProfilePanel";
 import DeleteAccountForm from "./DeleteAccountForm";
 
 export default function Account() {
-  const {
-    user,
-    loading,
-    changePassword,
-    changeEmail,
-    changeProfileImage,
-    requestDeleteAccount,
-  } = useAccount();
+  const { user, loading, changePassword, changeEmail, requestDeleteAccount } =
+    useAccount();
   const [buttonState, setButtonState] = useState(Array(7).fill(false));
   if (!user) {
     return (
@@ -121,15 +114,7 @@ export default function Account() {
                     buttonState[2] === false ? () => ButtonStateSwitch(2) : null
                   }
                 >
-                  {buttonState[2] ? (
-                    <ManageProfilePanel
-                      changeProfileImage={changeProfileImage}
-                      buttonState={buttonState}
-                      setButtonState={setButtonState}
-                    />
-                  ) : (
-                    "Manage Profile"
-                  )}
+                  {buttonState[2] ? null : "Manage Profile"}
                 </div>
               </li>
               <li>
@@ -148,56 +133,6 @@ export default function Account() {
                   ) : (
                     "Delete Account"
                   )}
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div
-            name="account-settings"
-            className="text-amber-100 lg:text-xl text-lg mb-12 md:w-3/4 w-full px-4 text-center"
-          >
-            <h2 className="mb-3 text-2xl">Account Preferences</h2>
-            <ul
-              name="account-settings-list"
-              className="space-y-6 border-3 border-blue-200 p-10 rounded-2xl shadow-2xl group"
-            >
-              <li>
-                {/* buttonState[4] */}
-                <div
-                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
-                >
-                  <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
-                    Themes
-                  </button>
-                </div>
-              </li>
-              <li>
-                {/* buttonState[5] */}
-                <div
-                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
-                >
-                  <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
-                    Privacy Settings
-                  </button>
-                </div>
-              </li>
-              <li>
-                <div
-                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
-                >
-                  <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
-                    fonts
-                  </button>
-                </div>
-              </li>
-              <li>
-                {/* buttonState[7] */}
-                <div
-                  className={`hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "border-2 shadow-sm shadow-amber-100" : null}`}
-                >
-                  <button className="hover:saturate-200 hover:bg-gray-800 p-4 rounded-2xl px-20">
-                    Export Data
-                  </button>
                 </div>
               </li>
             </ul>

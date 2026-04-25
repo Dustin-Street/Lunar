@@ -203,64 +203,6 @@ export default function useAccount() {
     }
   };
 
-  const changeProfileImage = async (image) => {
-    console.log("image object before : ", image);
-    if (!image) {
-      setFlashMessage("No file selected.");
-      return;
-    }
-    const file = image;
-    const fileSizeMB = file.size / 1024 / 1024;
-
-    console.log("filesize", fileSizeMB);
-
-    //chec the meme type of the file and if it is not a meme type, return an error message
-    if (!memeTypeCheck(file)) {
-      setFlashMessage(
-        `Unsupported file type. Supported types are - .PNG .JPEG`,
-      );
-      return;
-    }
-
-    if (fileSizeMB > 5) {
-      setFlashMessage(validateImage(file));
-      return;
-    }
-
-    console.log("passed tests!");
-
-    try {
-      setLoading(true);
-      console.log("in try block");
-      const formData = new FormData();
-      formData.append("image", file);
-
-      console.log("FormData prepared for upload:", formData.get("image"));
-
-      const response = await axios.post(
-        `${API_BASE_URL}/account/profileImageUpload`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      setFlashMessage(response?.data?.message || "Image uploaded successfully");
-    } catch (error) {
-      const serverMsg =
-        error?.response?.data?.message || error?.response?.data?.error;
-
-      setFlashMessage(
-        serverMsg || error?.message || "Image upload failed...try again.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const requestDeleteAccount = async () => {
     try {
       setLoading(true);
@@ -302,7 +244,6 @@ export default function useAccount() {
     setLoading,
     changePassword,
     changeEmail,
-    changeProfileImage,
     userSignup,
     userLogin,
   };
