@@ -63,27 +63,17 @@ export default function Home() {
     updateAndGetUserStatistics();
   }, [accessToken]);
 
-  console.log(`statistics : ${statistics}`)
   return (
-    <>
+    <div className="">
       {loading ? (
-        <div className="min-h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat flex items-center justify-center">
+        <div className="h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat flex items-center justify-center">
           <LoadingOverlay />
         </div>
       ) : (
-        <div className="min-h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat text-white px-4 py-12 space-y-20">
+        <div className="h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat text-white px-4 py-4">
           {/* HERO SECTION */}
-          <div className="bg-gray-800/70 rounded-2xl p-8 max-w-3xl mx-auto mb-2 mt-2 max-h-screen shadow-md shadow-blue-200 space-y-2">
-            <section className="flex flex-col items-center text-center space-y-6">
-              <h1 className="text-3xl md:text-5xl font-serif text-amber-100 animate-fadeIn">
-                Welcome to Lunar
-              </h1>
-
-              <p className="max-w-2xl text-blue-200 text-lg leading-relaxed">
-                A calm, private space to reflect, grow, and understand your day.
-                free to use by everyone.
-              </p>
-
+          <div className="bg-gray-800/70 rounded-2xl p-8 max-w-3xl mx-auto m-2 max-h-screen shadow-md shadow-blue-200 space-y-2">
+            <section className="flex flex-col items-center text-center space-y-2 ">
               {!isAuthenticated ? (
                 <LoginSignupCard />
               ) : (
@@ -97,7 +87,7 @@ export default function Home() {
           </div>
 
           {/* SUPPORT SECTION */}
-          <section className="bg-gray-800/70 rounded-2xl p-8 max-w-3xl mx-auto my-2 shadow-md text-center shadow-blue-200 space-y-4">
+          <section className="bg-gray-800/70 rounded-2xl p-8 max-w-3xl mx-auto my-2 shadow-md text-center mt-4 shadow-blue-200 space-y-4">
             <p className="text-blue-200 leading-relaxed">
               Lunar is free to use — but it isn’t free to build or maintain. If
               you find value in Lunar, consider supporting the project by
@@ -124,6 +114,6 @@ export default function Home() {
           </section>
         </div>
       )}
-    </>
+    </div>
   );
 }

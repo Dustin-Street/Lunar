@@ -14,8 +14,8 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
 
   if (statsLoading && stats?.hasStatistics === true) {
     return (
-      <div>
-        <div className="bg-gray-700/10 rounded-lg p-6 max-w-2xl text-center justify-self-center text-amber-100 md:text-xl lg:text-lg font-serif animate-pulse">
+      <div className="">
+        <div className="bg-gray-700/10 rounded-lg p-6 max-w-2xl text-center justify-self-center text-amber-100 md:text-xl lg:text-lg font-serif animate-pulse mb-4">
           {/* Username skeleton */}
           <div className="h-12 w-40 bg-gray-800/40 rounded-lg mx-auto mb-4 animate-pulse"></div>
 
@@ -51,10 +51,10 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
     );
   }
   return (
-    <div>
+    <div className="mb-2">
       {stats?.hasStatistics === true ? (
         <div className=" bg-gray-700/10 rounded-lg p-6 max-w-2xl text-center justify-self-center text-amber-100  animate-fadeIn md:text-xl lg:text-lg font-serif">
-          <h2 className="m-4 md:text-2xl lg:text-3xl">
+          <h2 className=" md:text-2xl lg:text-3xl">
             {user?.username || "User"}
           </h2>
           <h2>Activity Report</h2>

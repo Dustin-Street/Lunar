@@ -9,7 +9,7 @@ import HoverButton from "../layout/HoverButton";
  * Displays a single journal with edit and delete actions
  * Memorized to prevent re-renders when other journals update
  */
-function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
+function JournalCard({ journal, onDelete, onEdit, onImageUpload, className }) {
   const { setFlashMessage, setToggleButton, setDuration } = useFlashMessage();
   //journal customization settings
   const [journalBackground, setJournalBackground] = useState("");
@@ -75,8 +75,6 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
     setInChangeBackground(true);
   });
 
-
-
   const handleBackgroundChangeColor = useCallback(() => {
     if (journal.background) {
       setImage(journal.background);
@@ -102,7 +100,6 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
       );
     }
 
-
     // HEX → backgroundColor
     if (isHex(background)) {
       return {
@@ -127,7 +124,7 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
       className={`grid relative place-items-center group border-4 bg-opacity-75
              border-blue-200 px-12 py-48
              text-amber-100 font-medium rounded-lg w-full max-w-xs sm:max-w-sm hover:shadow-2xl
-             hover:shadow-blue-400 transition-shadow`}
+             hover:shadow-blue-400 transition-shadow m-0 ${className}`}
       {...(!InEdit && { onClick: handleNavigate })}
     >
       <h3 className="mb-6 text-lg sm:text-xl text-center">
@@ -161,9 +158,7 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
         name="interactionButtons"
         className="md:group-hover:opacity-100 md:opacity-10 transition-opacity duration-2200 ease-out group-hover:duration-300 group-hover:ease-in"
       >
-        {InEdit ||
-        inChangeBackground ||
-        inChangeBackgroundColor ? (
+        {InEdit || inChangeBackground || inChangeBackgroundColor ? (
           //Delete / cancel
           <HoverButton
             position="left"
@@ -187,7 +182,7 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
 
           <HoverButton
             position="right"
-            colorBefore="blue-500"
+            colorBefore="blue-200"
             colorAfter="white"
             buttonText="Set Name"
             onClick={handleEdit}
@@ -195,7 +190,7 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
         ) : (
           <HoverButton
             position="right"
-            colorBefore="blue-500"
+            colorBefore="blue-200"
             colorAfter="white"
             buttonText="Edit"
             onClick={handleEditState}
@@ -204,32 +199,20 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload }) {
         {InEdit && !inChangeBackground ? (
           <HoverButton
             position="top"
-            colorBefore="green-400"
+            colorBefore="gray-400"
             colorAfter="white"
             buttonText="Change Background"
             onClick={handleBackgroundState}
           />
         ) : null}
 
-
         {/* color */}
-        {inChangeBackground  ? (
-          <HoverButton
-            position="top-left"
-            colorBefore="gray-800"
-            colorAfter="white"
-            buttonText="Change Color"
-            onClick={enterChangeBackgroundColor}
-          />
-        ) : null}
         {inChangeBackgroundColor ? (
-          <HoverButton
-            position="top-right"
-            colorBefore="green-400"
-            colorAfter="white"
-            buttonText="Set Color"
-            onClick={handleBackgroundChangeColor}
-          />
+          <ul>
+            <li>
+              <button className="border-3 border-black bg-red-400"></button>
+            </li>
+          </ul>
         ) : null}
       </div>
     </div>

@@ -15,12 +15,13 @@ export default function JournalGrid({
   return (
     //passing down from Journal Select -> journalCard
     <div className="fixed inset-0 bg-[url('/images/journaldeepnight2.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-lg">
-      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 place-items-center px-6 py-10 gap-10 overflow-y-auto h-screen">
+      <div className="relative z-10 grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 place-items-center px-6 py-10 gap-2 overflow-y-auto h-screen">
         <JournalCreateCard
           onSubmit={Create}
           className="justify-self-center"
           journals={journals}
         />
+        <div className="mt-15 sm:absolute"></div>
         {journals.map((journal) => (
           <JournalCard
             key={journal._id}
@@ -28,6 +29,7 @@ export default function JournalGrid({
             onDelete={Delete}
             onEdit={Edit}
             onImageUpload={Upload}
+            className={"mt-6"}
           />
         ))}
       </div>

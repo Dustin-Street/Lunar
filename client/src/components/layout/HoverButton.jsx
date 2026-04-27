@@ -7,6 +7,7 @@ export default function HoverButton({
   onClick = () => {},
   position = "center", // 'left', 'center', 'right'
   transform = "leftToRight",
+  className,
 }) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -126,7 +127,7 @@ export default function HoverButton({
               onClick();
             }}
             style={{ backgroundColor: bgColor, color: textColor }}
-            className="p-20 text-sm md:text-base rounded-lg hover:opacity-80 active:opacity-70 font-semibold transition-opacity touch-manipulation"
+            className={`p-20 text-sm md:text-base rounded-lg hover:opacity-80 active:opacity-70 font-semibold transition-opacity touch-manipulation ${className}`}
           >
             {buttonText}
           </button>

@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import LunarButton from "../layout/LunarButton";
+import HoverButton from "../layout/HoverButton";
 /**
  * Reusable form component for creating new journals
  * Handles its own title state and validation
@@ -49,13 +50,17 @@ export default function JournalCreateCard({
     }
   };
 
+  const cancelCreate = () => {
+    setCollapsed(true);
+  };
+
   const callpsedCreateCard = () => {
     return;
   };
   return (
     <>
       {collapsed ? (
-        <div className="absolute top-4 z-20">
+        <div className="absolute top-4 z-10">
           <button
             className="border-4 border-blue-200 bg-linear-60 from-blue-400  to-blue-200 rounded-b-2xl mt-8 p-4 text-lg text-white hover:bg-linear hover:from-blue-400 hover:to-blue-600"
             onClick={() => {
@@ -67,45 +72,54 @@ export default function JournalCreateCard({
         </div>
       ) : (
         <div
-          className={`flex-col shrink text-center place-items-center group border-4 border-blue-200 bg-linear-to-r mt-8 from-gray-600 py-40 via-gray-700 to-gray-900 mx-0  text-amber-100 w-full max-h-sm min-w-65 max-w-xs lg:max-w-sm my-0 font-medium rounded-lg ${className}`}
+          className={`grid relative place-items-center group border-4 bg-opacity-75
+             border-blue-200 px-12 py-48 bg-linear-90 from-gray-700 to-gray-900
+             
+             text-amber-100 font-medium rounded-lg w-full max-w-xs sm:max-w-sm hover:shadow-2xl
+             hover:shadow-blue-400 transition-shadow m-0 ${className} `}
         >
-          <input
-            name="title"
-            type="text"
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              setShowError(false);
-            }}
-            onKeyDown={handleKeyDown}
-            placeholder="Journal Title"
-            className={`
-                    bg-neutral-100 rounded-lg m-0 px-4  py-2 text-black text-center 
-                     outline-none transition-all duration-300 shrink
+          <div
+            name="interactionButtons"
+            className="md:group-hover:opacity-100 md:opacity-10 transition-opacity duration-2200 ease-out group-hover:duration-300 group-hover:ease-in"
+          >
+            <h3 className="relative justify-self-center mb-4 text-lg sm:text-xl">
+              Create Journal
+            </h3>
+            <input
+              name="title"
+              type="text"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setShowError(false);
+              }}
+              onKeyDown={handleKeyDown}
+              placeholder="Journal Title"
+              className={`
+                    bg-neutral-100 rounded-lg m-0 px-2  py-2 text-black text-center w-full max-w-full
+                     outline-none transition-all duration-300 shrink justify-self-center
                     ${
                       showError
                         ? "border-4 border-red-400 animate-pulse"
                         : "border-2 border-transparent focus:border-blue-400"
                     }
                 `}
-          />
-          <h3 className="mb-6 text-lg sm:text-xl">Create New Journal</h3>
-          <button onClick={handleSubmit} className="flex flex-col items-center">
-            <svg
-              className="border-transparent hover:border-blue-400 hover:border-4 shadow-2xl shadow-blue-400 rounded-3xl w-16 h-16 sm:w-20 sm:h-20 md:w-25 md:h-25 group-hover:text-blue-300 text-blue-200 transition-colors"
-              fill="none"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 5v14M5 12h14"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+            />
+            <HoverButton
+              position="left"
+              colorBefore="blue-200"
+              colorAfter="gray-600"
+              buttonText="Create"
+              onClick={handleSubmit}
+            />
+            <HoverButton
+              position="right"
+              colorBefore="gray-600"
+              colorAfter="white"
+              buttonText="Cancel"
+              onClick={cancelCreate}
+            />
+          </div>
         </div>
       )}
     </>

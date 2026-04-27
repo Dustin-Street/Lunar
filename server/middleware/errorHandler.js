@@ -22,19 +22,5 @@ export const errorHandler = async (err, req, res, next) => {
     },
   };
 
-  try {
-    const savedError = await ErrorLog.create(errorRecord);
-    if (req.userId || req.user) {
-      await User.findByIdAndUpdate(req.userId || req.user._id, {
-        $push: { accountErrors: savedError._id },
-      });
-    }
-  } catch (saveErr) {
-    console.error("Error logging failure:", saveErr);
-  }
-
-  console.error(err);
-  if (res.headersSent) return next(err);
-
-  res.status(status).json({ success: false, message });
+  res.end(res.sentry + "\n");
 };
