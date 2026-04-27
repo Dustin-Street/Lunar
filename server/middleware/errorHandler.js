@@ -9,18 +9,8 @@ export const errorHandler = async (err, req, res, next) => {
   const status = err.status || 500;
   const message = err.message || "Internal server error";
 
-  const errorRecord = {
-    user: req.userId || null,
-    route: req.originalUrl,
-    method: req.method,
-    status,
-    message,
-    stack: req.app.get("env") === "production" ? undefined : err.stack,
-    context: {
-      query: req.query,
-      body: req.body,
-    },
-  };
+  console.error(err);
+  if (res.headersSent) return next(err);
 
-  res.end(res.sentry + "\n");
+  res.status(status).json({ success: false, message });
 };

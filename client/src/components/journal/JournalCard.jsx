@@ -123,8 +123,8 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload, className }) {
       style={CustomizationSwitch(journalBackground)}
       className={`grid relative place-items-center group border-4 bg-opacity-75
              border-blue-200 px-12 py-48
-             text-amber-100 font-medium rounded-lg w-full max-w-xs sm:max-w-sm hover:shadow-2xl
-             hover:shadow-blue-400 transition-shadow m-0 ${className}`}
+             text-amber-100 font-medium rounded-lg w-full max-w-80 max-h-60 hover:shadow-2xl
+             hover:shadow-blue-400 transition-shadow m-1 ${className}`}
       {...(!InEdit && { onClick: handleNavigate })}
     >
       <h3 className="mb-6 text-lg sm:text-xl text-center">

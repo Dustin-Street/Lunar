@@ -73,16 +73,15 @@ export default function JournalCreateCard({
       ) : (
         <div
           className={`grid relative place-items-center group border-4 bg-opacity-75
-             border-blue-200 px-12 py-48 bg-linear-90 from-gray-700 to-gray-900
-             
-             text-amber-100 font-medium rounded-lg w-full max-w-xs sm:max-w-sm hover:shadow-2xl
+             border-blue-200 px-12 py-48 bg-linear-90 from-gray-700 to-gray-900 max-w-80 max-h-60
+             text-amber-100 font-medium rounded-lg w-full  hover:shadow-2xl
              hover:shadow-blue-400 transition-shadow m-0 ${className} `}
         >
           <div
             name="interactionButtons"
             className="md:group-hover:opacity-100 md:opacity-10 transition-opacity duration-2200 ease-out group-hover:duration-300 group-hover:ease-in"
           >
-            <h3 className="relative justify-self-center mb-4 text-lg sm:text-xl">
+            <h3 className="relative justify-self-center mb-auto text-lg sm:text-xl">
               Create Journal
             </h3>
             <input
@@ -96,8 +95,8 @@ export default function JournalCreateCard({
               onKeyDown={handleKeyDown}
               placeholder="Journal Title"
               className={`
-                    bg-neutral-100 rounded-lg m-0 px-2  py-2 text-black text-center w-full max-w-full
-                     outline-none transition-all duration-300 shrink justify-self-center
+                    bg-neutral-100 rounded-lg px-2  py-2 text-black text-center w-full max-w-full
+                     outline-none transition-all duration-300 shrink justify-self-center my-12
                     ${
                       showError
                         ? "border-4 border-red-400 animate-pulse"
@@ -105,6 +104,7 @@ export default function JournalCreateCard({
                     }
                 `}
             />
+
             <HoverButton
               position="left"
               colorBefore="blue-200"

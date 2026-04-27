@@ -285,7 +285,7 @@ export function useJournals() {
         `Are you sure you want to delete that? This action cannot be undone.`,
       );
 
-      setToggleButton(true, "Confirm Delete", async () => {
+      setToggleButton(true, "Confirm", async () => {
         try {
           const response = await axios.delete(
             `${API_BASE_URL}/journals/${journalId}`,

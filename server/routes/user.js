@@ -145,7 +145,6 @@ router.post(
     const refreshToken = getRefreshToken(payload);
 
     user.refreshToken.push({ refreshToken });
-    await user.save();
 
     res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
 
@@ -282,14 +281,14 @@ router.post(
     if (!req.body.email || !req.body.password) {
       throw createHttpError(400, "Email and password are required");
     }
-
+    console.log("inside login");
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(req.body.email)) {
       throw createHttpError(400, "Please enter a valid email address");
     }
 
     req.body.email = req.body.email.toLowerCase();
-
+    console.log("before passport auth");
     passport.authenticate(
       "local",
       { session: false },
@@ -315,7 +314,7 @@ router.post(
             ),
           );
         }
-
+        console.log("after passport auth");
         try {
           // Build consistent JWT payload
           const payload = buildJwtPayload(user);
@@ -334,11 +333,11 @@ router.post(
           // Send refresh token cookie
           res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
 
-          // console.log(
-          //   `Login successful! Sending back token and user info - User: ${user.username}, Email: ${user.email}, ID: ${user._id}, Journals: ${user.journals.length} journals, }`,
-          // );
-          // console.log("User profile info:", user.profile);
-
+          console.log(
+            `Login successful! Sending back token and user info - User: ${user.username}, Email: ${user.email}, ID: ${user._id}, Journals: ${user.journals.length} journals, }`,
+          );
+          console.log("User profile info:", user.profile);
+          console.log("before sucess response");
           // Send access token + user info
           return res.status(200).json({
             success: true,

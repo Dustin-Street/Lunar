@@ -51,59 +51,68 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
     );
   }
   return (
-    <div className="mb-2">
+    <div>
       {stats?.hasStatistics === true ? (
         <div className=" bg-gray-700/10 rounded-lg p-6 max-w-2xl text-center justify-self-center text-amber-100  animate-fadeIn md:text-xl lg:text-lg font-serif">
-          <h2 className=" md:text-2xl lg:text-3xl">
-            {user?.username || "User"}
-          </h2>
-          <h2>Activity Report</h2>
-          <ul className="m-4 space-y-4">
-            <li className="flex justify-between items-center border px-4 py-2 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
-              <span>Entries this month</span>
-              <span className="text-blue-200 border px-3 py-1 rounded-2xl m-3  bg-linear-60 from-gray-700 to-gray-900">
-                {stats?.statistics.monthlyEntries} Enties
+          <h2 className=" text-sm md:text-lg lg:text-2xl">{user?.username}</h2>
+          <h2 className=" text-sm md:text-lg lg:text-2xl">Activity Report</h2>
+          <ul className="mt-2 space-y-2">
+            <li className="flex justify-between items-center border p-2 lg:px-4 lg:py-3 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
+              <span className="text-sm md:text-lg lg:text-2xl">
+                Entries this month
+              </span>
+              <span className="text-blue-200 border px-3 py-2 rounded-2xl bg-linear-60 from-gray-700 to-gray-900 me-3 ">
+                {stats?.statistics.monthlyEntries}
               </span>
             </li>
 
-            <li className="flex justify-between items-center border px-4 py-3 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
-              <span>Most common day</span>
-              <span className="text-blue-200 border px-3 py-1 rounded-2xl m-2  bg-linear-60 from-gray-700 to-gray-900">
+            <li className="flex justify-between items-center border p-2 lg:px-4 lg:py-3 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
+              <span className="text-sm md:text-lg lg:text-2xl">
+                Most common day
+              </span>
+              <span className="text-blue-200 border px-3 py-2 rounded-2xl  bg-linear-60 from-gray-700 to-gray-900">
                 {stats?.statistics.commonDay}
               </span>
             </li>
 
-            <li className="flex justify-between items-center border px-4 py-2 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
-              <span>Most common mood is</span>
-              <span className="text-blue-200 border px-3 py-1 rounded-2xl m-3  bg-linear-60 from-gray-700 to-gray-900">
+            <li className="flex justify-between items-center border p-2 lg:px-4 lg:py-3 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
+              <span className="me-1 text-sm md:text-lg lg:text-2xl">
+                Most common mood{" "}
+              </span>
+              <span className="text-blue-200 border px-3 py-2 rounded-2xl  bg-linear-60 from-gray-700 to-gray-900">
                 {stats?.statistics.commonMood}
               </span>
             </li>
           </ul>
+          <LunarButton
+            text={"Start Journaling"}
+            onclick={() => {
+              navigate("/JournalSelect");
+            }}
+          />
         </div>
       ) : (
         <div className="text-center">
-          <h2 className="m-4 md:text-2xl lg:text-3xl text-center text-amber-100 font-bold">
+          <h2 className="m-4 text-sm md:text-lg lg:text-2xl text-center text-amber-100 font-bold">
             {user?.username || "User"}
           </h2>
           <div
             name="welcomeNewUser"
-            className="text-amber-100 text-md md:text-lg"
+            className="text-amber-100  text-sm md:text-lg lg:text-2xl"
           >
             <p>
               Welcome to Lunar, core journaling feature are free to use get
               started here
             </p>
           </div>
+          <LunarButton
+            text={"Start Journaling"}
+            onclick={() => {
+              navigate("/JournalSelect");
+            }}
+          />
         </div>
       )}
-
-      <LunarButton
-        text={"Start Journaling"}
-        onclick={() => {
-          navigate("/JournalSelect");
-        }}
-      />
     </div>
   );
 }

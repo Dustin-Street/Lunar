@@ -97,9 +97,11 @@ export default function useAccount() {
           withCredentials: true, // cookie comes back here
         },
       );
-
+      console.log("after api call");
       if (response.data.success) {
+        console.log("response data success after");
         if (login) {
+          console.log("login true");
           login(
             {
               _id: response.data.user._id,
@@ -111,12 +113,13 @@ export default function useAccount() {
             response.data.expiresIn,
           );
         }
-
-        navigate("/journalSelect").then(() => {
+        console.log("response data success after");
+        navigate("/").then(() => {
           setFlashMessage(
             "Login successful, " + response.data.user.username + "!",
           );
         });
+        console.log("after navigate");
       }
     } catch (err) {
       console.error("Login error:", err);

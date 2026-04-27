@@ -64,15 +64,16 @@ export default function Home() {
   }, [accessToken]);
 
   return (
-    <div className="">
+    <div className="h-dvh lg:h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat  flex items-center justify-center">
       {loading ? (
-        <div className="h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat flex items-center justify-center">
+        <div className=" flex items-center justify-center">
           <LoadingOverlay />
         </div>
       ) : (
-        <div className="h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat text-white px-4 py-4">
+        <div className=" text-white">
           {/* HERO SECTION */}
-          <div className="bg-gray-800/70 rounded-2xl p-8 max-w-3xl mx-auto m-2 max-h-screen shadow-md shadow-blue-200 space-y-2">
+
+          <div className="bg-gray-800/70 rounded-2xl pt-0 p-4 max-w-3xl mx-auto m-2 max-h-screen h-screen lg:h-3/4 shadow-md shadow-blue-200 space-y-2">
             <section className="flex flex-col items-center text-center space-y-2 ">
               {!isAuthenticated ? (
                 <LoginSignupCard />
@@ -84,34 +85,16 @@ export default function Home() {
                 />
               )}
             </section>
+            <section className="text-center">
+              {" "}
+              <h3 className="text-sm  lg:text-2xl  font-serif text-amber-100">
+                {quote[random]?.text}
+              </h3>
+              <p className="italic text-xs lg:text-2xl mt-0 text-blue-200">
+                — {quote[random]?.author}
+              </p>
+            </section>
           </div>
-
-          {/* SUPPORT SECTION */}
-          <section className="bg-gray-800/70 rounded-2xl p-8 max-w-3xl mx-auto my-2 shadow-md text-center mt-4 shadow-blue-200 space-y-4">
-            <p className="text-blue-200 leading-relaxed">
-              Lunar is free to use — but it isn’t free to build or maintain. If
-              you find value in Lunar, consider supporting the project by
-              donating.
-            </p>
-
-            <p className="text-blue-200 leading-relaxed">
-              Ads help cover operational costs so core features stay free. Your
-              support helps us continue improving the platform.
-            </p>
-            <p className="text-amber-100 font-serif">
-              Thank you for being part of our community.
-            </p>
-          </section>
-
-          {/* QUOTE SECTION */}
-          <section className="bg-gray-800/70 rounded-2xl p-6 max-w-xl mx-auto mt-1 text-center shadow-md shadow-blue-200 animate-fadeIn">
-            <h3 className="text-xl md:text-2xl font-serif text-amber-100">
-              {quote[random]?.text}
-            </h3>
-            <p className="italic mt-0 text-blue-200">
-              — {quote[random]?.author}
-            </p>
-          </section>
         </div>
       )}
     </div>
