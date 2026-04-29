@@ -67,8 +67,7 @@ router.post("/createJournal", authenticateToken, async (req, res, next) => {
   try {
     const { title } = req.body;
     const userId = req.user.id;
-    console.log("Creating journal for userID:", userId, "with title:", title);
-
+  
     const newJournal = new Journal({ title: title, userID: userId });
 
     const savedJournal = await newJournal.save();
@@ -122,7 +121,7 @@ router.put("/editEntry", authenticateToken, async (req, res, next) => {
       { pages: pages, mood: mood, userID: userId },
       { new: true },
     );
-    console.log(updatedEntry);
+    
 
     if (!updatedEntry) {
       return res.status(404).json({ message: "Journal or Entry not found" });
@@ -137,14 +136,12 @@ router.put("/editEntry", authenticateToken, async (req, res, next) => {
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
   const { title } = req.body;
-  console.log(`hit route - ID :${id} with title of ${title}`);
   try {
     const updatedJournal = await Journal.findByIdAndUpdate(
       id,
       { title: title },
       { new: true },
     );
-    console.log(`${updatedJournal} -> being sent to client`);
 
     if (!updatedJournal) {
       return res.status(404).json({ message: "Journal not found" });

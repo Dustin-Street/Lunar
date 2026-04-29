@@ -5,7 +5,7 @@ export default function JournalEntryCard({ journalEntries, changeEntry }) {
       <div>
         {journalEntries.map((entry, index) => (
           <div
-            className="border-2 my-3 border-blue-200 p-5 bg-linear-30 from-gray-500  to-gray-700 rounded-lg text-amber-100 text-center hover:shadow-2xs hover:shadow-amber-100"
+            className="border-2 my-3 border-blue-200 p-5 bg-linear-30 hover:shadow-md hover:shadow-amber-100 from-gray-500  to-gray-700 rounded-lg text-amber-100 text-center"
             key={index}
           >
             <p>{entry.pages?.[0]?.text?.slice(0, 20) ?? ""}...</p>

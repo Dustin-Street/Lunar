@@ -363,42 +363,7 @@ export function useJournals() {
    * @param {string} newImage - the new journal background Image to replace the old background Image
    */
 
-  //expects a string can be a Hex code as well to be stored in DB
-  const uploadImage = useCallback(
-    async (journalId, newBackground, method) => {
-      //schema expects type : String enum ['Url' , 'Hex'], Value : 'url or hex value'
-      try {
-        const response = await axios.put(
-          `${API_BASE_URL}/journals/${journalId}`,
-          { type: method, value: newBackground },
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
-        if (response.data) {
-          setJournals((prevJournals) =>
-            prevJournals.map((journal) =>
-              journal._id === journalId ? response.data : journal,
-            ),
-          );
-          setFlashMessage("Background Successfully Changed", 3000);
-          setToggleButton(false);
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error("Error updating background", error);
-        setFlashMessage(
-          `Error updating journal, Supported types : PNG - JPG file size limit of 10MB`,
-        );
-        return false;
-      }
-    },
-    [setFlashMessage, setToggleButton, accessToken],
-  );
+  //expects a string can be a Hex code
 
   return {
     journals,
@@ -408,7 +373,6 @@ export function useJournals() {
     createJournal,
     deleteJournal,
     editJournal,
-    uploadImage,
     fetchSingleJournal,
     createEntry,
     editEntry,

@@ -54,7 +54,6 @@ export default function Home() {
             headers: { Authorization: `Bearer ${accessToken}` },
           },
         );
-        console.log(`axios response : ${response.data}`);
         setStatistics(response.data);
       } catch (error) {
         console.error(error);

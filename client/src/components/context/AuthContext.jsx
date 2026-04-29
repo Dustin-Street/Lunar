@@ -37,11 +37,16 @@ const AuthContext = createContext(null);
  * @returns {JSX.Element} AuthProvider component wrapping the application.
  */
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({ profile: {} }); //with  profile for profile.profileImage
+  const [user, setUser] = useState();
 
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState(null);
   const { setFlashMessage } = useFlashMessage();
+
+  //token state
+  const [tokenExpiration, setTokenExpiration] = useState(null);
+  let expiresIn; // initial time from backend in seconds  900
+  let tokenExpirationTimestamp; //convertion to Date.now() * 1000
 
   /**
    * Runs once on app load to verify the user's session using the refresh token cookie.
@@ -65,6 +70,50 @@ export const AuthProvider = ({ children }) => {
 
     verifyUser();
   }, []);
+
+  useEffect(() => {
+    const setTokenAutoRefresh = async () => {
+      if (!tokenExpiration) {
+        return;
+      }
+
+      const now = Date.now();
+
+      const timeUntilExpire = tokenExpiration - now;
+
+      //30 seconds before to disallow disruptions
+      const refreshTime = timeUntilExpire - 30000;
+
+      if (refreshTime <= 0) {
+        try {
+          refreshToken();
+        } catch (err) {
+          logger(
+            "warning",
+            "failed to authorize your account, redirecting",
+            err,
+          );
+          logout();
+        }
+
+        const timer = setTimeout(() => {
+          try {
+            refreshToken();
+          } catch (err) {
+            logger(
+              "warning",
+              "failed to authorize your account, redirecting",
+              err,
+            );
+            logout();
+          }
+        }, refreshTime);
+
+        return;
+      }
+    };
+    setTokenAutoRefresh();
+  }, [tokenExpiration]);
 
   /**
    * Attempts to refresh the user's access token using the HTTP-only refresh token cookie.
@@ -93,6 +142,12 @@ export const AuthProvider = ({ children }) => {
         });
 
         setUser(userRes.data.user);
+
+        expiresIn = userRes.data.user.tokenExpiry; // 900 seconds
+
+        tokenExpirationTimestamp = Date.now() + expiresIn * 1000;
+
+        setTokenExpiration(tokenExpirationTimestamp);
       }
     } catch (err) {
       setFlashMessage("Authenication Error :", err);
@@ -113,6 +168,11 @@ export const AuthProvider = ({ children }) => {
   const login = (user, token, expiresIn) => {
     setAccessToken(token);
     setUser(user);
+    expiresIn = user.tokenExpiry; // 900 seconds
+
+    tokenExpirationTimestamp = Date.now() + expiresIn * 1000;
+
+    setTokenExpiration(tokenExpirationTimestamp);
   };
 
   /**

@@ -94,6 +94,8 @@ router.post(
     body("username").escape().isLength({ min: 2, max: 20 }),
   ]),
   asyncHandler(async (req, res, next) => {
+    //test
+    console.log(`after sanitization check: ${(username, password)}`);
     const { password, username } = req.body;
     const email = req.body.email?.toLowerCase?.();
 
@@ -273,6 +275,7 @@ router.get(
         profile: user.profile,
         dateCreated: user.dateCreated,
         statistics: user.statistics,
+        tokenExpiry: process.env.JWT_TOKEN_EXPIRY,
       },
     });
   }),
@@ -284,7 +287,6 @@ router.post(
     if (!req.body.email || !req.body.password) {
       return next(createHttpError(400, "Email and password are required"));
     }
-    console.log("inside login");
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(req.body.email)) {
       return next(createHttpError(400, "Please enter a valid email address"));

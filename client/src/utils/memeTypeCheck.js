@@ -6,7 +6,6 @@
  * This function checks if the provided file is of an allowed type based on its MIME type and file extension. It uses a predefined list of allowed MIME types and extensions, which can be overridden by the AllowedTypes parameter. The function returns true if the file's MIME type or extension matches the allowed types, and false otherwise.
  */
 export function memeTypeCheck(file, AllowedTypes) {
-  console.log(file);
   // Default allowed types
   const defaultTypes = {
     "image/jpeg": "jpg",

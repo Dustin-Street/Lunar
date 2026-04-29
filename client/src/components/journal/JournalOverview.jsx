@@ -21,6 +21,7 @@ export default function JournalOverview() {
 
   const [createToEdit, setCreateToEdit] = useState(false);
   const [sideBarOpened, setSideBarOpen] = useState(false);
+  const [showButtonOnScroll, setButtonOnScroll] = useState(false);
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [pages, setPages] = useState([""]);
@@ -61,6 +62,21 @@ export default function JournalOverview() {
     fetchSingleJournal(id);
   }, [id, sideBarOpened]);
 
+  //handles listening for scroll to show back button if burried in content (entries) to be able to quickly go back in wanted
+  useEffect(() => {
+    function handleScroll() {
+      if (window.scrollY > 100 && sideBarOpened === true) {
+        setButtonOnScroll(true);
+      }
+      setTimeout(() => {
+        setButtonOnScroll(false);
+      }, 3000);
+    }
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [sideBarOpened,showButtonOnScroll]);
+
   //change the entry from the indevidual entry card side panel
   const changeEntry = useCallback((entry) => {
     setActiveEntrySelected(entry);
@@ -88,15 +104,6 @@ export default function JournalOverview() {
       prev.map((page, i) => (i === currentPageIndex ? currentState : page)),
     );
   };
-
-  //for page increment and decrement if used later
-  // const handlePageChangeUp = useCallback(() => {
-  //   setCurrentPageIndex(prev => Math.min(prev + 1, 10));
-  // }, []);
-
-  // const handlePageChangeDown = useCallback(() => {
-  //   setCurrentPageIndex(prev => Math.max(prev - 1, 0));
-  // }, []);
 
   //creation logic
   const handleCreateEntry = useCallback(() => {
@@ -128,13 +135,13 @@ export default function JournalOverview() {
         name="EntrySidePanel"
         className={
           sideBarOpened
-            ? `fixed flex inset-0 top-12 z-50 bg-gray-800 border-r-2 border-amber-100
-           overflow-y-auto justify-center
+            ? `fixed flex flex-col space-y-1 inset-0 top-12 z-50 bg-gray-800 border-r-2 border-amber-100
+           overflow-y-auto 
            md:static md:inset-auto md:top-0 md:w-1/2`
             : "hidden"
         }
       >
-        <div name="entryGrid" className="grid-cols-2 mx-3">
+        <div name="entryGrid" className="mx-0 md:mx-2 w-full ">
           <JournalEntryCard
             journalEntries={journalEntries}
             changeEntry={changeEntry}
@@ -143,7 +150,9 @@ export default function JournalOverview() {
         </div>
         <button
           onClick={openSideBar}
-          className="text-center text-lg lg:text-2xl bg-gray-600 text-blue-200 border  border-blue-200 p-4 shadow-blue-100 shadow-2xs justify-self-center self-end max-h-16 rounded-t-lg hover:bg-gray-700 hover:text-blue-400 hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
+          className={`text-center text-lg lg:text-2xl bg-gray-600 text-blue-200 border  border-blue-200 p-4
+             shadow-blue-100 shadow-2xs  max-h-16 rounded-t-lg hover:bg-gray-700 hover:text-blue-400 hover:border-blue-400
+              hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab ${showButtonOnScroll ? "fixed top-0 left-1/2" : " mt-auto"}`}
         >
           Back
         </button>

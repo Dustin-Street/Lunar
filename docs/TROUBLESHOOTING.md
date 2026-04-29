@@ -3,6 +3,7 @@
 Solutions to common issues and problems when running or developing Insight.
 
 ## Table of Contents
+
 1. [Setup Issues](#setup-issues)
 2. [Authentication Errors](#authentication-errors)
 3. [API & Network Errors](#api--network-errors)
@@ -19,6 +20,7 @@ Solutions to common issues and problems when running or developing Insight.
 **Cause:** Node.js/npm not installed or not in system PATH
 
 **Solution:**
+
 1. Install Node.js from [nodejs.org](https://nodejs.org/) (includes npm)
 2. Restart your terminal
 3. Verify: `node --version` and `npm --version`
@@ -30,6 +32,7 @@ Solutions to common issues and problems when running or developing Insight.
 **Cause:** Dependencies not installed
 
 **Solution:**
+
 1. In the `server` directory, run:
    ```bash
    npm install
@@ -44,6 +47,7 @@ Solutions to common issues and problems when running or developing Insight.
 **Cause:** Environment file missing
 
 **Solution:**
+
 1. Create `server/.env` file
 2. Add required variables:
    ```
@@ -67,6 +71,7 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
 **Cause:** Token is missing, expired, or invalid
 
 **Symptoms:**
+
 - API calls return 401 status
 - "Unauthorized" message in response
 - Can't access protected endpoints
@@ -74,9 +79,11 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
 **Solutions:**
 
 1. **Check request headers:**
+
    ```
    Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
    ```
+
    - Token must be present
    - Format must be `Bearer <token>` (with space)
 
@@ -98,6 +105,7 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
    - Verify format is correct
 
 **Debug Steps:**
+
 ```javascript
 // In browser console
 // Access tokens are stored in-memory in AuthContext in this app,
@@ -115,6 +123,7 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
 **Cause:** Email or password is incorrect
 
 **Symptoms:**
+
 - Login returns 401 status
 - "Invalid credentials" error message
 
@@ -139,10 +148,11 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
      ```
 
 4. **Test in Postman:**
+
    ```bash
    POST http://localhost:5050/api/user/login
    Content-Type: application/json
-   
+
    {
      "email": "test@example.com",
      "password": "testpassword123"
@@ -156,14 +166,17 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
 **Cause:** Email already has an account
 
 **Symptoms:**
+
 - Signup returns 409 Conflict
 - Can't create new account with that email
 
 **Solution:**
+
 1. Use a different email address, or
 2. Login with existing credentials instead
 
 **To reuse same email:**
+
 - Delete the user from MongoDB directly
 - Contact admin to reset the account
 
@@ -176,27 +189,32 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
 **Cause:** Frontend origin not whitelisted in backend CORS settings
 
 **Symptoms:**
+
 - Browser console shows CORS error
 - Network tab shows request blocked
 - API calls fail silently
 
 **Example Error:**
+
 ```
-Access to XMLHttpRequest at 'http://localhost:5050/api/...' 
+Access to XMLHttpRequest at 'http://localhost:5050/api/...'
 from origin 'http://localhost:5173' has been blocked by CORS policy
 ```
 
 **Solutions:**
 
 1. **Update `server/.env`:**
+
    ```env
    WHITELISTED_DOMAINS=http://localhost:5173,http://localhost:3000
    ```
+
    - Add your frontend URL
    - Separate multiple origins with comma
    - No spaces around comma
 
 2. **Restart backend server:**
+
    ```bash
    npm start
    ```
@@ -216,12 +234,14 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Cause:** Route not registered or backend not running
 
 **Symptoms:**
+
 - 404 Not Found error
 - "Cannot POST/GET /api/..." message
 
 **Solutions:**
 
 1. **Verify backend is running:**
+
    ```bash
    # In server directory
    npm start
@@ -236,8 +256,8 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 3. **Verify routes are imported:**
    - Check `server/server.js` has:
      ```javascript
-     import userRoute from './routes/user.js';
-     app.use('/api/user', userRoute);
+     import userRoute from "./routes/user.js";
+     app.use("/api/user", userRoute);
      ```
 
 4. **Test with cURL:**
@@ -254,6 +274,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Cause:** Backend unreachable (not running, wrong port, or network issue)
 
 **Symptoms:**
+
 - "NetworkError" in browser console
 - All API calls fail immediately
 - No response from server
@@ -261,17 +282,19 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Solutions:**
 
 1. **Start the backend:**
+
    ```bash
    cd server
    npm start
    ```
 
 2. **Verify backend is listening:**
+
    ```bash
    # From terminal, test if port 5050 is open
    # Windows PowerShell:
    Test-NetConnection localhost -Port 5050
-   
+
    # Mac/Linux:
    lsof -i :5050
    ```
@@ -297,6 +320,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Cause:** MongoDB not running or connection string is wrong
 
 **Symptoms:**
+
 - Backend crashes on startup
 - Error mentions "localhost:27017" or connection string
 - "Failed to connect to MongoDB" message
@@ -304,38 +328,45 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Solutions:**
 
 1. **Start MongoDB (Local):**
-   
+
    **Windows:**
+
    ```powershell
    # If installed via MSI
    net start MongoDB
-   
+
    # Or run mongod directly
    mongod
    ```
-   
+
    **Mac:**
+
    ```bash
    brew services start mongodb-community
    ```
-   
+
    **Linux:**
+
    ```bash
    sudo systemctl start mongod
    ```
 
 2. **Verify MongoDB is running:**
+
    ```bash
    mongo
    # or newer versions:
    mongosh
    ```
+
    - Should show MongoDB prompt
 
 3. **Check connection string in `.env`:**
+
    ```env
    MONGODB_URI=mongodb://localhost:27017/insight
    ```
+
    - For local: `mongodb://localhost:27017/<database_name>`
    - For Atlas: `mongodb+srv://user:password@cluster.mongodb.net/insight`
 
@@ -351,10 +382,12 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Cause:** Model imported before schema defined, or missing model registration
 
 **Symptoms:**
+
 - Crashes when trying to query database
 - Error mentions "Schema hasn't been registered"
 
 **Solution:**
+
 1. Verify `server/schema/` files export models correctly
 2. Restart server: `npm start`
 3. Check imports in route files match schema names
@@ -366,18 +399,22 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Cause:** Data saved to wrong database or connection issue
 
 **Symptoms:**
+
 - Can create records, but they disappear on restart
 - Can't retrieve previously created records
 
 **Solutions:**
 
 1. **Verify database name in connection string:**
+
    ```env
    MONGODB_URI=mongodb://localhost:27017/insight
    ```
+
    - All code must use same database name
 
 2. **Check MongoDB actually saved the data:**
+
    ```bash
    # Connect to MongoDB
    mongo
@@ -392,11 +429,12 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
    ```
 
 3. **Restart MongoDB to ensure persistence:**
+
    ```bash
    # Stop MongoDB
    mongod --shutdown
    # Or: net stop MongoDB (Windows)
-   
+
    # Start again
    mongod
    ```
@@ -410,6 +448,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Cause:** Trying to use data before it's loaded
 
 **Symptoms:**
+
 - JavaScript error in browser console
 - Page crashes or shows broken content
 - "Cannot read property 'X' of undefined"
@@ -417,12 +456,13 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Solutions:**
 
 1. **Check for data loading:**
+
    ```javascript
    // Bad: assumes data exists
    const userName = user.name;
-   
+
    // Good: check first
-   const userName = user?.name || 'Guest';
+   const userName = user?.name || "Guest";
    ```
 
 2. **Verify API response structure:**
@@ -444,6 +484,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Cause:** Frontend build error or missing dependencies
 
 **Symptoms:**
+
 - Browser shows blank page
 - Console has red errors
 - "Cannot find module" or syntax errors
@@ -460,6 +501,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
    - Check Network tab for failed requests
 
 3. **Reinstall dependencies:**
+
    ```bash
    cd client
    rm -rf node_modules
@@ -478,6 +520,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Cause:** Import path is incorrect
 
 **Symptoms:**
+
 - React component won't load
 - Error mentions "Cannot find module"
 - Page shows blank or error boundary
@@ -489,19 +532,21 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
    - Verify file name and path match exactly
 
 2. **Fix import statement:**
+
    ```javascript
    // Wrong
-   import { Home } from './components/home'; // file is Home.jsx
-   
+   import { Home } from "./components/home"; // file is Home.jsx
+
    // Correct
-   import Home from './components/Home';
+   import Home from "./components/Home";
    ```
 
 3. **Check component exports:**
+
    ```javascript
    // Correct
    export default Home;
-   
+
    // Or with named export
    export { Home };
    ```
@@ -515,8 +560,9 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Backend:**
 
 1. Check server console for request logs:
+
    ```javascript
-   console.log('Creating journal for userID:', userID);
+   console.log("Creating journal for userID:", userID);
    ```
 
 2. View logs in terminal where `npm start` runs
@@ -529,7 +575,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 2. Check for JavaScript errors (red text)
 3. Add console.log statements:
    ```javascript
-   console.log('Response:', response);
+   console.log("Response:", response);
    ```
 
 ---
@@ -555,6 +601,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Isolate frontend issues from backend:**
 
 1. **Test login:**
+
    ```bash
    curl -X POST http://localhost:5050/api/user/login \
      -H "Content-Type: application/json" \
@@ -562,6 +609,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
    ```
 
 2. **Test protected endpoint:**
+
    ```bash
    curl -X GET http://localhost:5050/api/user/me \
      -H "Authorization: Bearer eyJhbGc..."
@@ -578,6 +626,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Check if data exists in database:**
 
 1. Connect to MongoDB:
+
    ```bash
    mongo
    # or
@@ -585,25 +634,27 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
    ```
 
 2. Select database:
+
    ```javascript
    use insight
    ```
 
 3. Query data:
+
    ```javascript
    // Show all users
-   db.users.find().pretty()
-   
+   db.users.find().pretty();
+
    // Show all journals
-   db.journals.find().pretty()
-   
+   db.journals.find().pretty();
+
    // Find specific user
-   db.users.findOne({ email: "test@example.com" })
+   db.users.findOne({ email: "test@example.com" });
    ```
 
 4. Check indexes:
    ```javascript
-   db.users.getIndexes()
+   db.users.getIndexes();
    ```
 
 ---
@@ -613,10 +664,11 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 **Verify `.env` file is being read:**
 
 1. In `server.js`, add debug log:
+
    ```javascript
-   console.log('MongoDB URI:', process.env.MONGODB_URI);
-   console.log('JWT Secret exists:', !!process.env.JWT_SECRET);
-   console.log('Whitelisted domains:', process.env.WHITELISTED_DOMAINS);
+   console.log("MongoDB URI:", process.env.MONGODB_URI);
+   console.log("JWT Secret exists:", !!process.env.JWT_SECRET);
+   console.log("Whitelisted domains:", process.env.WHITELISTED_DOMAINS);
    ```
 
 2. Restart server and check output
@@ -636,6 +688,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 6. Review error response from API for details
 
 **Provide this info when asking for help:**
+
 - Exact error message
 - Steps to reproduce
 - Request being made (method, URL, headers)
