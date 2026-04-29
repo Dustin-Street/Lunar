@@ -36,11 +36,9 @@ export default function useAccount() {
       );
       // setting user account setting from user schema -> need to add more details to user schema for subscription and profile settings
       if (setUserAccountSettings(response.data)) {
-        console.log("User account settings fetched successfully");
       }
       // whatever you want to do with the data
     } catch (err) {
-      console.log("Fetch user account error:", err);
     } finally {
       setLoading(false);
     }
@@ -97,11 +95,8 @@ export default function useAccount() {
           withCredentials: true, // cookie comes back here
         },
       );
-      console.log("after api call");
       if (response.data.success) {
-        console.log("response data success after");
         if (login) {
-          console.log("login true");
           login(
             {
               _id: response.data.user._id,
@@ -113,16 +108,13 @@ export default function useAccount() {
             response.data.expiresIn,
           );
         }
-        console.log("response data success after");
         navigate("/").then(() => {
           setFlashMessage(
             "Login successful, " + response.data.user.username + "!",
           );
         });
-        console.log("after navigate");
       }
     } catch (err) {
-      console.error("Login error:", err);
       setFlashMessage(err.response?.data?.message || "Login failed");
     }
   };
@@ -144,7 +136,6 @@ export default function useAccount() {
 
       setFlashMessage(response.data.message);
     } catch (error) {
-      console.log(error, "from catch");
       const serverMsg =
         error?.response?.data?.message || error?.response?.data?.error;
 

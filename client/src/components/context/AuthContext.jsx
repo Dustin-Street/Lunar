@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
         setUser(userRes.data.user);
       }
     } catch (err) {
-      setFlashMessage("Authenication Error :", err.message);
+      setFlashMessage("Authenication Error :", err);
       logger("error", "Refresh token failed:", err);
       logout();
     }
@@ -111,11 +111,8 @@ export const AuthProvider = ({ children }) => {
    * @returns {void}
    */
   const login = (user, token, expiresIn) => {
-    console.log("login() received:", { user, token, expiresIn });
-
     setAccessToken(token);
     setUser(user);
-    console.log("User logged in:", user);
   };
 
   /**

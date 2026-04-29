@@ -1,5 +1,4 @@
 import ErrorLog from "../schema/errorLog.js";
-import User from "../schema/user.js";
 
 export const notFoundHandler = (req, res) => {
   res.status(404).json({ success: false, message: "Route not found" });
@@ -12,5 +11,5 @@ export const errorHandler = async (err, req, res, next) => {
   console.error(err);
   if (res.headersSent) return next(err);
 
-  res.status(status).json({ success: false, message });
+  res.status(status).json({ message: message, success: false });
 };

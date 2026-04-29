@@ -1,9 +1,13 @@
 //sentry - cloud storage for logs file contain include and setup logic
 import "./instrument.js";
 import * as Sentry from "@sentry/node";
+import sentryHandler from "./middleware/sentryHandler.js";
 //server.js
 import express from "express";
 const app = express();
+
+//security
+import { query, validationResult } from "express-validator";
 
 //database
 import "./database/connection.js";
@@ -71,7 +75,6 @@ app.use(passport.initialize());
 
 //logger to debug front-end to backend routing
 app.use((req, res, next) => {
-  console.log(req.method, req.url);
   next();
 });
 
@@ -83,7 +86,8 @@ app.use("/admin", adminRoutes);
 
 app.use(notFoundHandler);
 
-Sentry.setupExpressErrorHandler(app);
+//Sentry.setupExpressErrorHandler(app);
+//app.use(sentryHandler);
 app.use(errorHandler);
 
 app.listen(PORT, () => {

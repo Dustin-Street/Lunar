@@ -47,25 +47,6 @@ const UserSchema = new Schema({
       type: String,
       default: "Lunar",
     },
-    privacySettings: {},
-    notificationSettings: {
-      emailNotifications: {
-        type: Boolean,
-        default: true,
-      },
-      pushNotifications: {
-        type: Boolean,
-        default: true,
-      },
-      smsNotifications: {
-        type: Boolean,
-        default: false,
-      },
-    },
-    UserDataExport: {
-      type: Boolean,
-      default: false,
-    },
   },
 
   refreshToken: [Session],

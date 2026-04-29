@@ -1,4 +1,6 @@
 import { useState } from "react";
+import LunarButton from "../layout/LunarButton";
+import {useNavigate} from "react-router-dom";
 
 export default function ErrorPage({ error }) {
   const [errorinfo, setErrorinfo] = useState({
@@ -8,6 +10,8 @@ export default function ErrorPage({ error }) {
   if (error.statusCode === 404) {
     errorinfo.errorImage = "/images/404error.jpg";
   }
+
+  const navigate = useNavigate();
   return (
     <div className="justify-items-center justify-self-center h-screen w-full bg-neutral-100  flex flex-col items-center border-2 bg-[url('images/deepnight3.jpg')] py-10">
       <h1 className="text-sm md:text-2xl lg:text-3xl font-bold mb-2 mt-24 text-blue-200 ">
@@ -23,7 +27,9 @@ export default function ErrorPage({ error }) {
             alt=""
           />
         )}
+        <LunarButton text={"Home"} onclick={() => navigate("/")}/>
       </span>
     </div>
   );
 }
+

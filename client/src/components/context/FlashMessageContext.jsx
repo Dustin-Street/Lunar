@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 
 const FlashMessageContext = createContext(null);
 
@@ -16,11 +22,14 @@ export const FlashMessageProvider = ({ children }) => {
    * @param {string} [buttonText="Click Me"] - Text displayed on the button.
    * @param {function} [onClick=()=>{}] - Handler for button click.
    */
-  const setToggleButton = useCallback((buttonNeeded, buttonText = "Click Me", onClick = () => {}) => {
-    setShowButton(buttonNeeded);
-    setButtonText(buttonText);
-    setOnClick(() => onClick);
-  }, []);
+  const setToggleButton = useCallback(
+    (buttonNeeded, buttonText = "Click Me", onClick = () => {}) => {
+      setShowButton(buttonNeeded);
+      setButtonText(buttonText);
+      setOnClick(() => onClick);
+    },
+    [],
+  );
 
   /**
    * Sets how long the flash message stays visible.
@@ -44,7 +53,7 @@ export const FlashMessageProvider = ({ children }) => {
    */
   const setFlashMessage = useCallback((text) => {
     setMessage(text);
-    setMessageId(prev => prev + 1);
+    setMessageId((prev) => prev + 1);
   }, []);
 
   /**
@@ -82,7 +91,7 @@ export const FlashMessageProvider = ({ children }) => {
       onClick,
       durationTime,
       setDuration,
-    ]
+    ],
   );
 
   return (

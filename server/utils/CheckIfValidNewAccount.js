@@ -19,27 +19,29 @@ import asyncHandler from "../middleware/asyncHandler.js";
 
 export const CheckIfValidNewAccount = async (username, email, password) => {
   if (!email || !password) {
-    createHttpError(400, "Email and password are required");
+    return next(createHttpError(400, "Email and password are required"));
 
     const normalizedUsername = username.trim();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      throw createHttpError(400, "Please enter a valid email address");
+      return next(createHttpError(400, "Please enter a valid email address"));
     }
 
     if (password.length < 6) {
-      throw createHttpError(400, "Password must be at least 6 characters long");
+      return next(
+        createHttpError(400, "Password must be at least 6 characters long"),
+      );
     }
 
     if (!username || username.trim().length === 0) {
-      throw createHttpError(400, "Username is required");
+      return next(createHttpError(400, "username is required"));
     }
 
-    
-
     if (username.length < 2) {
-      throw createHttpError(400, "Username must be at least 2 characters long");
+      return next(
+        createHttpError(400, "username must be at least 2 characters long"),
+      );
     }
 
     let existingEmail;
@@ -47,16 +49,17 @@ export const CheckIfValidNewAccount = async (username, email, password) => {
       existingEmail = await User.findOne({ email });
     } catch (dbError) {
       console.error("Database error during email check:", dbError);
-      throw createHttpError(
-        500,
-        "Server error during registration. Please try again.",
+      return next(
+        createHttpError(500, "Error during registration process, try again."),
       );
     }
 
     if (existingEmail) {
-      throw createHttpError(
-        409,
-        "That email is already registered with an account",
+      return next(
+        createHttpError(
+          400,
+          "that email is taken by another user, try another",
+        ),
       );
     }
 
@@ -67,16 +70,20 @@ export const CheckIfValidNewAccount = async (username, email, password) => {
       });
     } catch (dbError) {
       console.error("Database error during username check:", dbError);
-      throw createHttpError(
-        500,
-        "Server error during registration. Please try again.",
+      return next(
+        createHttpError(
+          500,
+          "Server error during registration. Please try again",
+        ),
       );
     }
 
     if (usernameCount > 0) {
-      throw createHttpError(
-        409,
-        "That username is already taken. Please choose a different one",
+      return next(
+        createHttpError(
+          409,
+          "That username is already taken. Please choose a different one",
+        ),
       );
     }
   }

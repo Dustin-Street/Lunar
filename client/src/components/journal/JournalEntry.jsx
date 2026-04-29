@@ -51,7 +51,7 @@ export default function JournalEntry() {
     return (
 
         <div className="flex flex-col items-center justify-items-center h-dvh bg-[url(/images/jou)] bg-no-repeat bg-cover">
-            <h2 className="text-3xl font-semibold">Journal Entry</h2>
+            <h2 className="text-lg lg:text-2xl font-semibold">Journal Entry</h2>
             <textarea onMouseEnter={illuminateBorder} name="journalEntry" id="journalEntry" className={`bg-neutral-100 border-3 border-${borderColor} 
             rounded-2xl w-[80vw] h-[80vh] text-2xl mt-20 lg:max-w-[55dvh]`} onChange={handleInputChange}>{journalEntry}</textarea>
             <div className="space-x-35 mx-5 mb-5  mt-5">

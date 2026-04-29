@@ -1,3 +1,6 @@
+import * as Sentry from "@sentry/react";
+import "./instrument.js";
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -119,7 +122,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <FlashMessageProvider>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <Sentry.ErrorBoundary>
+        <RouterProvider router={router} />
+      </Sentry.ErrorBoundary>
     </AuthProvider>
   </FlashMessageProvider>,
 );

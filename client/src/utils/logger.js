@@ -34,6 +34,7 @@ export default function logger(level, message, meta = {}) {
 
   if (process.env.NODE_ENV !== "production") {
     console.log(`[${log.level.toUpperCase()}]`, log);
+    
   }
 
   return log;

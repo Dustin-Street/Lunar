@@ -14,7 +14,6 @@ export default function JournalCreateCard({
   const [showError, setShowError] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
-  console.log(journals);
   useEffect(() => {
     function manageCollapse() {
       if (journals.length > 0) {

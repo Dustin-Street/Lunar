@@ -27,7 +27,7 @@ export default function DeleteAccountForm({
 
   return (
     <form
-      className="flex flex-col items-center mx-0 relative"
+      className="flex flex-col items-center mx-0 relative pt-10"
       onSubmit={(e) => {
         e.preventDefault();
       }}
@@ -39,16 +39,15 @@ export default function DeleteAccountForm({
           value={userInputValidation}
           onChange={(e) => setUserInputValidation(e.target.value)}
           className={`w-full p-3 rounded-lg border bg-gray-800 text-amber-100
-      focus:outline-none focus:ring-2 focus:ring-blue-200
+      focus:outline-none focus:ring-2 focus:ring-blue-200 text-sm mt-8
       ${errorPulse ? "animate-pulse border-red-500 shadow-lg shadow-red-400" : ""}
     `}
         />
 
         <label
           htmlFor="confirm-delete"
-          className={`absolute left-3 top-1/2 -translate-y-1/2 text-red-400 
-      pointer-events-none transition-all duration-200
-      ${userInputValidation ? "text-xs top-[-26px] -translate-y-1" : ""}
+          className={`absolute left-3 top-[-26px] -translate-y-1 text-red-400 
+      pointer-events-none transition-all duration-200 text-sm ${errorPulse ? "animate-pulse" : ""} 
     `}
         >
           Confirm by typing "Delete My Account"
@@ -61,7 +60,7 @@ export default function DeleteAccountForm({
 
       <button
         type="button"
-        className="w-full lg:w-1/2 bg-red-400 text-black p-3 rounded-lg 
+        className="w-full lg:w-1/2 bg-red-400 text-black p-5 rounded-lg 
                hover:bg-red-400 hover:text-white transition duration-200 mt-2"
         onClick={handleStringVerification}
       >

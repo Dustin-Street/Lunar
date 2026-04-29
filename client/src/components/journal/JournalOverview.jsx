@@ -123,13 +123,13 @@ export default function JournalOverview() {
   }, [deleteEntry, pages, mood, journal._id]);
 
   return (
-    <div className="flex h-[calc(100vh-3rem)] overflow-hidden">
+    <div className="flex h-[calc(100vh-3rem)] justify-items-center  overflow-hidden">
       <div
-        name="EntryPanelSide"
+        name="EntrySidePanel"
         className={
           sideBarOpened
-            ? `fixed inset-0 top-12 z-50 bg-gray-800 border-r-2 border-amber-100
-           overflow-y-auto
+            ? `fixed flex inset-0 top-12 z-50 bg-gray-800 border-r-2 border-amber-100
+           overflow-y-auto justify-center
            md:static md:inset-auto md:top-0 md:w-1/2`
             : "hidden"
         }
@@ -143,36 +143,39 @@ export default function JournalOverview() {
         </div>
         <button
           onClick={openSideBar}
-          className="text-center text-2xl bg-gray-600 text-blue-200 border md:left-0 border-blue-200 p-4 shadow-blue-100 shadow-2xs rounded-t-lg fixed bottom-0 left-5/12 hover:bg-gray-700 hover:text-blue-400 hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
+          className="text-center text-lg lg:text-2xl bg-gray-600 text-blue-200 border  border-blue-200 p-4 shadow-blue-100 shadow-2xs justify-self-center self-end max-h-16 rounded-t-lg hover:bg-gray-700 hover:text-blue-400 hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
         >
           Back
         </button>
       </div>
       <div className="h-screen overflow-hidden bg-linear-to-r  from-gray-700 to-gray-900 w-full scrollbar-none">
-        <div name="mainJournalingButtons" className="">
+        <div
+          name="mainJournalingButtons"
+          className="flex flex-row justiy-items-center justify-center"
+        >
           {createToEdit ? (
             <>
               {" "}
               <button
                 onClick={openSideBar}
-                className="text-center text-2xl bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
-           shadow-blue-100 shadow-2xs rounded-b-lg relative lg:left-1/8 md:left-2/8 sm:left-3/8 left-10 z-10 hover:bg-gray-700 hover:text-blue-400
+                className="text-center text-lg bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
+           shadow-blue-100 shadow-2xs rounded-b-lg shrink hover:bg-gray-700 hover:text-blue-400
             hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
               >
                 Entries
               </button>
               <button
                 onClick={handleEditEntry}
-                className="text-center text-2xl bg-gray-600 text-blue-200 border border-blue-200 p-4 md:mx-2
-           shadow-blue-100 shadow-2xs rounded-b-lg relative lg:left-1/8 md:left-2/8 sm:left-3/8 left-15 z-10 hover:bg-gray-700 hover:text-blue-400
+                className="text-center text-lg bg-gray-600 text-blue-200 border border-blue-200 p-4 md:mx-2
+           shadow-blue-100 shadow-2xs rounded-b-lg shrink  hover:bg-gray-700 hover:text-blue-400 
             hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
               >
-                Edit
+                Save
               </button>
               <button
                 onClick={handledeleteEntry}
-                className="text-center text-2xl bg-red-300 text-white border border-red-600 p-4 md:mx-2
-           shadow-red-200 shadow-2xs rounded-b-lg relative lg:left-1/8 md:left-2/8 sm:left-3/8 left-20 z-10 hover:bg-red-400 hover:text-white
+                className="text-center text-lg bg-red-300 text-white border border-red-400 p-4 md:mx-2
+           shadow-red-200 shadow-2xs rounded-b-lg shrink hover:bg-red-400 hover:text-white
             hover:border-red-400 hover:shadow-sm hover:shadow-red-200 hover:cursor-grab"
               >
                 Delete
@@ -182,16 +185,16 @@ export default function JournalOverview() {
             <>
               <button
                 onClick={openSideBar}
-                className="text-center text-2xl bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
-           shadow-blue-100 shadow-2xs rounded-b-lg relative lg:left-1/8 md:left-2/8 sm:left-3/8 left-10 z-10 hover:bg-gray-700 hover:text-blue-400
+                className="text-center text-lg lg:text-2xl bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
+           shadow-blue-100 shadow-2xs rounded-b-lg shrink  hover:bg-gray-700 hover:text-blue-400
             hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
               >
                 Entries
               </button>
               <button
                 onClick={handleCreateEntry}
-                className="text-center text-2xl bg-gray-600 text-blue-200 border border-blue-200 p-4 md:mx-2
-           shadow-blue-100 shadow-2xs rounded-b-lg relative lg:left-1/8 md:left-2/8 sm:left-3/8 left-15 z-10 hover:bg-gray-700 hover:text-blue-400
+                className="text-center text-lg lg:text-2xl bg-gray-600 text-blue-200 border border-blue-200 p-4 md:mx-2
+           shadow-blue-100 shadow-2xs rounded-b-lg shrink hover:bg-gray-700 hover:text-blue-400
             hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
               >
                 Save
@@ -210,8 +213,8 @@ export default function JournalOverview() {
             spellCheck={true}
             className={
               sideBarOpened
-                ? "border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center text-lg md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
-                : "border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-lg md:text-md md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
+                ? "border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center text-sm md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
+                : "border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md  md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
             }
           ></textarea>
         </div>

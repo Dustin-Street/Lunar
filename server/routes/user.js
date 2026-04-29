@@ -19,6 +19,9 @@ import { computeCommonDay } from "../utils/computeCommonDay.js";
 import { computeCommonMood } from "../utils/computeCommonMood.js";
 import { computeMonthlyEntries } from "../utils/computeMonthlyEntries.js";
 
+//security
+import { sanitize } from "../security/sanitize.js";
+
 const router = express.Router();
 //authentication
 import passport from "passport";
@@ -75,19 +78,21 @@ router.get(
     };
 
     await User.findByIdAndUpdate(userId, { statistics: stats });
-    console.log(`sending user : ${user} `);
 
     //only send the neessisary parts of the schema
     const userStatistics = await User.findById(userId).select(
       "-password -refreshToken",
     );
-    console.log(`userStatistics : ${userStatistics}`);
     return res.status(200).json(userStatistics);
   }),
 );
 
 router.post(
   "/createUser",
+  sanitize([
+    body("password").escape().isLength({ min: 6 }),
+    body("username").escape().isLength({ min: 2, max: 20 }),
+  ]),
   asyncHandler(async (req, res, next) => {
     const { password, username } = req.body;
     const email = req.body.email?.toLowerCase?.();
@@ -95,7 +100,7 @@ router.post(
     try {
       await CheckIfValidNewAccount(email, username, password);
     } catch (validationError) {
-      return next(validationError);
+      return next(createHttpError(validationError));
     }
 
     const normalizedUsername = username.trim();
@@ -109,7 +114,6 @@ router.post(
     try {
       await user.save();
     } catch (saveError) {
-      console.error("Error saving user:", saveError);
       next(saveError);
       if (saveError.code === 11000) {
         if (saveError.keyPattern?.username) {
@@ -164,6 +168,7 @@ router.post(
 
 import jwt from "jsonwebtoken";
 import user from "../schema/user.js";
+import { body } from "express-validator";
 
 //create refreshToken route
 
@@ -224,8 +229,6 @@ router.post(
       // Send new refresh token cookie
       res.cookie("refreshToken", newRefreshToken, COOKIE_OPTIONS);
 
-      console.log("Refresh token successful! Sending back new token");
-
       res.send({ success: true, token, expiresIn: 900 });
     } catch (err) {
       if (err.name === "JsonWebTokenError") {
@@ -279,12 +282,12 @@ router.post(
   "/login",
   asyncHandler((req, res, next) => {
     if (!req.body.email || !req.body.password) {
-      throw createHttpError(400, "Email and password are required");
+      return next(createHttpError(400, "Email and password are required"));
     }
     console.log("inside login");
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(req.body.email)) {
-      throw createHttpError(400, "Please enter a valid email address");
+      return next(createHttpError(400, "Please enter a valid email address"));
     }
 
     req.body.email = req.body.email.toLowerCase();
@@ -333,11 +336,6 @@ router.post(
           // Send refresh token cookie
           res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
 
-          console.log(
-            `Login successful! Sending back token and user info - User: ${user.username}, Email: ${user.email}, ID: ${user._id}, Journals: ${user.journals.length} journals, }`,
-          );
-          console.log("User profile info:", user.profile);
-          console.log("before sucess response");
           // Send access token + user info
           return res.status(200).json({
             success: true,
@@ -368,7 +366,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) {
-      throw createHttpError(404, "User not found");
+      return next(createHttpError(404, "User not found"));
     }
 
     // Clear the user's refresh tokens
@@ -388,8 +386,6 @@ router.post(
 router.post(
   "/password-reset-request",
   asyncHandler(async (req, res) => {
-    console.log("inside of password-reset-request call");
-
     const { userEmail } = req.body;
 
     if (!userEmail) {
