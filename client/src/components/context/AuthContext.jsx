@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
   /**
    * Runs once on app load to verify the user's session using the refresh token cookie.
-   * Avoids storing access tokens in localStorage for security.
+   * Avoids storing access tokens in Storage for security.
    *
    * @returns {Promise<void>}
    */

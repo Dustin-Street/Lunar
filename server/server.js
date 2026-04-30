@@ -9,6 +9,9 @@ const app = express();
 //security
 import { query, validationResult } from "express-validator";
 
+import helmet from "helmet";
+import crypto from "crypto";
+
 //database
 import "./database/connection.js";
 
@@ -72,6 +75,46 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 //passport config
 
 app.use(passport.initialize());
+
+//helmet
+app.use((req, res, next) => {
+  res.locals.cspNonce = crypto.randomBytes(32).toString("base64");
+  next();
+});
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          (req, res) => `'nonce-${res.locals.cspNonce}'`,
+          process.env.FRONTEND_URL,
+        ],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'", // or use nonces for styles too
+        ],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: ["'self'", process.env.FRONTEND_URL, process.env.API_URL],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+    frameguard: { action: "deny" },
+    hidePoweredBy: true,
+    noSniff: true,
+    xssFilter: true,
+    hsts: {
+      maxAge: 60 * 60 * 24 * 365,
+      includeSubDomains: true,
+      preload: true,
+    },
+  }),
+);
 
 //logger to debug front-end to backend routing
 app.use((req, res, next) => {

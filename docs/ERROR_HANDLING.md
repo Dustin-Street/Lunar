@@ -42,15 +42,15 @@ Some errors include additional context:
 
 Understand what each status code means:
 
-| Code | Name | Meaning | What to Do |
-|------|------|---------|-----------|
-| 200 | OK | Request succeeded | Success, use response data |
-| 201 | Created | Resource created | Success, new record saved |
-| 400 | Bad Request | Invalid request format | Check request headers, body, parameters |
-| 401 | Unauthorized | Authentication required or failed | Add token to Authorization header or refresh token |
-| 404 | Not Found | Resource doesn't exist | Verify ID is correct, resource wasn't deleted |
-| 409 | Conflict | Resource already exists | Email taken, duplicate record |
-| 500 | Server Error | Backend error | Server crashed or database error, try again |
+| Code | Name         | Meaning                           | What to Do                                         |
+| ---- | ------------ | --------------------------------- | -------------------------------------------------- |
+| 200  | OK           | Request succeeded                 | Success, use response data                         |
+| 201  | Created      | Resource created                  | Success, new record saved                          |
+| 400  | Bad Request  | Invalid request format            | Check request headers, body, parameters            |
+| 401  | Unauthorized | Authentication required or failed | Add token to Authorization header or refresh token |
+| 404  | Not Found    | Resource doesn't exist            | Verify ID is correct, resource wasn't deleted      |
+| 409  | Conflict     | Resource already exists           | Email taken, duplicate record                      |
+| 500  | Server Error | Backend error                     | Server crashed or database error, try again        |
 
 ---
 
@@ -61,6 +61,7 @@ Understand what each status code means:
 **What it means:** Your request is malformed or missing required data.
 
 **Example response:**
+
 ```json
 {
   "message": "Email and password are required"
@@ -68,12 +69,14 @@ Understand what each status code means:
 ```
 
 **How to fix:**
+
 1. Check request body has all required fields
 2. Verify JSON syntax is correct
 3. Check data types match expectations (strings, numbers, objects)
 4. See [API Reference](API.md) for required fields per endpoint
 
 **Example request:**
+
 ```bash
 # Bad: Missing password field
 curl -X POST http://localhost:5050/api/user/createUser \
@@ -97,6 +100,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 **What it means:** You need to authenticate or your authentication is invalid.
 
 **Example response:**
+
 ```json
 {
   "message": "Unauthorized"
@@ -106,10 +110,11 @@ curl -X POST http://localhost:5050/api/user/createUser \
 **Common causes:**
 
 1. **Missing Authorization header**
+
    ```
    ❌ Wrong: No Authorization header
    GET /api/user/me
-   
+
    ✅ Correct: Include Authorization header
    GET /api/user/me
    Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
@@ -120,6 +125,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
    - Then retry with new token
 
 3. **Invalid token format**
+
    ```
    ❌ Wrong: Authorization: <token>
    ✅ Correct: Authorization: Bearer <token>
@@ -130,6 +136,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
    - Store and use that token
 
 **How to fix:**
+
 1. Ensure `Authorization: Bearer <token>` header exists
 2. Verify token value (should be long JWT string starting with `eyJ`)
 3. If expired, refresh token via `POST /user/refreshToken`
@@ -142,6 +149,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 **What it means:** The resource you're asking for doesn't exist.
 
 **Example response:**
+
 ```json
 {
   "message": "User not found are you sure you have an account?"
@@ -151,6 +159,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 **Common causes:**
 
 1. **Wrong ID format**
+
    ```
    ❌ Wrong: /journals/123 (too short)
    ✅ Correct: /journals/507f1f77bcf86cd799439011 (24 hex chars)
@@ -166,6 +175,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
    ```
 
 **How to fix:**
+
 1. Verify MongoDB ID format (24 hexadecimal characters)
 2. Ensure resource still exists (check in database or list endpoints)
 3. Check endpoint URL exactly matches [API Reference](API.md)
@@ -177,6 +187,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 **What it means:** You're trying to create a resource that already exists.
 
 **Example response:**
+
 ```json
 {
   "message": "A user with the given email is already registered"
@@ -192,6 +203,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
    - Try-catch in route prevents duplicate entries
 
 **How to fix:**
+
 1. For email conflict: Use a different email address
 2. For other conflicts: Check [Troubleshooting Guide](TROUBLESHOOTING.md)
 
@@ -202,6 +214,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 **What it means:** Something went wrong on the backend.
 
 **Example response:**
+
 ```json
 {
   "message": "Failed to fetch user"
@@ -222,6 +235,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
    - `.env` file missing or incomplete
 
 **How to fix:**
+
 1. Check server console logs for error details
 2. Verify MongoDB is running: `mongo` or `mongosh`
 3. Check `.env` file has all required variables
@@ -230,6 +244,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 **Debug example:**
 
 Server console shows:
+
 ```
 MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
 ```
@@ -252,9 +267,9 @@ const handleLogin = async (email, password) => {
   setError(null);
 
   try {
-    const response = await axios.post('/api/user/login', {
+    const response = await axios.post("/api/user/login", {
       email,
-      password
+      password,
     });
 
     // Success
@@ -262,14 +277,12 @@ const handleLogin = async (email, password) => {
     // In this app tokens are handled in-memory through AuthContext
     // and refresh tokens are stored as HttpOnly cookies.
     // Do not persist access tokens in localStorage/sessionStorage.
-    window.location.href = '/dashboard';
-
+    window.location.href = "/dashboard";
   } catch (err) {
     // Handle error response
-    const message = err.response?.data?.message || 'An error occurred';
+    const message = err.response?.data?.message || "An error occurred";
     setError(message);
-    console.error('Login error:', err);
-
+    console.error("Login error:", err);
   } finally {
     setIsLoading(false);
   }
@@ -286,13 +299,13 @@ if (err.response?.status === 401) {
   // Retry request
 } else if (err.response?.status === 409) {
   // Conflict - resource exists
-  setError('This email is already registered');
+  setError("This email is already registered");
 } else if (err.response?.status === 500) {
   // Server error
-  setError('Server error, try again later');
+  setError("Server error, try again later");
 } else if (!err.response) {
   // Network error
-  setError('Network error, check server is running');
+  setError("Network error, check server is running");
 }
 ```
 
@@ -303,12 +316,14 @@ if (err.response?.status === 401) {
 ### Step 1: Identify the error
 
 **Check HTTP status code:**
+
 - 4xx = Client error (your request is wrong)
 - 5xx = Server error (backend issue)
 
 ### Step 2: Read the error message
 
 **Error message tells you what's wrong:**
+
 - "Email and password are required" → Add missing fields
 - "A user with the given email is already registered" → Use different email
 - "User not found" → Check user ID is correct
@@ -316,11 +331,13 @@ if (err.response?.status === 401) {
 ### Step 3: Inspect the request
 
 **In browser DevTools:**
+
 1. Network tab → Find the failing request
 2. Check Request Headers (Authorization, Content-Type)
 3. Check Payload (request body, match required format)
 
 **Example inspection:**
+
 ```
 REQUEST HEADERS:
   Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
@@ -340,6 +357,7 @@ RESPONSE STATUS: 401 Unauthorized
 ### Step 4: Fix and retry
 
 **Based on error type:**
+
 - 400 → Fix request format
 - 401 → Add/refresh token
 - 404 → Verify ID exists
@@ -371,6 +389,7 @@ This tells you the ID format is wrong.
 ### Enable Debug Mode
 
 **In `server/.env`:**
+
 ```env
 NODE_ENV=development
 DEBUG=*
@@ -382,24 +401,25 @@ Then restart server for more detailed logs.
 
 ## Common Error Messages Explained
 
-| Error Message | Cause | Fix |
-|---------------|-------|-----|
-| "Email and password are required" | Missing field in signup | Add all required fields |
-| "A user with the given email is already registered" | Email exists | Use different email |
-| "Invalid credentials" | Wrong email/password on login | Check spelling, try signup |
-| "User not found are you sure you have an account?" | User ID doesn't exist | Verify user ID format |
-| "No journals found" | Journal ID doesn't exist | Check journal ID is correct |
-| "Journal deleted successfully" | This is success, not error | Your deletion worked! |
-| "Token expired" | JWT token time limit exceeded | Call refresh endpoint |
-| "Unauthorized" | No/invalid authentication | Add Authorization header |
-| "Cannot POST /api/..." | Route not found or backend down | Check URL, restart server |
-| "MongooseServerSelectionError" | MongoDB not running | Start MongoDB |
+| Error Message                                       | Cause                           | Fix                         |
+| --------------------------------------------------- | ------------------------------- | --------------------------- |
+| "Email and password are required"                   | Missing field in signup         | Add all required fields     |
+| "A user with the given email is already registered" | Email exists                    | Use different email         |
+| "Invalid credentials"                               | Wrong email/password on login   | Check spelling, try signup  |
+| "User not found are you sure you have an account?"  | User ID doesn't exist           | Verify user ID format       |
+| "No journals found"                                 | Journal ID doesn't exist        | Check journal ID is correct |
+| "Journal deleted successfully"                      | This is success, not error      | Your deletion worked!       |
+| "Token expired"                                     | JWT token time limit exceeded   | Call refresh endpoint       |
+| "Unauthorized"                                      | No/invalid authentication       | Add Authorization header    |
+| "Cannot POST /api/..."                              | Route not found or backend down | Check URL, restart server   |
+| "MongooseServerSelectionError"                      | MongoDB not running             | Start MongoDB               |
 
 ---
 
 ## Testing Error Scenarios
 
 ### Test 401 Unauthorized
+
 ```bash
 # Call protected endpoint without token
 curl -X GET http://localhost:5050/api/user/me
@@ -407,6 +427,7 @@ curl -X GET http://localhost:5050/api/user/me
 ```
 
 ### Test 404 Not Found
+
 ```bash
 # Use invalid journal ID
 curl -X GET http://localhost:5050/api/journals/journals/invalid_id \
@@ -415,6 +436,7 @@ curl -X GET http://localhost:5050/api/journals/journals/invalid_id \
 ```
 
 ### Test 400 Bad Request
+
 ```bash
 # Missing required password field
 curl -X POST http://localhost:5050/api/user/createUser \
@@ -424,6 +446,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 ```
 
 ### Test 409 Conflict
+
 ```bash
 # Try to register with existing email
 curl -X POST http://localhost:5050/api/user/createUser \
@@ -443,11 +466,15 @@ curl -X POST http://localhost:5050/api/user/createUser \
 ### On Frontend
 
 1. **Always include Authorization header for protected routes**
+
    ```javascript
-   headers: { Authorization: `Bearer ${token}` }
+   headers: {
+     Authorization: `Bearer ${accessToken}`;
+   }
    ```
 
 2. **Handle token expiration gracefully**
+
    ```javascript
    if (err.response?.status === 401) {
      refreshToken(); // Get new token
@@ -455,9 +482,10 @@ curl -X POST http://localhost:5050/api/user/createUser \
    ```
 
 3. **Validate input before sending**
+
    ```javascript
    if (!email || !password) {
-     setError('Email and password required');
+     setError("Email and password required");
      return;
    }
    ```
@@ -471,6 +499,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 ### On Backend
 
 1. **Validate all input**
+
    ```javascript
    if (!email || !password) {
      return res.status(400).json({ message: "..." });
@@ -478,11 +507,13 @@ curl -X POST http://localhost:5050/api/user/createUser \
    ```
 
 2. **Check authentication on protected routes**
+
    ```javascript
    router.get('/me', authenticateToken, async (req, res) => { ... })
    ```
 
 3. **Use try-catch for all database operations**
+
    ```javascript
    try {
      // database query
@@ -501,6 +532,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 ## Support
 
 **Still having issues?**
+
 1. Check [Troubleshooting Guide](TROUBLESHOOTING.md)
 2. Review [API Reference](API.md) for correct format
 3. Inspect server logs and browser DevTools

@@ -39,7 +39,6 @@ Content-Type: application/json
 {
   "success": true,
   "message": "Successfully created account. Welcome john_doe!",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "expiresIn": 900,
   "user": {
     "_id": "507f1f77bcf86cd799439011",
