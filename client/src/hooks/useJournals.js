@@ -49,8 +49,11 @@ export function useJournals() {
         const data = response.data;
         setJournals(data.docs || []);
       } catch (error) {
-        logger.error("Error fetching journals:", error);
-        setFlashMessage("Error fetching journals");
+        const serverMsg =
+          error?.response?.data?.message || error?.response?.data?.error;
+
+        setFlashMessage(serverMsg || error?.message || "Error creating entry");
+        logger("error", error);
       } finally {
         setLoading(false);
       }
@@ -82,8 +85,11 @@ export function useJournals() {
 
         setJournalEntries(data.entries?.docs);
       } catch (error) {
-        setFlashMessage("Error fetching journal");
-        console.error("Error fetching journal : ", error);
+        const serverMsg =
+          error?.response?.data?.message || error?.response?.data?.error;
+
+        setFlashMessage(serverMsg || error?.message || "Error creating entry");
+        logger("error", error);
       } finally {
         setLoading(false);
       }
@@ -126,8 +132,11 @@ export function useJournals() {
         }
         return false;
       } catch (error) {
-        console.error("Error creating journal:", error);
-        setFlashMessage("Error creating journal");
+        const serverMsg =
+          error?.response?.data?.message || error?.response?.data?.error;
+
+        setFlashMessage(serverMsg || error?.message || "Error creating entry");
+        logger("error", error);
         return false;
       }
     },
@@ -178,8 +187,11 @@ export function useJournals() {
 
         return false;
       } catch (error) {
-        console.error("Error creating entry:", error);
-        setFlashMessage("Error creating entry");
+        const serverMsg =
+          error?.response?.data?.message || error?.response?.data?.error;
+
+        setFlashMessage(serverMsg || error?.message || "Error creating entry");
+        logger("error", error);
         return false;
       }
     },
@@ -230,8 +242,11 @@ export function useJournals() {
 
         return false;
       } catch (error) {
-        console.error("Error editting entry:", error);
-        setFlashMessage("Error editting entry");
+        const serverMsg =
+          error?.response?.data?.message || error?.response?.data?.error;
+
+        setFlashMessage(serverMsg || error?.message || "Error creating entry");
+        logger("error", error);
         return false;
       }
     },
@@ -266,8 +281,11 @@ export function useJournals() {
 
         return false;
       } catch (error) {
-        console.error("Error deleting entry:", error);
-        setFlashMessage("Error deleting entry");
+        const serverMsg =
+          error?.response?.data?.message || error?.response?.data?.error;
+
+        setFlashMessage(serverMsg || error?.message || "Error creating entry");
+        logger("error", error);
         return false;
       }
     },
@@ -310,7 +328,13 @@ export function useJournals() {
         } catch (error) {
           console.error("Error deleting journal:", error);
           setDuration(3000);
-          setFlashMessage("Error deleting journal");
+          const serverMsg =
+            error?.response?.data?.message || error?.response?.data?.error;
+
+          setFlashMessage(
+            serverMsg || error?.message || "Error creating entry",
+          );
+          logger("error", error);
         } finally {
           setToggleButton(false);
         }
@@ -350,8 +374,12 @@ export function useJournals() {
         }
         return false;
       } catch (error) {
-        console.error("Error updating journal:", error);
-        setFlashMessage("Error updating journal");
+        const serverMsg =
+          error?.response?.data?.message || error?.response?.data?.error;
+
+        setFlashMessage(serverMsg || error?.message || "Error creating entry");
+        logger("error", error);
+
         return false;
       }
     },

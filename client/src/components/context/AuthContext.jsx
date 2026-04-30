@@ -72,47 +72,35 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const setTokenAutoRefresh = async () => {
-      if (!tokenExpiration) {
-        return;
+    if (!tokenExpiration) return;
+
+    const now = Date.now();
+    const timeUntilExpire = tokenExpiration - now;
+    const refreshTime = timeUntilExpire - 30000; // refresh 30s early
+
+    let timer;
+
+    if (refreshTime <= 0) {
+      // Token is expiring soon or already expired → refresh immediately
+      try {
+        refreshToken();
+      } catch (err) {
+        logger("warning", "failed to authorize account", err);
+        logout();
       }
-
-      const now = Date.now();
-
-      const timeUntilExpire = tokenExpiration - now;
-
-      //30 seconds before to disallow disruptions
-      const refreshTime = timeUntilExpire - 30000;
-
-      if (refreshTime <= 0) {
+    } else {
+      // Schedule the refresh
+      timer = setTimeout(() => {
         try {
           refreshToken();
         } catch (err) {
-          logger(
-            "warning",
-            "failed to authorize your account, redirecting",
-            err,
-          );
+          logger("warning", "failed to authorize account", err);
           logout();
         }
+      }, refreshTime);
+    }
 
-        const timer = setTimeout(() => {
-          try {
-            refreshToken();
-          } catch (err) {
-            logger(
-              "warning",
-              "failed to authorize your account, redirecting",
-              err,
-            );
-            logout();
-          }
-        }, refreshTime);
-
-        return;
-      }
-    };
-    setTokenAutoRefresh();
+    return () => clearTimeout(timer);
   }, [tokenExpiration]);
 
   /**
@@ -150,7 +138,6 @@ export const AuthProvider = ({ children }) => {
         setTokenExpiration(tokenExpirationTimestamp);
       }
     } catch (err) {
-      setFlashMessage("Authenication Error :", err);
       logger("error", "Refresh token failed:", err);
       logout();
     }

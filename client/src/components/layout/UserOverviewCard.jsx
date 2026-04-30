@@ -55,23 +55,29 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
           <h2 className=" text-sm md:text-lg ">{user?.username}</h2>
           <h2 className=" text-sm md:text-lg ">Activity Report</h2>
           <ul className="mt-2 space-y-2">
-            <li className="flex justify-between items-center border p-2 lg:px-4 lg:py-3 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
-              <span className="text-sm md:text-lg">Entries this month</span>
-              <span className="text-blue-200 text-sm border px-3 py-2 rounded-2xl bg-linear-60 from-gray-700 to-gray-900 me-3 ">
+            <li className="flex  items-center justify-baseline p-2 lg:px-4 lg:py-3 rounded-lg">
+              <span className="text-sm  min-w-45  bg-linear-150 from-gray-800/70 to-gray-900/70 rounded-lg px-5 py-3 ">
+                Entries this month
+              </span>
+              <span className="text-blue-200 text-sm border px-3 py-2 rounded-lg bg-linear-60 from-gray-700 to-gray-900 ms-5 me-3 ">
                 {stats?.statistics.monthlyEntries}
               </span>
             </li>
 
-            <li className="flex justify-between items-center border p-2 lg:px-4 lg:py-3 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
-              <span className="text-sm md:text-lg">Most common day</span>
-              <span className="text-blue-200 text-sm border px-3 py-2 rounded-2xl  bg-linear-60 from-gray-700 to-gray-900">
+            <li className="flex  items-center justify-between p-2 lg:px-4 lg:py-3 ">
+              <span className="text-sm  me-2 min-w-45 bg-linear-150 from-gray-800/70 to-gray-900/70 rounded-lg px-5 py-3">
+                Most common day
+              </span>
+              <span className="text-blue-200 text-sm border px-3 py-2 rounded-lg bg-linear-60 from-gray-700 to-gray-900 mx-3">
                 {stats?.statistics.commonDay}
               </span>
             </li>
 
-            <li className="flex justify-between items-center border p-2 lg:px-4 lg:py-3 rounded-lg bg-linear-150 from-gray-800/70 to-gray-900/70">
-              <span className="me-1 text-sm md:text-lg">Most common mood </span>
-              <span className="text-blue-200 text-sm border px-3 py-2 rounded-2xl  bg-linear-60 from-gray-700 to-gray-900">
+            <li className="flex items-center p-2 lg:px-4 lg:py-3 ">
+              <span className=" text-sm  me-2 min-w-45 bg-linear-150 from-gray-800/70 to-gray-900/70 rounded-lg px-5 py-3">
+                Most common mood{" "}
+              </span>
+              <span className="text-blue-200 text-sm border px-3 py-2 rounded-lg  bg-linear-60 from-gray-700 to-gray-900 mx-3">
                 {stats?.statistics.commonMood}
               </span>
             </li>

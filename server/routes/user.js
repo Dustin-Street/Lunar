@@ -13,14 +13,15 @@ import { buildJwtPayload } from "../authentication/jwtBuild.js";
 
 //utility function
 import forgotPasswordChange from "../email/forgotPasswordChange.js";
-import { CheckIfValidNewAccount } from "../utils/CheckIfValidNewAccount.js";
+
 import { createHttpError } from "../utils/httpError.js";
 import { computeCommonDay } from "../utils/computeCommonDay.js";
 import { computeCommonMood } from "../utils/computeCommonMood.js";
 import { computeMonthlyEntries } from "../utils/computeMonthlyEntries.js";
 
 //security
-import { sanitize } from "../security/sanitize.js";
+import { CheckIfValidNewAccount } from "../security/CheckIfValidNewAccount.js";
+import { check, body, validationResult, matchedData } from "express-validator";
 
 const router = express.Router();
 //authentication
@@ -89,20 +90,27 @@ router.get(
 
 router.post(
   "/createUser",
-  sanitize([
-    body("password").escape().isLength({ min: 6 }),
-    body("username").escape().isLength({ min: 2, max: 20 }),
-  ]),
+  body("password").isStrongPassword(),
   asyncHandler(async (req, res, next) => {
-    //test
-    console.log(`after sanitization check: ${(username, password)}`);
     const { password, username } = req.body;
+
     const email = req.body.email?.toLowerCase?.();
 
+    //validation checks
+
+    const strongerPasswordError = validationResult(req);
+    
+    if (!strongerPasswordError.isEmpty()) {
+      throw createHttpError(
+        400,
+        "Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.",
+      );
+    }
+
     try {
-      await CheckIfValidNewAccount(email, username, password);
-    } catch (validationError) {
-      return next(createHttpError(validationError));
+      await CheckIfValidNewAccount(username, email, password);
+    } catch (err) {
+      next(err);
     }
 
     const normalizedUsername = username.trim();
@@ -141,8 +149,7 @@ router.post(
           ),
         );
       }
-
-      throw saveError;
+      return next(saveError);
     }
 
     const payload = buildJwtPayload(user);
@@ -170,7 +177,6 @@ router.post(
 
 import jwt from "jsonwebtoken";
 import user from "../schema/user.js";
-import { body } from "express-validator";
 
 //create refreshToken route
 
@@ -293,7 +299,7 @@ router.post(
     }
 
     req.body.email = req.body.email.toLowerCase();
-    console.log("before passport auth");
+
     passport.authenticate(
       "local",
       { session: false },
@@ -319,7 +325,6 @@ router.post(
             ),
           );
         }
-        console.log("after passport auth");
         try {
           // Build consistent JWT payload
           const payload = buildJwtPayload(user);
@@ -365,7 +370,7 @@ router.post(
 router.post(
   "/logout",
   authenticateToken,
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.user.id);
     if (!user) {
       return next(createHttpError(404, "User not found"));
@@ -387,13 +392,15 @@ router.post(
 
 router.post(
   "/password-reset-request",
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req, res, next) => {
     const { userEmail } = req.body;
 
     if (!userEmail) {
-      throw createHttpError(
-        400,
-        "You must enter a valid email to receive password reset instructions.",
+      return next(
+        createHttpError(
+          400,
+          "You must enter a valid email to receive password reset instructions.",
+        ),
       );
     }
 
@@ -422,29 +429,33 @@ router.post(
 //  password since they have verified ownership of the email through the reset link. does not give to much information and only send the request if the email was valid and associated with an account, otherwis
 // just send no email as to not give away which emails are associated with accounts
 
-router.get("/forgot-password-form", async (req, res) => {
+router.get("/forgot-password-form", async (req, res, next) => {
   const { token } = req.query;
 
   if (!token) {
-    return res.status(400).json({
-      message: "Invalid or missing token try again or contact support",
-    });
+    return next(
+      createHttpError(400, "Invalid or expired link, try to get another one"),
+    );
   }
   await User.findOne({ verificationCode: token })
     .then((user) => {
       if (!user) {
-        return res.status(400).json({
-          message:
-            "Invalid or expired token. Please try again or contact support.",
-        });
+        return next(
+          createHttpError(
+            400,
+            "Invalid or expired link, try to get another one",
+          ),
+        );
       }
     })
     .catch((err) => {
       console.error("Error during token verification:", err);
-      return res.status(500).json({
-        message:
-          "Server error during token verification. Please try again later.",
-      });
+      return next(
+        createHttpError(
+          400,
+          "Server error during authenication process, try again later",
+        ),
+      );
     });
   return res.status(200).json({
     message: "Token verified. Redirecting to Password Reset.",
@@ -455,15 +466,26 @@ router.get("/forgot-password-form", async (req, res) => {
 //chnage password in user access through user settings while logged in
 router.patch(
   "/change-password",
+  body("newPassword").isStrongPassword(),
   authenticateToken,
   asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body;
+
+    const userId = req.user.id;
 
     if (!oldPassword || !newPassword) {
       throw createHttpError(400, "Missing fields");
     }
 
-    const user = await User.findById(req.userId).select("+password");
+    const strongerPasswordError = validationResult(req);
+    if (!strongerPasswordError.isEmpty()) {
+      throw createHttpError(
+        400,
+        "Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.",
+      );
+    }
+
+    const user = await User.findById(userId).select("+password");
     if (!user) {
       throw createHttpError(404, "User not found");
     }

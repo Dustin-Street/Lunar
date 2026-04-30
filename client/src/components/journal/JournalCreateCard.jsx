@@ -29,6 +29,9 @@ export default function JournalCreateCard({
   const handleSubmit = useCallback(async () => {
     if (title.trim() === "") {
       setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
       return;
     }
 
@@ -71,7 +74,7 @@ export default function JournalCreateCard({
         </div>
       ) : (
         <div
-          className={`grid relative place-items-center group border-4 bg-opacity-75
+          className={`flex relative place-items-center group border-4 bg-opacity-75
              border-blue-200 px-12 py-48 bg-linear-90 from-gray-700 to-gray-900 max-w-80 max-h-60
              text-amber-100 font-medium rounded-lg w-full  hover:shadow-2xl
              hover:shadow-blue-400 transition-shadow m-0 ${className} `}
@@ -83,6 +86,7 @@ export default function JournalCreateCard({
             <h3 className="relative justify-self-center mb-auto text-lg sm:text-xl">
               Create Journal
             </h3>
+
             <input
               name="title"
               type="text"
@@ -103,7 +107,12 @@ export default function JournalCreateCard({
                     }
                 `}
             />
-
+            {showError ? (
+              <p className="animate-pulse text-sm text-red-400 justify-self-center m-0">
+                {" "}
+                title cannot be empty
+              </p>
+            ) : null}
             <HoverButton
               position="left"
               colorBefore="blue-200"

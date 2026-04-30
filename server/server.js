@@ -86,8 +86,8 @@ app.use("/admin", adminRoutes);
 
 app.use(notFoundHandler);
 
-//Sentry.setupExpressErrorHandler(app);
-//app.use(sentryHandler);
+Sentry.setupExpressErrorHandler(app);
+app.use(sentryHandler);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
