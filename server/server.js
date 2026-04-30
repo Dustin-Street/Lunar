@@ -12,6 +12,8 @@ import { query, validationResult } from "express-validator";
 import helmet from "helmet";
 import crypto from "crypto";
 
+import { limiter } from "./middleware/limiterHandler.js";
+
 //database
 import "./database/connection.js";
 
@@ -115,6 +117,10 @@ app.use(
     },
   }),
 );
+
+app.set("trust proxy", 1);
+//limit to 100 request per IP
+app.use(limiter)
 
 //logger to debug front-end to backend routing
 app.use((req, res, next) => {

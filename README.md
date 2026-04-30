@@ -3,6 +3,7 @@
 A full-stack web application for secure, personal journaling with user authentication, real-time journal management, and creative interface. Some images are AI Generated as placeholder, I intend to refrence these later an create or commission these myself before any real Deployment. Very early development, still using this for learning and furthing my Web Development skills.
 
 ## Quick Links
+
 - [Setup Instructions](docs/SETUP.md) - Get the app running locally (No Deployment yet...)
 - [API Reference](docs/API.md) - Complete endpoint documentation
 - [Troubleshooting Guide](docs/TROUBLESHOOTING.md) - Common issues & solutions
@@ -12,7 +13,7 @@ A full-stack web application for secure, personal journaling with user authentic
 
 ## Features
 
-✅ **User Authentication** - Secure signup/login with JWT tokens and refresh token rotation for security 
+✅ **User Authentication** - Secure signup/login with JWT tokens and refresh token rotation for security
 ✅ **Journal Management** - Create, read, update, and delete journals (CRUD)
 ✅ **Responsive UI** - Built with React + Tailwind CSS To later be mobile friendly with React Native
 ✅ **Token-Based Security** - JWT with automatic token refresh handling
@@ -23,18 +24,21 @@ A full-stack web application for secure, personal journaling with user authentic
 ## Tech Stack
 
 **Frontend:**
+
 - React with Vite (fast development environment)
 - Tailwind CSS (styling)
 - Axios (HTTP client)
 - Context API (state management)
 
 **Backend:**
+
 - Node.js + Express (REST API)
 - MongoDB + Mongoose (database)
 - Passport.js (authentication)
 - JWT (JSON Web Tokens)
 
 **Deployment Ready:**
+
 - CORS configured for cross-origin requests
 - Environment variable support
 - Error handling & logging
@@ -44,8 +48,9 @@ A full-stack web application for secure, personal journaling with user authentic
 
 **Images**
 
-![Login](docs/assets/images/Login.png)
+![Login](docs/assets/images/LunarLoginFull.png)
 
+![Login mobile](docs/assets/images/LunarLoginFull.png)
 
 ## Project Structure
 
@@ -74,18 +79,21 @@ README.md
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 16+ and npm
 - MongoDB (local or Atlas connection string)
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repo-url>
    cd Insight
    ```
 
 2. **Setup Backend**
+
    ```bash
    cd server
    npm install
@@ -107,6 +115,7 @@ See [Setup Instructions](docs/SETUP.md) for detailed environment variable config
 ## Architecture & Design
 
 ### Authentication Flow
+
 The application implements a secure token-based authentication system:
 
 1. User registers with email/password → password hashed with bcrypt
@@ -116,6 +125,7 @@ The application implements a secure token-based authentication system:
 5. Logout clears tokens on client side
 
 **Key Security Features:**
+
 - Passwords never transmitted or logged
 - JWT tokens have short expiration times
 - Refresh tokens rotated on use
@@ -123,11 +133,11 @@ The application implements a secure token-based authentication system:
 - CORS restricted to whitelisted domains
 
 ### API Architecture
+
 - RESTful endpoints following HTTP conventions
 - Consistent error response format
 - Pagination support for large datasets for Journals
 - Request validation on all endpoints
 - Comprehensive logging for debugging
 
-this is a work in progress and is not intended to be bug-free, production ready or even good code just a learning element. 
-
+this is a work in progress and is not intended to be bug-free, production ready or even good code just a learning element.

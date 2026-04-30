@@ -99,7 +99,7 @@ router.post(
     //validation checks
 
     const strongerPasswordError = validationResult(req);
-    
+
     if (!strongerPasswordError.isEmpty()) {
       throw createHttpError(
         400,
