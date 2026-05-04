@@ -14,6 +14,8 @@ import crypto from "crypto";
 
 import { limiter } from "./middleware/limiterHandler.js";
 
+import ExpressMongoSanitize from "express-mongo-sanitize";
+
 //database
 import "./database/connection.js";
 
@@ -120,7 +122,16 @@ app.use(
 
 app.set("trust proxy", 1);
 //limit to 100 request per IP
-app.use(limiter)
+app.use(limiter);
+
+//mongo Sanitization
+app.use(ExpressMongoSanitize());
+
+app.use(
+  ExpressMongoSanitize({
+    replaceWith: "_",
+  }),
+);
 
 //logger to debug front-end to backend routing
 app.use((req, res, next) => {

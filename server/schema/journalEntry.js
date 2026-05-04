@@ -25,6 +25,7 @@ const PageSchema = new Schema(
     },
   },
   { _id: true },
+  { strict: true },
 );
 
 const JournalEntrySchema = new Schema({
@@ -51,7 +52,7 @@ const JournalEntrySchema = new Schema({
   pages: { type: [PageSchema], default: [], required: true },
   journalID: { type: mongoose.Schema.Types.ObjectId, ref: "Journal" },
   userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-});
+}, {strict : true});
 
 JournalEntrySchema.plugin(mongoosePaginate);
 const JournalEntry = mongoose.model("JournalEntry", JournalEntrySchema);

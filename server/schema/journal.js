@@ -1,32 +1,35 @@
-import mongoose from 'mongoose';
-
+import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 const date = new Date();
-const JournalSchema = new Schema(
-  {
-    title: { type: String, required: true },
-    entries: [{ type: Schema.Types.ObjectId, ref: 'JournalEntry' }],
-    dateCreated: {
+const JournalSchema = new Schema({
+  title: { type: String, required: true },
+  entries: [{ type: Schema.Types.ObjectId, ref: "JournalEntry" }],
+  dateCreated: {
+    type: String,
+    default:
+      date.getMonth() +
+      "/" +
+      date.getDate() +
+      "/" +
+      date.getFullYear() +
+      " - " +
+      date.getHours() +
+      ":" +
+      date.getMinutes(),
+  },
+  userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  background: {
+    type: {
       type: String,
-      default: date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
+      enum: ["Hex", "Url"],
     },
-    userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    background : {type: {
-      type: String, 
-      enum: ['Hex', 'Url']},
+  },
+  value: {
+    type: String,
+  },
+}, {strict : true});
 
-    },
-    value: {
-      type: String,
-
-    }
-  }
-
-);
-
-
-
-const Journal = mongoose.model('Journal', JournalSchema);
+const Journal = mongoose.model("Journal", JournalSchema);
 
 export default Journal;

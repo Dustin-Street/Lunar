@@ -1,0 +1,21 @@
+{
+  "levels": {
+    "low": true,
+    "moderate": true,
+    "high": true,
+    "critical": true
+  },
+  "report": {
+    "type": "full",
+    "path": "./security-audit-report.json"
+  },
+  "allowlist": [
+    {
+      "GHSA-42xw-8j3v-x4qj": "Axios vulnerability - mitigated by input sanitization and CSP"
+    }
+  ],
+  "path-allowlist": [
+    "/test/**",
+    "/docs/**"
+  ]
+}

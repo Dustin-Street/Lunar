@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "security-audit": "audit-ci --config audit-ci.json"
   },
   "dependencies": {
     "@sentry/react": "^10.50.0",
@@ -22,6 +23,7 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "audit-ci": "^7.1.0",
     "autoprefixer": "^10.4.22",
     "baseline-browser-mapping": "^2.9.19",
     "eslint": "^9.39.1",

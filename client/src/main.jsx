@@ -19,10 +19,11 @@ import ErrorPage from "./components/error/ErrorPage.jsx";
 import Account from "./components/account/Account.jsx";
 import { AuthProvider } from "./components/context/AuthContext.jsx";
 import AccountRecovery from "./components/account/AccountRecovery.jsx";
-import {
-  FlashMessageProvider,
-  useFlashMessage,
-} from "./components/context/FlashMessageContext";
+import { FlashMessageProvider } from "./components/context/FlashMessageContext";
+
+// Security utilities
+import { SecureStorage } from "./utils/security";
+// import SecurityInitializer from "./components/layout/SecurityInitializer";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,26 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+    ],
+  },
+  {
+    path: "/signup",
+    element: <App />,
+    children: [
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <App />,
+    children: [
+      {
+        path: "/login",
+        element: <Login />,
       },
     ],
   },

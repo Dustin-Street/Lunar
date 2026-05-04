@@ -14,81 +14,83 @@ const Session = new Schema({
   },
 });
 
-const UserSchema = new Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    minlength: 2,
-    maxlength: 20,
-  },
-
-  password: {
-    type: String,
-    required: true,
-    //select:false
-    //could be best to add select false in future improvements to enhance security measures which will require a few refactors for login and signup to implicetly select the password in logic
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  journals: [{ type: Schema.Types.ObjectId, ref: "Journal" }],
-  //object for profile settings and preferences
-
-  preferences: {
-    theme: {
+const UserSchema = new Schema(
+  {
+    email: {
       type: String,
-      default: "Lunar",
+      required: true,
+      unique: true,
     },
-  },
-
-  refreshToken: [Session],
-  dateCreated: {
-    type: String,
-    default:
-      date.getMonth() +
-      "/" +
-      date.getDate() +
-      "/" +
-      date.getFullYear() +
-      " - " +
-      date.getHours() +
-      ":" +
-      date.getMinutes(),
-  },
-  statistics: {
-    //number of entries this month
-    monthlyEntries: {
-      type: Number,
-      default: 0,
-    },
-    //most common mood selected
-    commonMood: {
+    username: {
       type: String,
-      default: null,
+      required: true,
+      unique: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 20,
     },
-    //most common day to journal
-    commonDay: {
-      type: String,
-      default: null,
-    },
-  },
 
-  isAdmin: {
-    type: Boolean,
-    default: false,
+    password: {
+      type: String,
+      required: true,
+      //select:false
+      //could be best to add select false in future improvements to enhance security measures which will require a few refactors for login and signup to implicetly select the password in logic
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    journals: [{ type: Schema.Types.ObjectId, ref: "Journal" }],
+    //object for profile settings and preferences
+
+    preferences: {
+      theme: {
+        type: String,
+        default: "Lunar",
+      },
+    },
+
+    refreshToken: [Session],
+    dateCreated: {
+      type: String,
+      default:
+        date.getMonth() +
+        "/" +
+        date.getDate() +
+        "/" +
+        date.getFullYear() +
+        " - " +
+        date.getHours() +
+        ":" +
+        date.getMinutes(),
+    },
+    statistics: {
+      //number of entries this month
+      monthlyEntries: {
+        type: Number,
+        default: 0,
+      },
+      //most common mood selected
+      commonMood: {
+        type: String,
+        default: null,
+      },
+      //most common day to journal
+      commonDay: {
+        type: String,
+        default: null,
+      },
+    },
+
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    verificationCode: { type: String, limit: 2 },
+    verificationExperation: { type: Date },
   },
-  accountErrors: [{ type: mongoose.Schema.Types.ObjectId, ref: "ErrorLog" }],
-  verificationCode: { type: String, limit: 2 },
-  verificationExperation: { type: Date },
-});
+  { strict: true },
+);
 
 //Methods
 // Hash password before saving

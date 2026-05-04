@@ -7,7 +7,7 @@ const quote = new Schema({
     author: {type: String, required:true},
     saved:{type: Date, default: Date.now}
     
-})
+}, {strict : true})
 const Quote = mongoose.model('Quote', quote);
 
 
