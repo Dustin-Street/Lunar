@@ -19,206 +19,103 @@ git --version     # Should show git version 2.x.x
 
 ---
 
-## Step 1: Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone <repository-url>
 cd Insight
 ```
 
----
+### 2. Environment Setup
 
-## Step 2: Configure Environment Variables
-
-### Backend Configuration
-
-1. Navigate to the server directory:
-   ```bash
-   cd server
-   ```
-
-2. Create a `.env` file:
-   ```bash
-   # Copy the example (create if doesn't exist)
-   ```
-
-3. Add the following environment variables to `server/.env`:
-
-   ```env
-   # MongoDB Connection
-   MONGODB_URI=mongodb://localhost:27017/insight
-   
-   # JWT Secrets (use strong random strings in production)
-   JWT_SECRET=your_jwt_secret_key_change_this
-   REFRESH_TOKEN_SECRET=your_refresh_token_secret_change_this
-   
-   # Server Port
-   PORT=5050
-   
-   # CORS Configuration
-   WHITELISTED_DOMAINS=http://localhost:5173
-   
-   # Node Environment
-   NODE_ENV=development
-   ```
-
-   **Configuration Explained:**
-   - `MONGODB_URI`: Your database connection string
-     - Local: `mongodb://localhost:27017/insight`
-     - Atlas: `mongodb+srv://user:password@cluster.mongodb.net/insight`
-   - `JWT_SECRET`: Random string used to sign authentication tokens
-   - `WHITELISTED_DOMAINS`: Comma-separated list of allowed frontend origins
-   - `NODE_ENV`: Set to `development` for detailed logging
-
-### Frontend Configuration
-
-1. Navigate to the client directory:
-   ```bash
-   cd ../client
-   ```
-
-2. The frontend typically uses `http://localhost:5050` as the API base URL. If you need to customize:
-   - Check `src/main.jsx` or API service files for the backend URL
-   - Update if necessary for your setup
-
----
-
-## Step 3: Setup MongoDB
-
-### Option A: Local MongoDB
-
-1. **Install MongoDB Community Edition** ([Guide](https://docs.mongodb.com/manual/installation/))
-
-2. **Start MongoDB:**
-   
-   **On Windows (PowerShell):**
-   ```powershell
-   # If installed via MSI
-   net start MongoDB
-   
-   # Or if you have mongod.exe path
-   mongod
-   ```
-   
-   **On Mac/Linux:**
-   ```bash
-   brew services start mongodb-community
-   # or
-   mongod
-   ```
-
-3. **Verify it's running:**
-   ```bash
-   mongo  # or mongosh for newer versions
-   ```
-   You should see a MongoDB shell prompt.
-
-### Option B: MongoDB Atlas (Cloud)
-
-1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Sign up for a free account
-3. Create a new cluster
-4. Get your connection string: `mongodb+srv://user:password@cluster.mongodb.net/insight`
-5. Add your connection string to `server/.env` as `MONGODB_URI`
-6. In Atlas, add your IP to the IP Whitelist (or allow `0.0.0.0/0` for development)
-
----
-
-## Step 4: Install Backend Dependencies
-
-From the `server` directory:
+#### Backend Configuration
 
 ```bash
+cd server
+# Create environment file
+cp .env.example .env
+```
+
+** BACKEND ENV STRUCTURE **
+Edit `server/.env` with your configuration:
+
+```env
+
+MONGODB_URI=Your mongoDB URI local or Atlas
+JWT_SECRET=your_jwt_secret_here
+REFRESH_TOKEN_SECRET=your_refresh_token_secret_here
+REFRESH_TOKEN_EXPIRY= 60 * 60 * 24 * 30 //<- 30 days for refresh token experation
+JWT_TOKEN_EXPIRY = 900 //<- 15 minutes populates the front-end
+SESSION_EXPIRY= 60 * 15 //<- 15 minutes used in the server
+SESSION_SECRET=StrongRandomString
+COOKIE_SECRET=StrongrandomString
+
+WHITELISTED_DOMAINS=http://localhost:5173 //<- if you keep these consistent you can change these as the application uses thse strings
+FRONTEND_URL=http://localhost:5173
+PORT=5050
+API_URL=http://localhost:5050
+
+
+```
+
+**FRONTEND ENV STRUCTURE **
+
+``` env
+
+VITE_API_URL=http://localhost:5050 <- or whatever port points to your server
+SENTRY_ID=yourSentryURL
+
+```
+
+#### Database Setup
+
+- **Local MongoDB**: Install and start MongoDB on your system
+- **MongoDB Atlas**: Create a free cluster and get your connection string
+
+### 3. Install Dependencies
+
+#### Backend
+
+```bash
+cd server
 npm install
 ```
 
-This installs packages defined in `package.json`. Key packages include:
-- `express` - Web framework
-- `mongoose` - MongoDB ODM
-- `passport` & `passport-jwt` - Authentication
-- `jsonwebtoken` - JWT token handling
-- `bcrypt` - Password hashing
-- `cors` - Cross-origin requests
-- `helmet` - Security headers
-- `express-rate-limit` - Rate limiting
-- `multer` - File uploads
-- `nodemailer` - Email sending
-- `@sentry/node` - Error monitoring
-
----
-
-## Step 5: Start the Backend Server
-
-From the `server` directory:
+#### Frontend
 
 ```bash
-npm start
+cd ../client
+npm install
 ```
 
-**Expected output:**
+### 4. Start the Application
+
+#### Terminal 1: Backend Server
+
+```bash
+cd server : the server need to be passed the ENV I use node commmand below
+node --env-file=EnvFileNameHere server.js - loads the server with that env file
+
+
 ```
-Server running on port 5050
-MongoDB connected to mongodb://localhost:27017/insight
-```
 
-If you see errors:
-- **"Cannot find module"** → Run `npm install` again
-- **"Connection refused"** → MongoDB isn't running, see Step 3
-- **"EADDRINUSE"** → Port 5050 is already in use, change `PORT` in `.env`
+Server will run on `http://localhost:5050`
 
-Leave this terminal running.
-
----
-
-## Step 6: Install Frontend Dependencies
-
-Open a **new terminal** and navigate to the client directory:
+#### Terminal 2: Frontend Development Server
 
 ```bash
 cd client
-npm install
-```
-
-This installs packages defined in `package.json`. Key packages include:
-- `react` & `react-dom` - React framework (v19)
-- `react-router-dom` - Client-side routing
-- `axios` - HTTP client
-- `vite` - Build tool and dev server
-- `tailwindcss` - CSS framework
-- `@sentry/react` - Error monitoring
-
----
-
-## Step 7: Start the Frontend Development Server
-
-From the `client` directory:
-
-```bash
 npm run dev
 ```
 
-**Expected output:**
-```
-VITE v4.x.x ready in xxx ms
+Frontend will run on `http://localhost:5173`
 
-➜  Local:   http://localhost:5173/
-➜  press h to show help
-```
+### 5. Access the Application
 
----
+Open your browser and navigate to `http://localhost:5173`
+Or use the first terminal in Vite to Enter + o to run it in the browser
 
-## Step 8: Access the Application
-
-Open your browser and navigate to:
-```
-http://localhost:5173
-```
-
-You should see the Insight application home page.
-
----
-
-## Step 9: Test the Setup
+### 6. Test the Setup
 
 ### Test User Registration:
 1. Click "Sign Up"

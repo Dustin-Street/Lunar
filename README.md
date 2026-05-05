@@ -137,9 +137,7 @@ CSP is implemented **server-side** via Helmet.js middleware in the backend, prov
 
 ## Quick Start Guide
 
-- **[ Quick Start ](docs/SETUP.md)** if you want to try to run it youself on your machine
-
-## Documentation Resources
+- **[Quick Start](docs/QUICKSTART.md)** if you want to try to run it youself on your machine
 - **[Setup Guide](docs/SETUP.md)** - Detailed installation and configuration
 - **[API Reference](docs/API.md)** - Complete REST API documentation
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
