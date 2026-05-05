@@ -1,4 +1,4 @@
-# Insight - Personal Journaling Application
+# Lunar - Personal Journaling Application
 
 A modern, secure full-stack web application for personal journaling and reflection. Built with React, Node.js, and MongoDB, Insight provides users with a beautiful interface to create, manage, and reflect on their personal journals while maintaining privacy and security.
 
@@ -14,7 +14,7 @@ A modern, secure full-stack web application for personal journaling and reflecti
 
 ### Login Interface
 
-![Insight Login](docs/assets/images/LunarLoginFull.png)
+![Lunar Login](docs/assets/images/LunarLoginFull.png)
 
 ### Mobile Login View
 
