@@ -25,7 +25,9 @@ export default function Home() {
     async function getInitialQuote() {
       try {
         setLoading(true);
-        const response = await axios.get(`${API_BASE_URL}/quotes/quote`);
+        const response = await axios.get(`${API_BASE_URL}/quotes/quote`, {
+          withCredentials: true,
+        });
         setQuote(response.data);
       } catch (err) {
         console.error(err);
