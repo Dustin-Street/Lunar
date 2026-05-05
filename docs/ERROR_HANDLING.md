@@ -79,12 +79,12 @@ Understand what each status code means:
 
 ```bash
 # Bad: Missing password field
-curl -X POST http://localhost:5050/api/user/createUser \
+curl -X POST http://localhost:5050/account/createUser \
   -H "Content-Type: application/json" \
   -d '{"email": "test@example.com"}'
 
 # Good: All required fields
-curl -X POST http://localhost:5050/api/user/createUser \
+curl -X POST http://localhost:5050/account/createUser \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
@@ -430,7 +430,7 @@ curl -X GET http://localhost:5050/api/user/me
 
 ```bash
 # Use invalid journal ID
-curl -X GET http://localhost:5050/api/journals/journals/invalid_id \
+curl -X GET http://localhost:5050/journals/JournalOverview/invalid_id \
   -H "Authorization: Bearer <token>"
 # Response: No journals found
 ```
@@ -439,7 +439,7 @@ curl -X GET http://localhost:5050/api/journals/journals/invalid_id \
 
 ```bash
 # Missing required password field
-curl -X POST http://localhost:5050/api/user/createUser \
+curl -X POST http://localhost:5050/account/createUser \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com"}'
 # Response: Email and password are required
@@ -449,7 +449,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 
 ```bash
 # Try to register with existing email
-curl -X POST http://localhost:5050/api/user/createUser \
+curl -X POST http://localhost:5050/account/createUser \
   -H "Content-Type: application/json" \
   -d '{
     "email":"existing@example.com",

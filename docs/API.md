@@ -5,7 +5,7 @@ Complete documentation of all REST API endpoints with examples and error codes.
 ## Base URL
 
 ```
-http://localhost:5050/api
+http://localhost:5050
 ```
 
 All requests should use this base URL. Examples below show relative paths.
@@ -18,7 +18,7 @@ All requests should use this base URL. Examples below show relative paths.
 
 Create a new user account.
 
-**Endpoint:** `POST /user/createUser`
+**Endpoint:** `POST /account/createUser`
 
 **Request Headers:**
 ```
@@ -58,7 +58,7 @@ Content-Type: application/json
 
 **cURL Example:**
 ```bash
-curl -X POST http://localhost:5050/api/user/createUser \
+curl -X POST http://localhost:5050/account/createUser \
   -H "Content-Type: application/json" \
   -d '{
     "email": "newuser@example.com",
@@ -73,7 +73,7 @@ curl -X POST http://localhost:5050/api/user/createUser \
 
 Authenticate with email and password.
 
-**Endpoint:** `POST /user/login`
+**Endpoint:** `POST /account/login`
 
 **Request Headers:**
 ```
@@ -113,7 +113,7 @@ Content-Type: application/json
 
 **cURL Example:**
 ```bash
-curl -X POST http://localhost:5050/api/user/login \
+curl -X POST http://localhost:5050/account/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -127,7 +127,7 @@ curl -X POST http://localhost:5050/api/user/login \
 
 Get a new access token using the refresh token from login.
 
-**Endpoint:** `POST /user/refreshToken`
+**Endpoint:** `POST /account/refreshToken`
 
 **Request Headers:**
 ```
@@ -157,11 +157,11 @@ Cookie: refreshToken=<refresh_token_from_login>
 
 ---
 
-### Get Current User
+### Get User Settings
 
-Fetch the authenticated user's profile information.
+Fetch the authenticated user's account settings and profile information.
 
-**Endpoint:** `GET /user/me`
+**Endpoint:** `GET /account/requestSettings`
 
 **Request Headers:**
 ```
@@ -196,7 +196,7 @@ Content-Type: application/json
 
 **cURL Example:**
 ```bash
-curl -X GET http://localhost:5050/api/user/me \
+curl -X GET http://localhost:5050/account/requestSettings \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
@@ -221,8 +221,7 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-  "title": "My First Journal",
-  "userID": "507f1f77bcf86cd799439011"
+  "title": "My First Journal"
 }
 ```
 
@@ -248,12 +247,11 @@ Content-Type: application/json
 
 **cURL Example:**
 ```bash
-curl -X POST http://localhost:5050/api/journals/createJournal \
+curl -X POST http://localhost:5050/journals/createJournal \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "My First Journal",
-    "userID": "507f1f77bcf86cd799439011"
+    "title": "My First Journal"
   }'
 ```
 
@@ -261,17 +259,14 @@ curl -X POST http://localhost:5050/api/journals/createJournal \
 
 ### Get User's Journals
 
-Retrieve all journals for a specific user.
+Retrieve all journals for the authenticated user.
 
-**Endpoint:** `GET /journals/:userId`
+**Endpoint:** `GET /journals/journalSelect`
 
 **Request Headers:**
 ```
 Authorization: Bearer <access_token>
 ```
-
-**Path Parameters:**
-- `userId` (string): MongoDB user ID
 
 **Response (200 OK):**
 ```json
@@ -305,7 +300,7 @@ Authorization: Bearer <access_token>
 
 **cURL Example:**
 ```bash
-curl -X GET http://localhost:5050/api/journals/507f1f77bcf86cd799439011 \
+curl -X GET http://localhost:5050/journals/journalSelect \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -313,9 +308,9 @@ curl -X GET http://localhost:5050/api/journals/507f1f77bcf86cd799439011 \
 
 ### Get Journal Details
 
-Retrieve a specific journal by ID.
+Retrieve a specific journal with its entries.
 
-**Endpoint:** `GET /journals/journals/:id`
+**Endpoint:** `GET /journals/JournalOverview/:id`
 
 **Request Headers:**
 ```
@@ -328,15 +323,30 @@ Authorization: Bearer <access_token>
 **Response (200 OK):**
 ```json
 {
-  "_id": "607f1f77bcf86cd799439020",
-  "title": "My First Journal",
-  "userID": "507f1f77bcf86cd799439011",
-  "entries": [
-    "607f1f77bcf86cd799439022",
-    "607f1f77bcf86cd799439023"
-  ],
-  "createdAt": "2025-02-05T14:20:00.000Z",
-  "updatedAt": "2025-02-05T15:30:00.000Z"
+  "journal": {
+    "_id": "607f1f77bcf86cd799439020",
+    "title": "My First Journal",
+    "userID": "507f1f77bcf86cd799439011",
+    "entries": [
+      "607f1f77bcf86cd799439022",
+      "607f1f77bcf86cd799439023"
+    ],
+    "createdAt": "2025-02-05T14:20:00.000Z",
+    "updatedAt": "2025-02-05T15:30:00.000Z"
+  },
+  "entries": {
+    "docs": [
+      {
+        "_id": "607f1f77bcf86cd799439022",
+        "content": "Today was a great day!",
+        "journalId": "607f1f77bcf86cd799439020",
+        "createdAt": "2025-02-05T15:30:00.000Z"
+      }
+    ],
+    "totalPages": 1,
+    "currentPage": 1,
+    "totalDocs": 1
+  }
 }
 ```
 
@@ -349,7 +359,7 @@ Authorization: Bearer <access_token>
 
 **cURL Example:**
 ```bash
-curl -X GET http://localhost:5050/api/journals/journals/607f1f77bcf86cd799439020 \
+curl -X GET http://localhost:5050/journals/JournalOverview/607f1f77bcf86cd799439020 \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -359,7 +369,7 @@ curl -X GET http://localhost:5050/api/journals/journals/607f1f77bcf86cd799439020
 
 Delete a journal and remove it from the user's journal list.
 
-**Endpoint:** `DELETE /journals/journals/:id`
+**Endpoint:** `DELETE /journals/:id`
 
 **Request Headers:**
 ```
@@ -387,8 +397,73 @@ Authorization: Bearer <access_token>
 
 **cURL Example:**
 ```bash
-curl -X DELETE http://localhost:5050/api/journals/journals/607f1f77bcf86cd799439020 \
+curl -X DELETE http://localhost:5050/journals/607f1f77bcf86cd799439020 \
   -H "Authorization: Bearer <token>"
+```
+
+---
+
+### Create Journal Entry
+
+Create a new entry in a journal with mood tracking.
+
+**Endpoint:** `POST /journals/createEntry`
+
+**Request Headers:**
+```
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "mood": "happy",
+  "pages": [
+    {
+      "content": "Today was a great day!",
+      "type": "text"
+    }
+  ],
+  "journalId": "607f1f77bcf86cd799439020"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "_id": "607f1f77bcf86cd799439022",
+  "mood": "happy",
+  "pages": [
+    {
+      "content": "Today was a great day!",
+      "type": "text"
+    }
+  ],
+  "journalId": "607f1f77bcf86cd799439020",
+  "createdAt": "2025-02-05T15:30:00.000Z"
+}
+```
+
+**Error Responses:**
+
+| Status | Error Message | Cause |
+|--------|---------------|-------|
+| 400 | "Entry must have at least one page!" | Missing pages array |
+| 401 | "Unauthorized" | Missing or invalid token |
+| 404 | "Journal not found" | Invalid journal ID |
+| 500 | Internal server error | Database error |
+
+**cURL Example:**
+```bash
+curl -X POST http://localhost:5050/journals/createEntry \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "mood": "happy",
+    "pages": [{"content": "Today was great!", "type": "text"}],
+    "journalId": "607f1f77bcf86cd799439020"
+  }'
 ```
 
 ---
@@ -428,8 +503,41 @@ Authorization: Bearer <access_token>
 
 **cURL Example:**
 ```bash
-curl -X GET "http://localhost:5050/api/journals/journalEntry?page=1&limit=10" \
+curl -X GET "http://localhost:5050/journals/journalEntry?page=1&limit=10" \
   -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Quotes Endpoints
+
+### Get Quotes
+
+Retrieve all available quotes from the database.
+
+**Endpoint:** `GET /quotes/quote`
+
+**Response (200 OK):**
+```json
+[
+  {
+    "_id": "507f1f77bcf86cd799439011",
+    "text": "The only way to do great work is to love what you do.",
+    "author": "Steve Jobs",
+    "category": "motivation"
+  },
+  {
+    "_id": "507f1f77bcf86cd799439012",
+    "text": "Believe you can and you're halfway there.",
+    "author": "Theodore Roosevelt",
+    "category": "inspiration"
+  }
+]
+```
+
+**cURL Example:**
+```bash
+curl -X GET http://localhost:5050/quotes/quote
 ```
 
 ---
@@ -471,10 +579,10 @@ When you get a `400` error, check:
 4. **Click Send** and view the response
 
 ### Example Postman Flow:
-1. `POST /user/createUser` → Save the `token` from response
-2. `GET /user/me` → Use token in header
+1. `POST /account/createUser` → Save the `token` from response
+2. `GET /account/requestSettings` → Use token in header
 3. `POST /journals/createJournal` → Use token in header
-4. `GET /journals/:userId` → Use token in header
+4. `GET /journals/journalSelect` → Use token in header
 
 ---
 

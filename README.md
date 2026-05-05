@@ -1,6 +1,6 @@
 # Lunar - Personal Journaling Application
 
-A modern, secure full-stack web application for personal journaling and reflection. Built with React, Node.js, and MongoDB, Insight provides users with a beautiful interface to create, manage, and reflect on their personal journals while maintaining privacy and security.
+A modern, secure full-stack web application for personal journaling and reflection. Built with React, Node.js, and MongoDB, Insight provides users with a reactive interface to create, manage, and reflect on their personal journals while maintaining privacy and security, still in super early state.
 
 ## ✨ Features
 
@@ -9,6 +9,8 @@ A modern, secure full-stack web application for personal journaling and reflecti
 - **📝 Rich Journal Entries**: Write and manage journal entries
 - **📊 User Statistics**: Track journaling activity and insights with computed statistics
 - **🎨 Modern UI**: Responsive design built with Tailwind CSS and React
+
+-** Features ** are in a early state and are basic hopefully to be expanded in the future to add images to pages, and further customization to the application
 
 ## 📸 Screenshots
 
@@ -71,7 +73,7 @@ audit-ci --config audit-ci.json
 
 ### Content Security Policy
 
-CSP is implemented **exclusively server-side** via Helmet.js middleware in the backend, providing comprehensive protection against XSS and injection attacks. No client-side CSP plugins or functions are used to maintain simplicity and avoid dependency conflicts.
+CSP is implemented **server-side** via Helmet.js middleware in the backend, providing comprehensive protection against XSS and injection attacks.
 
 ### Security Implementation Status
 
@@ -188,8 +190,10 @@ npm install
 #### Terminal 1: Backend Server
 
 ```bash
-cd server
-npm start
+cd server : the server need to be passed the ENV I use node commmand below
+node --env-file=EnvFileNameHere server.js - loadeds the server with that env file
+
+
 ```
 
 Server will run on `http://localhost:5050`
@@ -269,32 +273,15 @@ npm run lint     # Run ESLint
 #### Backend
 
 ```bash
-cd server
-npm start        # Start production server
+node --env-file=.env server.js       # Start production server
+.env can be the name of your ENV file the ENV file
+
 ```
-
-### Code Quality
-
-- **ESLint**: Configured for React and modern JavaScript
-- **Prettier**: Code formatting (via ESLint)
-- **Security**: Helmet, input sanitization, and validation
 
 ### Testing
 
 Currently, the project focuses on development and learning. Testing frameworks can be added in future iterations.
 
-## 🤝 Contributing
-
-This project is currently in active development for learning purposes. Contributions are welcome for:
-
-- Bug fixes and improvements
-- Feature enhancements
-- Documentation updates
-- Security improvements
-
-## 📄 License
-
-This project is licensed under the ISC License - see the LICENSE file for details.
 
 ## ⚠️ Disclaimer
 
@@ -310,4 +297,4 @@ For questions or issues:
 
 ---
 
-_Built with for personal growth and reflection_
+_Built for myself for personal growth and reflection_

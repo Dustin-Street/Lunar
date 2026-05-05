@@ -5,14 +5,14 @@ Complete step-by-step instructions to get Insight running on your machine.
 ## Prerequisites
 
 Before starting, ensure you have:
-- **Node.js 16+** ([Download](https://nodejs.org/))
+- **Node.js 18+** ([Download](https://nodejs.org/))
 - **npm** (comes with Node.js)
 - **MongoDB** (local instance or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) free account)
 - **Git** (to clone the repository)
 
 Check your installation:
 ```bash
-node --version    # Should show v16.0.0 or higher
+node --version    # Should show v18.0.0 or higher
 npm --version     # Should show 8.0.0 or higher
 git --version     # Should show git version 2.x.x
 ```
@@ -132,14 +132,18 @@ From the `server` directory:
 npm install
 ```
 
-This installs packages defined in `package.json`. Expected packages:
+This installs packages defined in `package.json`. Key packages include:
 - `express` - Web framework
-- `mongoose` - MongoDB connection
-- `passport.js` - Authentication
-- `jsonwebtoken` - JWT tokens
-- `bcryptjs` - Password hashing
+- `mongoose` - MongoDB ODM
+- `passport` & `passport-jwt` - Authentication
+- `jsonwebtoken` - JWT token handling
+- `bcrypt` - Password hashing
 - `cors` - Cross-origin requests
-- `cookie-parser` - Cookie handling
+- `helmet` - Security headers
+- `express-rate-limit` - Rate limiting
+- `multer` - File uploads
+- `nodemailer` - Email sending
+- `@sentry/node` - Error monitoring
 
 ---
 
@@ -175,7 +179,13 @@ cd client
 npm install
 ```
 
-This installs React, Vite, Tailwind CSS, and other frontend dependencies.
+This installs packages defined in `package.json`. Key packages include:
+- `react` & `react-dom` - React framework (v19)
+- `react-router-dom` - Client-side routing
+- `axios` - HTTP client
+- `vite` - Build tool and dev server
+- `tailwindcss` - CSS framework
+- `@sentry/react` - Error monitoring
 
 ---
 

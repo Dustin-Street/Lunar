@@ -149,7 +149,7 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
 4. **Test in Postman:**
 
    ```bash
-   POST http://localhost:5050/api/user/login
+   POST http://localhost:5050/account/login
    Content-Type: application/json
 
    {
@@ -196,7 +196,7 @@ See [Setup Guide](SETUP.md#step-2-configure-environment-variables) for details.
 **Example Error:**
 
 ```
-Access to XMLHttpRequest at 'http://localhost:5050/api/...'
+Access to XMLHttpRequest at 'http://localhost:5050/account/...'
 from origin 'http://localhost:5173' has been blocked by CORS policy
 ```
 
@@ -248,20 +248,20 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
    ```
 
 2. **Check correct base URL:**
-   - Should be: `http://localhost:5050/api/user/createUser`
-   - NOT: `http://localhost:5173/api/...` (frontend port)
-   - NOT: `http://localhost:5050/user/createUser` (missing /api)
+   - Should be: `http://localhost:5050/account/createUser`
+   - NOT: `http://localhost:5173/account/...` (frontend port)
+   - NOT: `http://localhost:5050/api/account/createUser` (wrong path)
 
 3. **Verify routes are imported:**
    - Check `server/server.js` has:
      ```javascript
      import userRoute from "./routes/user.js";
-     app.use("/api/user", userRoute);
+     app.use("/account", userRoute);
      ```
 
 4. **Test with cURL:**
    ```bash
-   curl http://localhost:5050/api/user/login \
+   curl http://localhost:5050/account/login \
      -H "Content-Type: application/json" \
      -d '{"email":"test@example.com","password":"test"}'
    ```
