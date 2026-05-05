@@ -38,17 +38,77 @@ const AuthContext = createContext(null);
  */
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
-
+  const expiresIn = useRef(null);
+  const tokenExpirationTimestamp = useRef(null); 
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState(null);
+  const { setFlashMessage } = useFlashMessage();
 
   //token state
   const [tokenExpiration, setTokenExpiration] = useState(null);
 
-  let expiresIn = useRef(null); 
-  let tokenExpirationTimestamp = useRef(null); 
-  
-  
+  /**
+   * Logs out the user by clearing all authentication-related state.
+   *
+   * @returns {void}
+   */
+  const logout = useCallback(() => {
+    try {
+      axios.post(
+        `${API_BASE_URL}/account/logout`,
+        {},
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      );
+    } catch (err) {
+      logger("error", "Logout error:", err);
+    }
+    setAccessToken(null);
+    setUser(null);
+  }, [setAccessToken, setUser, accessToken]);
+
+  /**
+   * Attempts to refresh the user's access token using the HTTP-only refresh token cookie.
+   * If successful, updates access token, expiry, and fetches the authenticated user's data.
+   * If refresh fails, logs out the user.
+   *
+   * @returns {Promise<void>}
+   */
+  const refreshToken = useCallback(async () => {
+    try {
+      const res = await axios.post(
+        `${API_BASE_URL}/account/refreshToken`,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (res.data.success && res.data.token) {
+        setAccessToken(res.data.token);
+
+        // Fetch user info with new access token
+        const userRes = await axios.get(`${API_BASE_URL}/account/me`, {
+          headers: { Authorization: `Bearer ${res.data.token}` },
+          withCredentials: true,
+        });
+
+        setUser(userRes.data.user);
+
+        expiresIn.current = userRes.data.user.tokenExpiry; // 900 seconds
+        tokenExpirationTimestamp.current = Date.now() + expiresIn.current * 1000;
+
+        setTokenExpiration(tokenExpirationTimestamp.current);
+      }
+    } catch (err) {
+      logger("error", "Refresh token failed:", err);
+      setFlashMessage("Session expired, please log in again.");
+      logout();
+    }
+  }, [logout, setFlashMessage]);
+
   /**
    * Runs once on app load to verify the user's session using the refresh token cookie.
    * Avoids storing access tokens in Storage for security.
@@ -70,7 +130,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     verifyUser();
-  }, []);
+  }, [refreshToken, logout]);
 
   useEffect(() => {
     if (!tokenExpiration) return;
@@ -105,47 +165,6 @@ export const AuthProvider = ({ children }) => {
   }, [tokenExpiration, logout, refreshToken]);
 
   /**
-   * Attempts to refresh the user's access token using the HTTP-only refresh token cookie.
-   * If successful, updates access token, expiry, and fetches the authenticated user's data.
-   * If refresh fails, logs out the user.
-   *
-   * @returns {Promise<void>}
-   */
-  const refreshToken = useCallback(async () => {
-    try {
-      const res = await axios.post(
-        `${API_BASE_URL}/account/refreshToken`,
-        {},
-        {
-          withCredentials: true,
-        },
-      );
-
-      if (res.data.success && res.data.token) {
-        setAccessToken(res.data.token);
-
-        // Fetch user info with new access token
-        const userRes = await axios.get(`${API_BASE_URL}/account/me`, {
-          headers: { Authorization: `Bearer ${res.data.token}` },
-          withCredentials: true,
-        });
-
-        setUser(userRes.data.user);
-
-        expiresIn.current = userRes.data.user.tokenExpiry; // 900 seconds
-        tokenExpirationTimestamp.current = Date.now() + expiresIn.current * 1000;
-
-       
-
-        setTokenExpiration(tokenExpirationTimestamp.current);
-      }
-    } catch (err) {
-      logger("error", "Refresh token failed:", err);
-      logout();
-    }
-  }, [logout]);
-
-  /**
    * Logs in a user by storing their user object, access token, and expiry timestamp.
    *
    * @param {Object} params
@@ -164,28 +183,6 @@ export const AuthProvider = ({ children }) => {
 
     setTokenExpiration(tokenExpirationTimestamp.current);
   };
-
-  /**
-   * Logs out the user by clearing all authentication-related state.
-   *
-   * @returns {void}
-   */
-  const logout = useCallback(() => {
-    try {
-      axios.post(
-        `${API_BASE_URL}/account/logout`,
-        {},
-        {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${accessToken}` },
-        },
-      );
-    } catch (err) {
-      logger("error", "Logout error:", err);
-    }
-    setAccessToken(null);
-    setUser(null);
-  }, [setAccessToken, setUser, accessToken]);
 
   return (
     <AuthContext.Provider
