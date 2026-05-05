@@ -10,7 +10,8 @@ A modern, secure full-stack web application for personal journaling and reflecti
 - **📊 User Statistics**: Track journaling activity and insights with computed statistics
 - **🎨 Modern UI**: Responsive design built with Tailwind CSS and React
 
--** Features ** are in a early state and are basic hopefully to be expanded in the future to add images to pages, and further customization to the application
+- ** Features ** are in a early state and are basic hopefully to be expanded in the future to add images to pages, and further customization to the application
+ when I have time between other projects to improve the experience.
 
 ## 📸 Screenshots
 
@@ -123,95 +124,7 @@ CSP is implemented **server-side** via Helmet.js middleware in the backend, prov
 - **npm** (comes with Node.js)
 - **Git** for cloning the repository
 
-## 🚀 Quick Start
-
-### 1. Clone the Repository
-
-```bash
-git clone <repository-url>
-cd Insight
-```
-
-### 2. Environment Setup
-
-#### Backend Configuration
-
-```bash
-cd server
-# Create environment file
-cp .env.example .env
-```
-
-Edit `server/.env` with your configuration:
-
-```env
-# Database
-MONGODB_URI=mongodb://localhost:27017/insight
-
-# JWT Secrets (use strong random strings)
-JWT_SECRET=your_jwt_secret_here
-REFRESH_TOKEN_SECRET=your_refresh_token_secret_here
-
-# Server
-PORT=5050
-NODE_ENV=development
-
-# CORS
-WHITELISTED_DOMAINS=http://localhost:5173
-
-# Email (for password recovery)
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
-```
-
-#### Database Setup
-
-- **Local MongoDB**: Install and start MongoDB on your system
-- **MongoDB Atlas**: Create a free cluster and get your connection string
-
-### 3. Install Dependencies
-
-#### Backend
-
-```bash
-cd server
-npm install
-```
-
-#### Frontend
-
-```bash
-cd ../client
-npm install
-```
-
-### 4. Start the Application
-
-#### Terminal 1: Backend Server
-
-```bash
-cd server : the server need to be passed the ENV I use node commmand below
-node --env-file=EnvFileNameHere server.js - loadeds the server with that env file
-
-
-```
-
-Server will run on `http://localhost:5050`
-
-#### Terminal 2: Frontend Development Server
-
-```bash
-cd client
-npm run dev
-```
-
-Frontend will run on `http://localhost:5173`
-
-### 5. Access the Application
-
-Open your browser and navigate to `http://localhost:5173`
-
-## 📖 Usage
+## Usage
 
 1. **Sign Up**: Create a new account with email and password
 2. **Login**: Authenticate with your credentials
@@ -220,14 +133,19 @@ Open your browser and navigate to `http://localhost:5173`
 5. **View Statistics**: Track your journaling activity
 6. **Manage Account**: Update profile and security settings
 
-## 📚 Documentation
+## Documentation
 
+## Quick Start Guide
+
+- **[ Quick Start ](docs/SETUP.md)** if you want to try to run it youself on your machine
+
+## Documentation Resources
 - **[Setup Guide](docs/SETUP.md)** - Detailed installation and configuration
 - **[API Reference](docs/API.md)** - Complete REST API documentation
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
 - **[Error Handling](docs/ERROR_HANDLING.md)** - Understanding error responses
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 Insight/
@@ -281,7 +199,6 @@ node --env-file=.env server.js       # Start production server
 ### Testing
 
 Currently, the project focuses on development and learning. Testing frameworks can be added in future iterations.
-
 
 ## ⚠️ Disclaimer
 

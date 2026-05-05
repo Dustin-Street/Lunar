@@ -7,13 +7,12 @@ node_modules
 #Frontend
 #images
 *.png
-*.jpg
 *.jpeg
 *.gif
 *.svg
 *.ico
 *.webp
-!insight/docs/assets/images/**
+!docs/assets/images/**
 
 
 # Logs
