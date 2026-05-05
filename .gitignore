@@ -13,7 +13,7 @@ node_modules
 *.ico
 *.webp
 !docs/assets/images/**
-
+!client/public/images/**
 
 # Logs
 logs
