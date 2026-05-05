@@ -2,6 +2,9 @@
 
 A modern, secure full-stack web application for personal journaling and reflection. Built with React, Node.js, and MongoDB, Insight provides users with a reactive interface to create, manage, and reflect on their personal journals while maintaining privacy and security, still in super early state.
 
+**Check it out your self here**
+Render deployment link - https://lunar-xycw.onrender.com
+
 ## ✨ Features
 
 - **🔐 Secure Authentication**: JWT-based authentication with automatic token refresh and secure password hashing
@@ -11,7 +14,7 @@ A modern, secure full-stack web application for personal journaling and reflecti
 - **🎨 Modern UI**: Responsive design built with Tailwind CSS and React
 
 - ** Features ** are in a early state and are basic hopefully to be expanded in the future to add images to pages, and further customization to the application
- when I have time between other projects to improve the experience.
+  when I have time between other projects to improve the experience.
 
 ## 📸 Screenshots
 
@@ -143,31 +146,33 @@ CSP is implemented **server-side** via Helmet.js middleware in the backend, prov
 ## Project Structure
 
 ```
+
 Insight/
-├── client/                    # React frontend
-│   ├── src/
-│   │   ├── components/       # Reusable React components
-│   │   │   ├── account/      # Authentication pages
-│   │   │   ├── journal/      # Journal management
-│   │   │   ├── layout/       # Navigation & UI components
-│   │   │   └── context/      # React context providers
-│   │   ├── hooks/            # Custom React hooks
-│   │   ├── utils/            # Helper functions
-│   │   └── assets/           # Static assets
-│   ├── package.json
-│   └── vite.config.js
-├── server/                    # Express backend
-│   ├── routes/               # API route handlers
-│   ├── schema/               # MongoDB schemas
-│   ├── authentication/       # Passport strategies
-│   ├── middleware/           # Express middleware
-│   ├── database/            # Database connection
-│   ├── utils/               # Server utilities
-│   ├── package.json
-│   └── server.js
-├── docs/                     # Documentation
+├── client/ # React frontend
+│ ├── src/
+│ │ ├── components/ # Reusable React components
+│ │ │ ├── account/ # Authentication pages
+│ │ │ ├── journal/ # Journal management
+│ │ │ ├── layout/ # Navigation & UI components
+│ │ │ └── context/ # React context providers
+│ │ ├── hooks/ # Custom React hooks
+│ │ ├── utils/ # Helper functions
+│ │ └── assets/ # Static assets
+│ ├── package.json
+│ └── vite.config.js
+├── server/ # Express backend
+│ ├── routes/ # API route handlers
+│ ├── schema/ # MongoDB schemas
+│ ├── authentication/ # Passport strategies
+│ ├── middleware/ # Express middleware
+│ ├── database/ # Database connection
+│ ├── utils/ # Server utilities
+│ ├── package.json
+│ └── server.js
+├── docs/ # Documentation
 └── README.md
-```
+
+````
 
 ## 🔧 Development
 
@@ -181,7 +186,7 @@ npm run dev      # Start development server
 npm run build    # Build for production
 npm run preview  # Preview production build
 npm run lint     # Run ESLint
-```
+````
 
 #### Backend
 
