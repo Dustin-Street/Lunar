@@ -41,13 +41,12 @@ export const AuthProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState(null);
-  const { setFlashMessage } = useFlashMessage();
 
   //token state
   const [tokenExpiration, setTokenExpiration] = useState(null);
 
-  let expiresIn = useRef(null); // initial time from backend in seconds  900
-  let tokenExpirationTimestamp = useRef(null); //convertion to Date.now() * 1000
+  let expiresIn = useRef(null); 
+  let tokenExpirationTimestamp = useRef(null); 
   
   
   /**
@@ -142,10 +141,9 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       logger("error", "Refresh token failed:", err);
-      setFlashMessage("Session expired, please log in again.");
       logout();
     }
-  }, [logout, setFlashMessage]);
+  }, [logout]);
 
   /**
    * Logs in a user by storing their user object, access token, and expiry timestamp.
