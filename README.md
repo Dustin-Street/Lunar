@@ -68,9 +68,6 @@ A modern, secure full-stack web application for personal journaling and reflecti
 # Run security audit
 npm run security-audit
 
-# Check for vulnerabilities
-audit-ci --config audit-ci.json
-```
 
 ### Content Security Policy
 
