@@ -66,7 +66,7 @@ export default function Home() {
   }, [accessToken, setFlashMessage]);
 
   return (
-    <div className="h-dvh lg:h-screen bg-[url('/images/deepnight3.jpg')] bg-center bg-no-repeat  flex items-center justify-center">
+    <div className="h-dvh lg:h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat  flex items-center justify-center">
       {loading ? (
         <div className=" flex items-center justify-center">
           <LoadingOverlay />
