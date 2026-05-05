@@ -13,14 +13,17 @@ A modern, secure full-stack web application for personal journaling and reflecti
 ## 📸 Screenshots
 
 ### Login Interface
+
 ![Insight Login](docs/assets/images/LunarLoginFull.png)
 
 ### Mobile Login View
+
 ![Insight Mobile Login](docs/assets/images/LunarLoginSmall.png)
 
 ## 🔒 Security Features
 
 ### Frontend Security
+
 - **Input Sanitization**: All user inputs are sanitized to prevent XSS attacks
 - **Form Validation**: Client-side validation with comprehensive error messages
 - **Rate Limiting**: Login and signup attempts are rate-limited to prevent brute force
@@ -32,6 +35,7 @@ A modern, secure full-stack web application for personal journaling and reflecti
 - **Secure Random Generation**: Cryptographically secure random values for nonces and IDs
 
 ### Authentication Security
+
 - **JWT Tokens**: Short-lived access tokens (15 minutes) with automatic refresh
 - **HTTP-Only Cookies**: Refresh tokens stored securely in HTTP-only cookies
 - **Password Policies**: Strong password requirements with validation
@@ -39,6 +43,7 @@ A modern, secure full-stack web application for personal journaling and reflecti
 - **Secure Logout**: Complete token cleanup on logout
 
 ### Data Protection
+
 - **Input Validation**: Comprehensive validation for all user inputs
 - **XSS Prevention**: HTML encoding and sanitization of all dynamic content
 - **CSRF Protection**: Request headers and origin validation
@@ -48,12 +53,14 @@ A modern, secure full-stack web application for personal journaling and reflecti
 ## 🔍 Security Monitoring & Auditing
 
 ### Automated Security Checks
+
 - **Dependency Auditing**: Regular security audits of npm packages
 - **Vulnerability Scanning**: Automated detection of known security issues
 - **Sentry Integration**: Real-time error monitoring and alerting
 - **Input Validation**: Comprehensive client and server-side validation
 
 ### Security Scripts
+
 ```bash
 # Run security audit
 npm run security-audit
@@ -63,14 +70,15 @@ audit-ci --config audit-ci.json
 ```
 
 ### Content Security Policy
+
 CSP is implemented **exclusively server-side** via Helmet.js middleware in the backend, providing comprehensive protection against XSS and injection attacks. No client-side CSP plugins or functions are used to maintain simplicity and avoid dependency conflicts.
 
 ### Security Implementation Status
+
 ✅ **Active Security Features**: Input sanitization, form validation, rate limiting, secure HTTP interceptors, and dependency auditing are fully implemented and working.
 
 ⚠️ **Build Compatibility**: The SecurityInitializer component is temporarily disabled to ensure build compatibility. Security checks are still performed through other implemented measures.
 
-🧹 **Clean Architecture**: Removed unnecessary CSP client-side code. Content Security Policy is handled exclusively server-side via Helmet.js for optimal security and simplicity.
 - **📱 Mobile Friendly**: Responsive design that works on all devices
 - **⚡ Fast Development**: Vite-powered frontend with hot module replacement
 - **🛡️ Error Monitoring**: Sentry integration for production error tracking
@@ -79,6 +87,7 @@ CSP is implemented **exclusively server-side** via Helmet.js middleware in the b
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React 19** - Modern React with hooks and concurrent features
 - **Vite** - Fast build tool and development server
 - **Tailwind CSS** - Utility-first CSS framework
@@ -87,6 +96,7 @@ CSP is implemented **exclusively server-side** via Helmet.js middleware in the b
 - **Context API** - State management for authentication and messaging
 
 ### Backend
+
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web framework for REST API
 - **MongoDB** - NoSQL database with Mongoose ODM
@@ -98,6 +108,7 @@ CSP is implemented **exclusively server-side** via Helmet.js middleware in the b
 - **Express Rate Limit** - API rate limiting
 
 ### DevOps & Monitoring
+
 - **Sentry** - Error tracking and monitoring
 - **Nodemailer** - Email service for account recovery
 - **Multer** - File upload handling
@@ -113,6 +124,7 @@ CSP is implemented **exclusively server-side** via Helmet.js middleware in the b
 ## 🚀 Quick Start
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <repository-url>
 cd Insight
@@ -121,6 +133,7 @@ cd Insight
 ### 2. Environment Setup
 
 #### Backend Configuration
+
 ```bash
 cd server
 # Create environment file
@@ -128,6 +141,7 @@ cp .env.example .env
 ```
 
 Edit `server/.env` with your configuration:
+
 ```env
 # Database
 MONGODB_URI=mongodb://localhost:27017/insight
@@ -149,18 +163,21 @@ EMAIL_PASS=your_app_password
 ```
 
 #### Database Setup
+
 - **Local MongoDB**: Install and start MongoDB on your system
 - **MongoDB Atlas**: Create a free cluster and get your connection string
 
 ### 3. Install Dependencies
 
 #### Backend
+
 ```bash
 cd server
 npm install
 ```
 
 #### Frontend
+
 ```bash
 cd ../client
 npm install
@@ -169,17 +186,21 @@ npm install
 ### 4. Start the Application
 
 #### Terminal 1: Backend Server
+
 ```bash
 cd server
 npm start
 ```
+
 Server will run on `http://localhost:5050`
 
 #### Terminal 2: Frontend Development Server
+
 ```bash
 cd client
 npm run dev
 ```
+
 Frontend will run on `http://localhost:5173`
 
 ### 5. Access the Application
@@ -236,6 +257,7 @@ Insight/
 ### Available Scripts
 
 #### Frontend
+
 ```bash
 cd client
 npm run dev      # Start development server
@@ -245,17 +267,20 @@ npm run lint     # Run ESLint
 ```
 
 #### Backend
+
 ```bash
 cd server
 npm start        # Start production server
 ```
 
 ### Code Quality
+
 - **ESLint**: Configured for React and modern JavaScript
 - **Prettier**: Code formatting (via ESLint)
 - **Security**: Helmet, input sanitization, and validation
 
 ### Testing
+
 Currently, the project focuses on development and learning. Testing frameworks can be added in future iterations.
 
 ## 🤝 Contributing
@@ -278,10 +303,11 @@ This is a work-in-progress application developed for educational purposes. While
 ## 📞 Support
 
 For questions or issues:
+
 1. Check the [Troubleshooting Guide](docs/TROUBLESHOOTING.md)
 2. Review server logs for error details
 3. Check browser developer tools for client-side errors
 
 ---
 
-*Built with for personal growth and reflection*
+_Built with for personal growth and reflection_
