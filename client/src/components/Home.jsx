@@ -63,7 +63,7 @@ export default function Home() {
       }
     }
     updateAndGetUserStatistics();
-  }, [accessToken]);
+  }, [accessToken, setFlashMessage]);
 
   return (
     <div className="h-dvh lg:h-screen bg-[url('images/deepnight3.jpg')] bg-center bg-no-repeat  flex items-center justify-center">
