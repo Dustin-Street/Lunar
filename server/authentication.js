@@ -8,7 +8,9 @@ export const COOKIE_OPTIONS = {
   secure: process.env.NODE_ENV === "production",
   signed: true,
   maxAge: eval(process.env.REFRESH_TOKEN_EXPIRY) * 1000,
-  sameSite: "lax", //prevents CSRF attacks
+  sameSite: "none", 
+  path: "/",
+  
 };
 
 export const getToken = (user) => {
