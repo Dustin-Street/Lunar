@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+
 import LoadingOverlay from "../layout/LoadingOverlay";
 import LoginSignupCard from "../layout/LoginSignupCard";
 
@@ -7,7 +7,7 @@ import LoginSignupCard from "../layout/LoginSignupCard";
  * Prompts them to sign up or log in
  */
 export default function UnauthenticatedView({ isLoading = false }) {
-  const navigate = useNavigate();
+  
 
   if (isLoading) {
     return LoadingOverlay({ message: "loading..." });

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { useJournals } from "../../hooks/useJournals";
 import JournalEntryCard from "./JournalEntryCard";
 
@@ -8,7 +7,6 @@ import JournalEntryCard from "./JournalEntryCard";
 
 export default function JournalOverview() {
   const {
-    loading,
     journal,
     journalEntries,
     fetchSingleJournal,
@@ -23,9 +21,9 @@ export default function JournalOverview() {
   const [sideBarOpened, setSideBarOpen] = useState(false);
   const [showButtonOnScroll, setButtonOnScroll] = useState(false);
 
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [pages, setPages] = useState([""]);
   const [pageImages, setPageImages] = useState([""]);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   //mood is an enumeration that accepts - ['happy', 'sad', 'neutral', 'angry', 'excited']
   const [mood, setMood] = useState("neutral");
@@ -33,34 +31,40 @@ export default function JournalOverview() {
   const [activeEntrySelected, setActiveEntrySelected] = useState(pages || [""]);
 
   //payload for backend
-  const JournalCreateEntryPayload = {
-    mood,
-    pages: pages.map((pageText, index) => ({
-      pageNumber: index + 1,
-      text: pageText,
-      images: pageImages[index] || [],
-    })),
-    journalId: journal._id,
-  };
+  const JournalCreateEntryPayload = useCallback(() => {
+    return {
+      mood,
+      pages: pages.map((pageText, index) => ({
+        pageNumber: index + 1,
+        text: pageText,
+        images: pageImages[index] || [],
+      })),
+      journalId: journal._id,
+    };
+  }, [mood, pages, pageImages, journal._id]);
 
-  const JournalEditEntryPayload = {
-    mood,
-    pages: pages.map((pageText, index) => ({
-      pageNumber: index + 1,
-      text: pageText,
-      images: pageImages[index] || [],
-    })),
-    journalEntryId: activeEntrySelected._id,
-  };
+  const JournalEditEntryPayload = useCallback(() => {
+    return {
+      mood,
+      pages: pages.map((pageText, index) => ({
+        pageNumber: index + 1,
+        text: pageText,
+        images: pageImages[index] || [],
+      })),
+      journalEntryId: activeEntrySelected._id,
+    };
+  }, [mood, pages, pageImages, activeEntrySelected._id]);
 
-  const JournalEntryDeletePayload = {
-    journalEntryId: activeEntrySelected._id,
-  };
+  const JournalEntryDeletePayload = useCallback(() => {
+    return {
+      journalEntryId: activeEntrySelected._id,
+    };
+  }, [activeEntrySelected._id]);
 
   //fetch journal
   useEffect(() => {
     fetchSingleJournal(id);
-  }, [id, sideBarOpened]);
+  }, [id, sideBarOpened, fetchSingleJournal]);
 
   //handles listening for scroll to show back button if burried in content (entries) to be able to quickly go back in wanted
   useEffect(() => {
@@ -75,7 +79,7 @@ export default function JournalOverview() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [sideBarOpened,showButtonOnScroll]);
+  }, [sideBarOpened, showButtonOnScroll]);
 
   //change the entry from the indevidual entry card side panel
   const changeEntry = useCallback((entry) => {
@@ -111,7 +115,7 @@ export default function JournalOverview() {
     setPages([""]);
     setPageImages([""]);
     setMood("neutral");
-  }, [createEntry, pages, mood, journal._id]);
+  }, [createEntry, JournalCreateEntryPayload]);
   //edit logic
   const handleEditEntry = useCallback(() => {
     editEntry(JournalEditEntryPayload);
@@ -119,7 +123,7 @@ export default function JournalOverview() {
     setPageImages([""]);
     setMood("neutral"); //placeholder in development still
     setCreateToEdit(false);
-  }, [editEntry, pages, mood, journal._id]);
+  }, [editEntry, JournalEditEntryPayload]);
   //delete logic
   const handledeleteEntry = useCallback(() => {
     deleteEntry(JournalEntryDeletePayload);
@@ -127,7 +131,7 @@ export default function JournalOverview() {
     setPageImages([""]);
     setMood("neutral");
     setCreateToEdit(false);
-  }, [deleteEntry, pages, mood, journal._id]);
+  }, [deleteEntry, JournalEntryDeletePayload]);
 
   return (
     <div className="flex h-[calc(100vh-3rem)] justify-items-center  overflow-hidden">

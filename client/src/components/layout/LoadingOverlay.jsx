@@ -5,8 +5,12 @@
  * @returns text defined in message to the card if some needed other than loading...
  */
 
+import getRandomLoadingString from "../../utils/randomLoadingString";
 
-export default function LoadingOverlay({ message = "Loading..." }) {
+const randomMessage = getRandomLoadingString();
+
+
+export default function LoadingOverlay({ message = randomMessage }) {
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm bg-linear-30 from-gray-700 to-gray-900 opacity-85">
       <div className="bg-gray-900 text-amber-100 p-8 rounded-2xl shadow-2xl border border-amber-200 animate-fade-in">
