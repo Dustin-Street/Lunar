@@ -45,9 +45,11 @@ export const AuthProvider = ({ children }) => {
 
   //token state
   const [tokenExpiration, setTokenExpiration] = useState(null);
-  let expiresIn; // initial time from backend in seconds  900
-  let tokenExpirationTimestamp; //convertion to Date.now() * 1000
 
+  let expiresIn = useRef(null); // initial time from backend in seconds  900
+  let tokenExpirationTimestamp = useRef(null); //convertion to Date.now() * 1000
+  
+  
   /**
    * Runs once on app load to verify the user's session using the refresh token cookie.
    * Avoids storing access tokens in Storage for security.
@@ -101,7 +103,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return () => clearTimeout(timer);
-  }, [tokenExpiration]);
+  }, [tokenExpiration, logout, refreshToken]);
 
   /**
    * Attempts to refresh the user's access token using the HTTP-only refresh token cookie.
@@ -110,7 +112,7 @@ export const AuthProvider = ({ children }) => {
    *
    * @returns {Promise<void>}
    */
-  const refreshToken = async () => {
+  const refreshToken = useCallback(async () => {
     try {
       const res = await axios.post(
         `${API_BASE_URL}/account/refreshToken`,
@@ -131,17 +133,19 @@ export const AuthProvider = ({ children }) => {
 
         setUser(userRes.data.user);
 
-        expiresIn = userRes.data.user.tokenExpiry; // 900 seconds
+        expiresIn.current = userRes.data.user.tokenExpiry; // 900 seconds
+        tokenExpirationTimestamp.current = Date.now() + expiresIn.current * 1000;
 
-        tokenExpirationTimestamp = Date.now() + expiresIn * 1000;
+       
 
-        setTokenExpiration(tokenExpirationTimestamp);
+        setTokenExpiration(tokenExpirationTimestamp.current);
       }
     } catch (err) {
       logger("error", "Refresh token failed:", err);
+      setFlashMessage("Session expired, please log in again.");
       logout();
     }
-  };
+  }, [logout, setFlashMessage]);
 
   /**
    * Logs in a user by storing their user object, access token, and expiry timestamp.
@@ -155,11 +159,12 @@ export const AuthProvider = ({ children }) => {
   const login = (user, token, expiresIn) => {
     setAccessToken(token);
     setUser(user);
-    expiresIn = user.tokenExpiry; // 900 seconds
 
-    tokenExpirationTimestamp = Date.now() + expiresIn * 1000;
+    expiresIn.current = user.tokenExpiry; // 900 seconds
 
-    setTokenExpiration(tokenExpirationTimestamp);
+    tokenExpirationTimestamp.current = Date.now() + expiresIn.current * 1000;
+
+    setTokenExpiration(tokenExpirationTimestamp.current);
   };
 
   /**
@@ -167,7 +172,7 @@ export const AuthProvider = ({ children }) => {
    *
    * @returns {void}
    */
-  const logout = () => {
+  const logout = useCallback(() => {
     try {
       axios.post(
         `${API_BASE_URL}/account/logout`,
@@ -182,7 +187,7 @@ export const AuthProvider = ({ children }) => {
     }
     setAccessToken(null);
     setUser(null);
-  };
+  }, [setAccessToken, setUser, accessToken]);
 
   return (
     <AuthContext.Provider
