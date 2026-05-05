@@ -39,10 +39,11 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
   const expiresIn = useRef(null);
-  const tokenExpirationTimestamp = useRef(null); 
+  const tokenExpirationTimestamp = useRef(null);
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState(null);
   const { setFlashMessage } = useFlashMessage();
+  const [isLoggedOut, setIsLoggedOut] = useState(false); // Track if user has logged out
 
   //token state
   const [tokenExpiration, setTokenExpiration] = useState(null);
@@ -62,6 +63,7 @@ export const AuthProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
       );
+      setIsLoggedOut(true);
     } catch (err) {
       logger("error", "Logout error:", err);
     }
@@ -98,16 +100,21 @@ export const AuthProvider = ({ children }) => {
         setUser(userRes.data.user);
 
         expiresIn.current = userRes.data.user.tokenExpiry; // 900 seconds
-        tokenExpirationTimestamp.current = Date.now() + expiresIn.current * 1000;
+        tokenExpirationTimestamp.current =
+          Date.now() + expiresIn.current * 1000;
 
         setTokenExpiration(tokenExpirationTimestamp.current);
       }
     } catch (err) {
-      logger("error", "Refresh token failed:", err);
-      setFlashMessage("Session expired, please log in again.");
+      if (!isLoggedOut) {
+        logger("warning", "Token refresh failed:", err);
+        setFlashMessage("Session expired, please log in again.");
+      } else {
+        logger("info", "User has logged out, skipping token refresh.");
+      }
       logout();
     }
-  }, [logout, setFlashMessage]);
+  }, [logout, setFlashMessage, isLoggedOut]);
 
   /**
    * Runs once on app load to verify the user's session using the refresh token cookie.
@@ -167,15 +174,14 @@ export const AuthProvider = ({ children }) => {
   /**
    * Logs in a user by storing their user object, access token, and expiry timestamp.
    *
-   * @param {Object} params
-   * @param {Object} params.user - The authenticated user's data.
-   * @param {string} params.token - The JWT access token.
-   * @param {number} params.expiresIn - Token expiry time in seconds.
+   * @param {Object} user - The authenticated user's data (must contain tokenExpiry property).
+   * @param {string} token - The JWT access token.
    * @returns {void}
    */
-  const login = (user, token, expiresIn) => {
+  const login = (user, token) => {
     setAccessToken(token);
     setUser(user);
+    setIsLoggedOut(false); 
 
     expiresIn.current = user.tokenExpiry; // 900 seconds
 

@@ -5,14 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useFlashMessage } from "../components/context/FlashMessageContext";
 import { useAuth } from "../components/context/AuthContext";
 import { API_BASE_URL } from "../utils/api";
-import { binaryStringToFile } from "../utils/binaryStringToFile";
-import { validateImage } from "../utils/validateImage";
-import { memeTypeCheck } from "../utils/memeTypeCheck";
+import logger from "../utils/logger";
+
 
 export default function useAccount() {
   const [loading, setLoading] = useState(false);
   const { login, logout } = useAuth();
   const { user, accessToken } = useAuth();
+
+  //state for user account settings will be used to pull user data and update profile information or themes so on not used yet
   const [userAccountSettings, setUserAccountSettings] = useState({});
   const navigate = useNavigate();
   const { setFlashMessage } = useFlashMessage();
@@ -35,10 +36,14 @@ export default function useAccount() {
         },
       );
       // setting user account setting from user schema -> need to add more details to user schema for subscription and profile settings
-      if (setUserAccountSettings(response.data)) {
+      if (response.data.success) {
+        setUserAccountSettings(response.data);
+      } else {
+       logger("Failed to fetch user account settings:", response.data.message);
       }
-      // whatever you want to do with the data
     } catch (err) {
+      ;
+      logger.error("Error fetching user account settings:", err);
     } finally {
       setLoading(false);
     }
@@ -105,7 +110,6 @@ export default function useAccount() {
               profile: response.data.user.profile,
             },
             response.data.token,
-            response.data.expiresIn,
           );
         }
         navigate("/").then(() => {
@@ -175,7 +179,7 @@ export default function useAccount() {
   };
 
   //still need to finish this logic !
-  const resetPassword = async (email) => {
+  const resetPassword = async () => {
     try {
       const response = await axios.post(
         `${API_BASE_URL}/account/request-password-reset`,
