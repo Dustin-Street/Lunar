@@ -1,6 +1,6 @@
-# Troubleshooting Guide - Insight Application
+# Troubleshooting Guide - Lunar Application
 
-Solutions to common issues and problems when running or developing Insight.
+Solutions to common issues and problems when running or developing Lunar.
 
 ## Table of Contents
 
@@ -51,7 +51,7 @@ Solutions to common issues and problems when running or developing Insight.
 1. Create `server/.env` file
 2. Add required variables:
    ```
-   MONGODB_URI=mongodb://localhost:27017/insight
+   MONGODB_URI=mongodb://localhost:27017/lunar
    JWT_SECRET=your_secret_key
    REFRESH_TOKEN_SECRET=your_refresh_token_secret
    PORT=5050
@@ -363,11 +363,11 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 3. **Check connection string in `.env`:**
 
    ```env
-   MONGODB_URI=mongodb://localhost:27017/insight
+   MONGODB_URI=mongodb://localhost:27017/lunar
    ```
 
    - For local: `mongodb://localhost:27017/<database_name>`
-   - For Atlas: `mongodb+srv://user:password@cluster.mongodb.net/insight`
+   - For Atlas: `mongodb+srv://user:password@cluster.mongodb.net/lunar`
 
 4. **Atlas connection issues:**
    - Verify username and password are correct
@@ -407,7 +407,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 1. **Verify database name in connection string:**
 
    ```env
-   MONGODB_URI=mongodb://localhost:27017/insight
+   MONGODB_URI=mongodb://localhost:27017/lunar
    ```
 
    - All code must use same database name
@@ -420,7 +420,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
    # List databases
    show dbs
    # Use your database
-   use insight
+   use lunar
    # Check collections
    show collections
    # Query documents
@@ -635,7 +635,7 @@ from origin 'http://localhost:5173' has been blocked by CORS policy
 2. Select database:
 
    ```javascript
-   use insight
+   use lunar
    ```
 
 3. Query data:

@@ -1,4 +1,4 @@
-# API Reference - Insight Application
+# API Reference - Lunar Application
 
 Complete documentation of all REST API endpoints with examples and error codes.
 

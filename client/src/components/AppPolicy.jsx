@@ -13,7 +13,7 @@ export default function AppPolicy() {
         This is a personal journaling application Beta or prototype, and is not
         intended to be viewed as a final product. This Privacy Policy explains
         how we collect, use, and protect your information when you use the
-        application. By using Insight, you agree to the collection and use of
+        application. By using Lunar, you agree to the collection and use of
         information in accordance with this policy. If you do not agree with
         this policy, please do not use the application.
       </p>

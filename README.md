@@ -1,6 +1,6 @@
 # Lunar - Personal Journaling Application
 
-A modern, secure full-stack web application for personal journaling and reflection. Built with React, Node.js, and MongoDB, Insight provides users with a reactive interface to create, manage, and reflect on their personal journals while maintaining privacy and security, still in super early state.
+A modern, secure full-stack web application for personal journaling and reflection. Built with React, Node.js, and MongoDB, Lunar provides users with a reactive interface to create, manage, and reflect on their personal journals while maintaining privacy and security, still in super early state.
 
 **Check it out yourself here**
 Render deployment link : https://lunar-xycw.onrender.com  **(note this could take a up to a minute to load)**
@@ -24,7 +24,7 @@ Render deployment link : https://lunar-xycw.onrender.com  **(note this could tak
 
 ### Mobile Login View
 
-![Insight Mobile Login](docs/assets/images/LunarLoginSmall.png)
+![Lunar Mobile Login](docs/assets/images/LunarLoginSmall.png)
 
 ## 🔒 Security Features
 
@@ -147,7 +147,7 @@ CSP is implemented **server-side** via Helmet.js middleware in the backend, prov
 
 ```
 
-Insight/
+Lunar/
 ├── client/ # React frontend
 │ ├── src/
 │ │ ├── components/ # Reusable React components

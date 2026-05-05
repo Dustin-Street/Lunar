@@ -1,4 +1,4 @@
-# Error Handling Guide - Insight Application
+# Error Handling Guide - Lunar Application
 
 Understanding how errors work and how to debug them effectively.
 

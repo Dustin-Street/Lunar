@@ -1,6 +1,6 @@
-# Setup Guide - Insight Application
+# Setup Guide - Lunar Application
 
-Complete step-by-step instructions to get Insight running on your machine.
+Complete step-by-step instructions to get Lunar running on your machine.
 
 ## Prerequisites
 
@@ -143,7 +143,7 @@ Or use the first terminal in Vite to Enter + o to run it in the browser
 ✅ Backend running on `http://localhost:5050` (see terminal)
 ✅ Frontend dependencies installed (`npm install` in client/)
 ✅ Frontend running on `http://localhost:5173` (see browser)
-✅ Can see the Insight landing page
+✅ Can see the Lunar landing page
 ✅ Can create a new user account
 
 ---
