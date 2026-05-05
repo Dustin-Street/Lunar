@@ -4,7 +4,7 @@ import {
   useFlashMessage,
 } from "./components/context/FlashMessageContext";
 import FlashMessage from "./components/layout/FlashMessage";
-import Footer from "./components/layout/footer";
+import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
 import { Outlet } from "react-router-dom";
 

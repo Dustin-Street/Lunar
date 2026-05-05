@@ -16,7 +16,6 @@ export default function Home() {
   const [statistics, setStatistics] = useState();
 
   //temp
-  const [name, setName] = useState();
   const { setFlashMessage } = useFlashMessage();
   const { user, isAuthenticated, accessToken } = useAuth();
 
@@ -57,7 +56,7 @@ export default function Home() {
         setStatistics(response.data);
       } catch (error) {
         console.error(error);
-        useFlashMessage("error receiving your Activity report");
+        setFlashMessage("error receiving your Activity report");
       } finally {
         setLoading(false);
         setLoadingStats(false);
