@@ -99,16 +99,28 @@ export const AuthProvider = ({ children }) => {
 
         setUser(userRes.data.user);
 
-        expiresIn.current = userRes.data.user.tokenExpiry; // 900 seconds
+        const refreshedExpiresIn = Number(res.data.expiresIn) || 900;
+        expiresIn.current = refreshedExpiresIn;
         tokenExpirationTimestamp.current =
           Date.now() + expiresIn.current * 1000;
 
         setTokenExpiration(tokenExpirationTimestamp.current);
       }
     } catch (err) {
-      if (!isLoggedOut) {
+      const noRefreshTokenPresent =
+        err?.response?.status === 401 &&
+        /refresh token/i.test(
+          err?.response?.data?.message || err?.response?.data?.error || "",
+        );
+
+      if (!isLoggedOut && !noRefreshTokenPresent) {
         logger("warning", "Token refresh failed:", err);
         setFlashMessage("Session expired, please log in again.");
+      } else if (!isLoggedOut) {
+        logger(
+          "info",
+          "No refresh token present or user is unauthenticated; skipping flash.",
+        );
       } else {
         logger("info", "User has logged out, skipping token refresh.");
       }
@@ -178,14 +190,17 @@ export const AuthProvider = ({ children }) => {
    * @param {string} token - The JWT access token.
    * @returns {void}
    */
-  const login = (user, token) => {
+  const login = (user, token, expiresInSeconds = null) => {
     setAccessToken(token);
     setUser(user);
-    setIsLoggedOut(false); 
+    setIsLoggedOut(false);
 
-    expiresIn.current = user.tokenExpiry; // 900 seconds
+    const effectiveExpiresIn =
+      Number(expiresInSeconds ?? user?.tokenExpiry ?? 900) || 900;
 
-    tokenExpirationTimestamp.current = Date.now() + expiresIn.current * 1000;
+    expiresIn.current = effectiveExpiresIn;
+    tokenExpirationTimestamp.current =
+      Date.now() + expiresIn.current * 1000;
 
     setTokenExpiration(tokenExpirationTimestamp.current);
   };

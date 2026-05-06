@@ -1,5 +1,6 @@
 //server
 import express from "express";
+import database from "../database/connection.js";
 import User from "../schema/user.js";
 import Journal from "../schema/journal.js";
 import JournalEntry from "../schema/journalEntry.js";
@@ -110,7 +111,7 @@ router.post(
     try {
       await CheckIfValidNewAccount(username, email, password);
     } catch (err) {
-      next(err);
+      return next(err);
     }
 
     const normalizedUsername = username.trim();
@@ -124,7 +125,6 @@ router.post(
     try {
       await user.save();
     } catch (saveError) {
-      next(saveError);
       if (saveError.code === 11000) {
         if (saveError.keyPattern?.username) {
           return next(

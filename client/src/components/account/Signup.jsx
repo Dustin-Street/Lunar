@@ -1,6 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useAccount from "../../hooks/useAccount";
-import { validateEmail, validatePassword, validateUsername, sanitizeInput, RateLimiter } from "../../utils/security";
+import {
+  validateEmail,
+  validateUsername,
+  validatePassword,
+  sanitizeInput,
+  RateLimiter,
+} from "../../utils/security";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -16,18 +22,7 @@ export default function Signup() {
   // Rate limiter for signup attempts (3 attempts per hour)
   const signupLimiter = new RateLimiter(3, 3600000);
 
-  // Clear errors when inputs change
-  useEffect(() => {
-    if (emailError && email) setEmailError("");
-  }, [email, emailError]);
-
-  useEffect(() => {
-    if (passwordError && password) setPasswordError("");
-  }, [password, passwordError]);
-
-  useEffect(() => {
-    if (usernameError && username) setUsernameError("");
-  }, [username, usernameError]);
+  // Clear field errors when the user edits the inputs
 
   const validateForm = () => {
     let isValid = true;
@@ -71,12 +66,19 @@ export default function Signup() {
 
     // Check rate limit
     if (!signupLimiter.isAllowed()) {
-      const timeUntilReset = Math.ceil(signupLimiter.getTimeUntilReset() / 1000 / 60);
-      setEmailError(`Too many signup attempts. Try again in ${timeUntilReset} minutes.`);
+      const timeUntilReset = Math.ceil(
+        signupLimiter.getTimeUntilReset() / 1000 / 60,
+      );
+      setEmailError(
+        `Too many signup attempts. Try again in ${timeUntilReset} minutes.`,
+      );
       return;
     }
 
     setIsSubmitting(true);
+    setEmailError("");
+    setUsernameError("");
+    setPasswordError("");
 
     try {
       // Sanitize inputs before sending
@@ -112,83 +114,91 @@ export default function Signup() {
           Sign Up
         </h1>
 
-        <div className="">
-          <div className="my-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
+        <div className="mb-0">
+          <div className="mt-10 mb-0 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
             <input
-              className={`bg-gray-200 rounded p-1.5 text-black ${emailError ? 'border-red-500' : ''}`}
+              className={`bg-gray-200 rounded p-1.5 text-black ${emailError ? "border-red-500" : ""}`}
               type="email"
               autoComplete="email"
               placeholder="Email"
               name="email"
               value={email}
-              onChange={(event) => setEmail(sanitizeInput(event.target.value))}
+              onChange={(event) => {
+                setEmail(sanitizeInput(event.target.value));
+                if (emailError) setEmailError("");
+              }}
               disabled={isSubmitting}
               maxLength={254}
-              required
             />
           </div>
-          {emailError && (
-            <p className="text-red-400 text-sm mt-1 ml-10">{emailError}</p>
-          )}
         </div>
+        {emailError && (
+          <p className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse ">{emailError}</p>
+        )}
 
         <div>
-          <div className="my-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
+          <div className="mt-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl mb-0">
             <input
-              className={`bg-gray-200 rounded p-1.5 text-black ${usernameError ? 'border-red-500' : ''}`}
+              className={`bg-gray-200 rounded p-1.5 text-black ${usernameError ? "border-red-500" : ""}`}
               type="text"
               autoComplete="off"
               placeholder="Username"
               value={username}
               name="username"
-              onChange={(event) => setUsername(sanitizeInput(event.target.value))}
+              onChange={(event) => {
+                setUsername(sanitizeInput(event.target.value));
+                if (usernameError) setUsernameError("");
+              }}
               disabled={isSubmitting}
               maxLength={30}
-              required
             />
           </div>
-          {usernameError && (
-            <p className="text-red-400 text-sm mt-1 ml-10">{usernameError}</p>
-          )}
         </div>
+        {usernameError && (
+          <p className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse">{usernameError}</p>
+        )}
 
-        <div className="my-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
-            <div className="flex items-center bg-gray-200 rounded p-1.5">
-              <input
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                placeholder="Password"
-                name="password"
-                id="password"
-                value={password}
-                className={`bg-gray-200 max-w-36 flex-1 outline-none ${passwordError ? "border-red-500" : ""}`}
-                onChange={(event) => setPassword(event.target.value)}
-                disabled={isSubmitting}
-                maxLength={128}
-              />
+        <div className="mt-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
+          <div className="flex items-center bg-gray-200 rounded p-1.5">
+            <input
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder="Password"
+              name="password"
+              id="password"
+              value={password}
+              className={`bg-gray-200 max-w-36 flex-1 outline-none ${passwordError ? "border-red-500" : ""}`}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                if (passwordError) setPasswordError("");
+              }}
+              disabled={isSubmitting}
+              maxLength={128}
+            />
 
-              <button
-                type="button"
-                className="text-gray-600 ml-2"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? "hide" : "show"}
-              </button>
-            </div>
-
-            {passwordError && (
-              <p className="text-red-400 text-sm mt-1 ml-1">{passwordError}</p>
-            )}
+            <button
+              type="button"
+              className="text-gray-600 ml-2"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "hide" : "show"}
+            </button>
           </div>
+        </div>
+        {passwordError && (
+          <p className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse">
+            {passwordError}
+          </p>
+        )}
 
         <button
           className={`p-3 block rounded-2xl border-3 justify-self-center border-blue-200 bg-blue-400 hover:text-white hover:border-amber-200 hover:shadow-lg transform hover:-translate-y-px my-8 mx-4 ${
-            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Creating Account...' : 'Sign Up'}
+          {isSubmitting ? "Creating Account..." : "Sign Up"}
         </button>
 
         <p className="mt-4 text-amber-100 text text-center">

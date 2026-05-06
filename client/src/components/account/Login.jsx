@@ -96,7 +96,7 @@ export default function Login() {
           </h1>
 
           <div>
-            <div className="my-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
+            <div className="mt-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
               <input
                 className={`bg-gray-200 rounded p-1.5 text-black ${emailError ? "border-red-500" : ""}`}
                 type="email"
@@ -112,11 +112,11 @@ export default function Login() {
               />
             </div>
             {emailError && (
-              <p className="text-red-400 text-sm mt-1 ml-10">{emailError}</p>
+              <p className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse ">{emailError}</p>
             )}
           </div>
 
-          <div className="my-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
+          <div className="mt-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
             <div className="flex items-center bg-gray-200 rounded p-1.5">
               <input
                 type={showPassword ? "text" : "password"}
@@ -140,11 +140,11 @@ export default function Login() {
               </button>
             </div>
 
-            {passwordError && (
-              <p className="text-red-400 text-sm mt-1 ml-1">{passwordError}</p>
-            )}
+            
           </div>
-
+            {passwordError && (
+              <p className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse">{passwordError}</p>
+            )}
           <button
             className={`p-3 block rounded-2xl border-3 justify-self-center border-blue-200 bg-blue-400 hover:text-white hover:border-amber-200 hover:shadow-lg transform hover:-translate-y-px my-8 mx-4 ${
               isSubmitting ? "opacity-50 cursor-not-allowed" : ""

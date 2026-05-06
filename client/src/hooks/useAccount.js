@@ -70,7 +70,13 @@ export default function useAccount() {
         userData,
         axiosOptions,
       );
-      login(response.data.user, response.data.token);
+
+      login(
+        response.data.user,
+        response.data.token,
+        response.data.expiresIn,
+      );
+
       navigate("/").then(() => {
         setFlashMessage(
           "Signup successful, " + response.data.user.username + "!",
@@ -79,10 +85,10 @@ export default function useAccount() {
     } catch (error) {
       const serverMsg =
         error?.response?.data?.message || error?.response?.data?.error;
+      const displayMessage =
+        serverMsg || error?.message || "Signup failed, try again...";
 
-      setFlashMessage(
-        serverMsg || error?.message || "Signup failed, try again...",
-      );
+      setFlashMessage(displayMessage);
     } finally {
       setLoading(false);
     }
@@ -110,6 +116,7 @@ export default function useAccount() {
               profile: response.data.user.profile,
             },
             response.data.token,
+            response.data.expiresIn,
           );
         }
         navigate("/").then(() => {

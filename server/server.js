@@ -17,7 +17,7 @@ import { limiter } from "./middleware/limiterHandler.js";
 import ExpressMongoSanitize from "express-mongo-sanitize";
 
 //database
-import "./database/connection.js";
+import database from "./database/connection.js";
 
 //passport
 import passport from "passport";
@@ -58,12 +58,13 @@ const whitelist = process.env.WHITELISTED_DOMAINS
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // Allow server-to-server or tools like Postman
     if (!origin) return callback(null, true);
 
-    if (whitelist.includes(origin)) {
+    if (whitelist.some((domain) => domain.trim() === origin.trim())) {
       callback(null, true);
     } else {
-      callback(null, false);
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
