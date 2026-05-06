@@ -5,12 +5,11 @@ import { buildJwtPayload } from "./authentication/jwtBuild.js";
 export const COOKIE_OPTIONS = {
   httpOnly: true,
 
-  secure: process.env.NODE_ENV === "production",
+  secure: process.env.NODE_ENV === "production" ? true : false,
   signed: true,
   maxAge: eval(process.env.REFRESH_TOKEN_EXPIRY) * 1000,
-  sameSite: "none", 
-  path: "/",
-  
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  path: "/"
 };
 
 export const getToken = (user) => {

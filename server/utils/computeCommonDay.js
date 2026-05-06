@@ -19,11 +19,15 @@ export function computeCommonDay(entries) {
   ];
 
   for (const e of entries) {
-    const day = e.rawDate.getDay(); // 0–6
+    if (!e.rawDate) continue; 
+    const day = new Date(e.rawDate).getDay(); 
     counts[day] = (counts[day] || 0) + 1;
   }
 
-  const most = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  const entriesArr = Object.entries(counts);
+  if (entriesArr.length === 0) return null; 
+
+  const most = entriesArr.sort((a, b) => b[1] - a[1])[0];
 
   return weekDays[most[0]] || null;
 }

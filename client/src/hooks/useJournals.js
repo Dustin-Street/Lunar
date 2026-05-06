@@ -154,19 +154,19 @@ export function useJournals() {
       if (!ensureAuth()) return;
       if (!accessToken) return;
 
-      // if (!Array.isArray(pages) || pages.length === 0) {
-      //   setFlashMessage("Entry must have at least one page!");
-      //   return false;
-      // }
+      if (!Array.isArray(pages) || pages.length === 0) {
+        setFlashMessage("Entry must have at least one page!");
+        return false;
+      }
 
-      // const hasEmptyPage = pages.some(
-      //   (p) => !p.text || p.text.trim().length === 0,
-      // );
+      const hasEmptyPage = pages.some(
+        (p) => !p.text || p.text.trim().length === 0,
+      );
 
-      // if (hasEmptyPage) {
-      //   setFlashMessage("Entry cannot be empty");
-      //   return false;
-      // }
+      if (hasEmptyPage) {
+        setFlashMessage("Entry cannot be empty");
+        return false;
+      }
 
       try {
         const response = await axios.post(
@@ -218,19 +218,19 @@ export function useJournals() {
       if (!ensureAuth()) return;
       if (!accessToken) return;
 
-      // if (!Array.isArray(pages) || pages.length === 0) {
-      //   setFlashMessage("Entry must have at least one page!");
-      //   return false;
-      // }
+      if (!Array.isArray(pages) || pages.length === 0) {
+        setFlashMessage("Entry must have at least one page!");
+        return false;
+      }
 
-      // const hasEmptyPage = pages.some(
-      //   (p) => !p.text || p.text.trim().length === 0,
-      // );
+      const hasEmptyPage = pages.some(
+        (p) => !p.text || p.text.trim().length === 0,
+      );
 
-      // if (hasEmptyPage) {
-      //   setFlashMessage("Entry cannot be empty");
-      //   return false;
-      // }
+      if (hasEmptyPage) {
+        setFlashMessage("Entry cannot be empty");
+        return false;
+      }
 
       try {
         const response = await axios.put(
@@ -239,7 +239,6 @@ export function useJournals() {
             mood: mood,
             pages: pages,
             journalEntryId: journalEntryId,
-            //userid get send through the Authorization header accessToken
           },
           {
             withCredentials: true,

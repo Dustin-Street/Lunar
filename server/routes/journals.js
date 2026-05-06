@@ -100,9 +100,15 @@ router.post(
 router.post("/createEntry", authenticateToken, async (req, res, next) => {
   try {
     const { pages, mood, journalId } = req.body;
+    console.log("Received createEntry request with data:", {
+      pages,
+      mood,
+      journalId,
+    });
+    
     const userId = req.user.id;
 
-    if (!Array.isArray(pages) || pages.length === 0) {
+    if (!Array.isArray(pages)) {
       throw createHttpError(400, "Entry must contain at least one page");
     }
 

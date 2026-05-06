@@ -14,6 +14,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { userLogin } = useAccount();
 
   // Rate limiter for login attempts (5 attempts per minute)
@@ -115,23 +116,32 @@ export default function Login() {
             )}
           </div>
 
-          <div>
-            <div className="my-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
+          <div className="my-10 border-3 border-blue-200 py-3 px-10 rounded-2xl inline-block shadow-2xl">
+            <div className="flex items-center bg-gray-200 rounded p-1.5">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 placeholder="Password"
                 name="password"
                 id="password"
                 value={password}
-                className={`bg-gray-200 rounded p-1.5 ${passwordError ? "border-red-500" : ""}`}
+                className={`bg-gray-200 max-w-36 flex-1 outline-none ${passwordError ? "border-red-500" : ""}`}
                 onChange={(event) => setPassword(event.target.value)}
                 disabled={isSubmitting}
                 maxLength={128}
               />
+
+              <button
+                type="button"
+                className="text-gray-600 ml-2"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "hide" : "show"}
+              </button>
             </div>
+
             {passwordError && (
-              <p className="text-red-400 text-sm mt-1 ml-10">{passwordError}</p>
+              <p className="text-red-400 text-sm mt-1 ml-1">{passwordError}</p>
             )}
           </div>
 
