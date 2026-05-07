@@ -38,20 +38,28 @@ export default function PasswordChangeForm({
       >
         <h2 className="text-2xl mb-4 self-star justift-self-center">Change Email</h2>
 
+        <label htmlFor="current-email" className="sr-only">
+          Current email address
+        </label>
         <input
+          id="current-email"
           type="email"
           placeholder="Current Email"
-          autoComplete="none"
+          autoComplete="email"
           className="w-full lg:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 
                  focus:outline-none focus:ring-2 focus:ring-blue-200"
           value={oldEmail}
           onChange={(e) => setOldEmail(e.target.value)}
         />
 
+        <label htmlFor="new-email" className="sr-only">
+          New email address
+        </label>
         <input
+          id="new-email"
           type="email"
           placeholder="New Email"
-          autoComplete="none"
+          autoComplete="email"
           className="w-full lg:w-1/2 p-3 mb-4 rounded-lg border border-gray-300 
                  focus:outline-none focus:ring-2 focus:ring-blue-200"
           value={newEmail}

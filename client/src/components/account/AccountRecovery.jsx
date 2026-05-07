@@ -14,7 +14,11 @@ export default function AccountRecovery() {
         Enter the username associated with your account, and we'll send you a
         link to reset your recovery method selected on Signup.
         <form className="mt-4">
+          <label htmlFor="recovery-username" className="sr-only">
+            Username
+          </label>
           <input
+            id="recovery-username"
             type="text"
             placeholder="Enter your username"
             className="p-2 rounded w-full text-amber-100 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
@@ -40,7 +44,11 @@ export default function AccountRecovery() {
         Enter the email associated with your account, and we'll send you a link
         to reset your password.
         <form className="mt-4">
+          <label htmlFor="recovery-email" className="sr-only">
+            Email address
+          </label>
           <input
+            id="recovery-email"
             type="email"
             placeholder="Enter your email"
             className="p-2 rounded w-full text-amber-100 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"

@@ -210,7 +210,10 @@ function JournalCard({ journal, onDelete, onEdit, onImageUpload, className }) {
         {inChangeBackgroundColor ? (
           <ul>
             <li>
-              <button className="border-3 border-black bg-red-400"></button>
+              <button
+                className="border-3 border-black bg-red-400"
+                aria-label="Select red background"
+              ></button>
             </li>
           </ul>
         ) : null}

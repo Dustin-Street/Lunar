@@ -29,18 +29,19 @@ export default function Navbar() {
     <div className="sticky top-0 z-60 rounded-xs border-0 border-b-blue-950 space-y-0 hover:shadow-md shadow-blue-200">
       <nav className="bg-gray-700 opacity-96 border-b-5 shadow-2xl border-b-blue-300">
         {/* Desktop & Mobile Header */}
-        <div className="flex items-center justify-between py-2">
+        <div className="flex items-center justify-between">
           {/* Logo & Brand */}
           <div className="flex items-center">
             <NavLink to="/" id="navlink" className="inline-block">
               <img
-                className="max-w-8 ms-5 me-5 "
-                src="images/LunarLogo.svg"
-                alt=""
+                className="mx-2 my-0 py-0 w-16 h-14"
+                fetchPriority="high"
+                src="images/LunarLogo.webp"
+                alt="Lunar logo"
               />
             </NavLink>
             <NavLink className="inline-block align-top" to="/">
-              <h1 className="bg-linear-to-r from-blue-200 to-amber-100 bg-clip-text text-transparent text-2xl md:text-2xl lg:text-2xl font-bold text-shadow-bold shadow-2xl hover:saturate-400 hover:translate-y-0.5">
+              <h1 className="bg-linear-to-r hidden sm:block from-blue-200 to-amber-100 bg-clip-text text-transparent text-2xl md:text-2xl lg:text-2xl font-bold text-shadow-bold shadow-2xl hover:saturate-400 hover:translate-y-0.5">
                 Lunar
               </h1>
             </NavLink>

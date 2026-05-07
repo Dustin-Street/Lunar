@@ -68,39 +68,47 @@ export default function Home() {
   }, [accessToken, setFlashMessage]);
 
   return (
-    <div className="h-dvh lg:h-screen bg-[url('/images/deepnight3.jpg')] bg-center bg-no-repeat  flex items-center justify-center">
-      {loading ? (
-        <div className=" flex items-center justify-center">
-          <LoadingOverlay />
-        </div>
-      ) : (
-        <div className=" text-white">
-          {/* HERO SECTION */}
-
-          <div className="bg-gray-800/70 md:rounded-2xl pt-12 p-8 max-w-3xl mx-0 lg:my-4 mb-0 max-h-screen h-screen w-screen sm:h-3/4 shadow-md shadow-amber-100 space-y-2">
-            <section className="flex flex-col items-center text-center ">
-              {!isAuthenticated ? (
-                <LoginSignupCard />
-              ) : (
-                <UserOverviewCard
-                  stats={statistics}
-                  user={user}
-                  statisticsloading={loadingStats}
-                />
-              )}
-            </section>
-            <section className="text-center">
-              {" "}
-              <h3 className="text-sm md:text-lg font-serif text-amber-100">
-                {quote[random]?.text}
-              </h3>
-              <p className="italic text-xs md:text mt-0 text-blue-200">
-                — {quote[random]?.author}
-              </p>
-            </section>
+    <div>
+      <img
+        src="/images/deepnight3.webp"
+        alt=""
+        fetchPriority="high"
+        className="hidden"
+      />
+      <div className="h-dvh lg:h-screen bg-[url('/images/deepnight3.webp')] bg-center bg-no-repeat  flex items-center justify-center">
+        {loading ? (
+          <div className=" flex items-center justify-center">
+            <LoadingOverlay />
           </div>
-        </div>
-      )}
+        ) : (
+          <div className=" text-white">
+            {/* HERO SECTION */}
+
+            <div className="bg-gray-800/70 md:rounded-2xl pt-12 p-8 max-w-3xl mx-0 lg:my-4 mb-0 max-h-screen h-screen w-screen sm:h-3/4 shadow-md shadow-amber-100 space-y-2">
+              <section className="flex flex-col items-center text-center ">
+                {!isAuthenticated ? (
+                  <LoginSignupCard />
+                ) : (
+                  <UserOverviewCard
+                    stats={statistics}
+                    user={user}
+                    statisticsloading={loadingStats}
+                  />
+                )}
+              </section>
+              <section className="text-center">
+                {" "}
+                <h3 className="text-sm md:text-lg font-serif text-amber-100">
+                  {quote[random]?.text}
+                </h3>
+                <p className="italic text-xs md:text mt-0 text-blue-200">
+                  — {quote[random]?.author}
+                </p>
+              </section>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

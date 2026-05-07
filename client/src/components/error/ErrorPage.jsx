@@ -24,7 +24,7 @@ export default function ErrorPage({ error }) {
           <img
             src={errorinfo.errorImage}
             className="border-6 mt-12 rounded-4xl shadow-lg"
-            alt=""
+            alt="Error illustration"
           />
         )}
         <LunarButton text={"Home"} onclick={() => navigate("/")}/>

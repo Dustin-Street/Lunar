@@ -34,10 +34,14 @@ export default function PasswordChangeForm({
         <h2 className="text-2xl mb-4">Change Password</h2>
 
         <div className="relative ">
+          <label htmlFor="current-password" className="sr-only">
+            Current password
+          </label>
           <input
+            id="current-password"
             type={showoldpassword ? "text" : "password"}
             placeholder="Current Password"
-            autoComplete="none"
+            autoComplete="current-password"
             className="w-full p-3 mb-4 lg:ms-20 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200 lg:w-1/2"
             value={oldPassword}
             onChange={(e) => {
@@ -48,16 +52,21 @@ export default function PasswordChangeForm({
             type="button"
             className="inline p-4 items-center text-gray-500 hover:text-amber-100 mb-4"
             onClick={() => setShowoldPassword(!showoldpassword)}
+            aria-label={showoldpassword ? "Hide current password" : "Show current password"}
           >
             {showoldpassword ? "Hide" : "Show"}
           </button>
         </div>
 
         <div className="relative">
+          <label htmlFor="new-password" className="sr-only">
+            New password
+          </label>
           <input
+            id="new-password"
             type={shownewpassword ? "text" : "password"}
             placeholder="New Password"
-            autoComplete="none"
+            autoComplete="new-password"
             className="w-full p-3 mb-4 rounded-lg border lg:ms-20 border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200 lg:w-1/2"
             value={newPassword}
             onChange={(e) => {
@@ -68,6 +77,7 @@ export default function PasswordChangeForm({
             type="button"
             className="inline p-4 items-center text-gray-500 hover:text-amber-100 mb-4"
             onClick={() => setShownewPassword(!shownewpassword)}
+            aria-label={shownewpassword ? "Hide new password" : "Show new password"}
           >
             {shownewpassword ? "Hide" : "Show"}
           </button>

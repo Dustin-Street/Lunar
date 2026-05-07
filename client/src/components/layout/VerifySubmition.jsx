@@ -27,7 +27,7 @@ export default function VerifiySubmition({
     >
       <div>
         {message}
-        <img src="CheckMark.png" alt="" />
+        <img src="CheckMark.png" alt="Verification check mark" />
       </div>
     </div>
   );
