@@ -228,11 +228,11 @@ export default function JournalOverview() {
             spellCheck={true}
             className={
               sideBarOpened
-                ? "col-start-1 mb-4 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center text-sm md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
-                : "col-start-1 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
+                ? "col-start-1 mb-4 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center mt-2 md:mt-10  text-sm md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
+                : "col-start-1 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md md:mx-40 mt-2 md:mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
             }
           ></textarea>
-          <section className="col-start-1 row-start-1 mt-auto space-x-15 justify-self-center mr-5">
+          <section className="col-start-1 row-start-1 mt-auto space-x-15 justify-self-center mx-5">
             {" "}
             <button
               className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 py-4 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
