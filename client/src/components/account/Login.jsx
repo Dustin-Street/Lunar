@@ -174,7 +174,7 @@ export default function Login() {
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Logging in..." : "Login"}
+            
           </button>
 
           <p className="mt-4 text-amber-100 text text-center">

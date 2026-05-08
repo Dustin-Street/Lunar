@@ -15,41 +15,45 @@ import { body, validationResult, matchedData } from "express-validator";
 const router = express.Router();
 
 //Journal should remove or add the page functionality to the app for better sync
-router.get("/journalOverview/:journalId", authenticateToken, async (req, res, next) => {
-  try {
-    const { journalId } = req.params;
+router.get(
+  "/journalOverview/:journalId",
+  authenticateToken,
+  async (req, res, next) => {
+    try {
+      const { journalId } = req.params;
 
-    //query the journal object
-    const journal = await Journal.findById(journalId);
-    if (!journal) {
-      return res.status(404).json({ message: "User not found" });
+      //query the journal object
+      const journal = await Journal.findById(journalId);
+      if (!journal) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      //then query the journal paginated pages assosiated
+      const { page = 1, limit = 15 } = req.query;
+
+      const entries = await JournalEntry.paginate(
+        { journalID: journalId },
+        {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          sort: { dateCreated: -1 },
+        },
+      );
+
+      res.json({
+        journal,
+        entries: {
+          docs: entries.docs,
+          totalPages: entries.totalPages,
+          currentPage: entries.page,
+          totalDocs: entries.totalDocs,
+        },
+      });
+    } catch (error) {
+      next(error);
     }
-
-    //then query the journal paginated pages assosiated
-    const { page = 1, limit = 15 } = req.query;
-
-    const entries = await JournalEntry.paginate(
-      { journalID: journalId },
-      {
-        page: parseInt(page),
-        limit: parseInt(limit),
-        sort: { dateCreated: -1 },
-      },
-    );
-
-    res.json({
-      journal,
-      entries: {
-        docs: entries.docs,
-        totalPages: entries.totalPages,
-        currentPage: entries.page,
-        totalDocs: entries.totalDocs,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 router.get("/journalSelect", authenticateToken, async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -105,7 +109,7 @@ router.post("/createEntry", authenticateToken, async (req, res, next) => {
       mood,
       journalId,
     });
-    
+
     const userId = req.user.id;
 
     if (!Array.isArray(pages)) {

@@ -111,14 +111,15 @@ export default function JournalOverview() {
 
   //creation logic
   const handleCreateEntry = useCallback(() => {
-    createEntry(JournalCreateEntryPayload);
+    createEntry(JournalCreateEntryPayload());
+
     setPages([""]);
     setPageImages([""]);
     setMood("neutral");
   }, [createEntry, JournalCreateEntryPayload]);
   //edit logic
   const handleEditEntry = useCallback(() => {
-    editEntry(JournalEditEntryPayload);
+    editEntry(JournalEditEntryPayload());
     setPages([""]);
     setPageImages([""]);
     setMood("neutral"); //placeholder in development still
@@ -126,7 +127,7 @@ export default function JournalOverview() {
   }, [editEntry, JournalEditEntryPayload]);
   //delete logic
   const handledeleteEntry = useCallback(() => {
-    deleteEntry(JournalEntryDeletePayload);
+    deleteEntry(JournalEntryDeletePayload());
     setPages([""]);
     setPageImages([""]);
     setMood("neutral");
@@ -216,7 +217,7 @@ export default function JournalOverview() {
           )}
         </div>
 
-        <div name="JournalEntry" className="flex h-7/8">
+        <div name="JournalEntry" className="h-7/8 grid">
           <textarea
             value={pages[currentPageIndex]}
             onChange={handleChange}
@@ -226,10 +227,13 @@ export default function JournalOverview() {
             spellCheck={true}
             className={
               sideBarOpened
-                ? "border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center text-sm md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
-                : "border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md  md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
+                ? "col-start-1 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center text-sm md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
+                : "col-start-1 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md  md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
             }
           ></textarea>
+          <button className="col-start-1 row-start-1 mb-auto mt-15 mr-auto ml-10">
+            Button
+          </button>
         </div>
       </div>
     </div>

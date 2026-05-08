@@ -56,15 +56,12 @@ export default function JournalCreateCard({
     setCollapsed(true);
   };
 
-  const callpsedCreateCard = () => {
-    return;
-  };
   return (
-    <>
+    <div className="flex-row items-center">
       {collapsed ? (
-        <div className="absolute top-4 z-10">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
           <button
-            className="border-4 border-blue-200 bg-linear-60 from-blue-400  to-blue-200 rounded-b-2xl mt-8 p-4 text-lg text-white hover:bg-linear hover:from-blue-400 hover:to-blue-600"
+            className="hover:shadow-2xl hover:shadow-amber-100 hover:border-amber-100 hover:-translate-1 border-4 text-white text-shadow-black font-medium border-blue-200 bg-linear-60 from-blue-600  to-blue-200 rounded-2xl mt-8 p-4 text-lg hover:bg-linear hover:from-blue-200 hover:to-blue-600"
             onClick={() => {
               setCollapsed(false);
             }}
@@ -75,8 +72,8 @@ export default function JournalCreateCard({
       ) : (
         <div
           className={`flex relative place-items-center group border-4 bg-opacity-75
-             border-blue-200 px-12 py-48 bg-linear-90 from-gray-700 to-gray-900 max-w-80 max-h-60
-             text-amber-100 font-medium rounded-lg w-full  hover:shadow-2xl
+             border-blue-200 px-12 py-48 bg-linear-90 from-gray-700 to-gray-900 items-center max-w-80 max-h-60
+             text-amber-100 font-medium rounded-lg  hover:shadow-2xl
              hover:shadow-blue-400 transition-shadow m-0 ${className} `}
         >
           <div
@@ -130,6 +127,6 @@ export default function JournalCreateCard({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

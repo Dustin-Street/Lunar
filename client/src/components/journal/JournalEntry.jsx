@@ -13,9 +13,7 @@ export default function JournalEntry() {
     const previousButton = "Previous";
     const SaveButton = "Save";
 
-    const toggleNextButton = () => {
-        nextButton === '>';
-    };
+
 
     const SaveEntry = () => {
         //save journal entry to database

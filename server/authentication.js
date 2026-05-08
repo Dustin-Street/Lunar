@@ -7,7 +7,7 @@ export const COOKIE_OPTIONS = {
   secure: process.env.NODE_ENV === "production" ? true : false,
   signed: true,
   maxAge: eval(process.env.REFRESH_TOKEN_EXPIRY) * 1000,
-  sameSite: "none",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   path: "/",
 };
 
