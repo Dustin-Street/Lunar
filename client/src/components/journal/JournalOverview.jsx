@@ -173,25 +173,25 @@ export default function JournalOverview() {
               {" "}
               <button
                 onClick={openSideBar}
-                className="text-center text-lg bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
-           shadow-blue-100 shadow-2xs rounded-b-lg shrink hover:bg-gray-700 hover:text-blue-400
-            hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
+                className="hidden sm:block text-center text-lg bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
+           shadow-amber-100 shadow-sm rounded-b-lg shrink hover:bg-gray-700 hover:text-blue-400
+            hover:border-blue-400 hover:shadow-md hover:shadow-amber-200 hover:cursor-grab"
               >
                 Entries
               </button>
               <button
                 onClick={handleEditEntry}
-                className="text-center text-lg bg-gray-600 text-blue-200 border border-blue-200 p-4 md:mx-2
-           shadow-blue-100 shadow-2xs rounded-b-lg shrink  hover:bg-gray-700 hover:text-blue-400 
-            hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
+                className="hidden sm:block text-center text-lg bg-gray-600 text-blue-200 border border-blue-200 p-4 md:mx-2
+           shadow-amber-100 shadow-sm rounded-b-lg shrink  hover:bg-gray-700 hover:text-blue-400 
+            hover:border-blue-400 hover:shadow-md hover:shadow-amber-200 hover:cursor-grab"
               >
                 Save
               </button>
               <button
                 onClick={handledeleteEntry}
-                className="text-center text-lg bg-red-300 text-white border border-red-400 p-4 md:mx-2
-           shadow-red-200 shadow-2xs rounded-b-lg shrink hover:bg-red-400 hover:text-white
-            hover:border-red-400 hover:shadow-sm hover:shadow-red-200 hover:cursor-grab"
+                className="hidden sm:block text-center text-lg bg-red-300 text-white border border-red-400 p-4 md:mx-2
+           shadow-red-200 shadow-sm rounded-b-lg shrink hover:bg-red-400 hover:text-white
+            hover:border-red-400 hover:shadow-md hover:shadow-red-200 hover:cursor-grab"
               >
                 Delete
               </button>
@@ -200,17 +200,17 @@ export default function JournalOverview() {
             <>
               <button
                 onClick={openSideBar}
-                className="text-center text-lg lg:text-2xl bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
-           shadow-blue-100 shadow-2xs rounded-b-lg shrink  hover:bg-gray-700 hover:text-blue-400
-            hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
+                className="hidden sm:block text-center text-lg lg:text-2xl bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
+           shadow-amber-100 shadow-sm rounded-b-lg shrink  hover:bg-gray-700 hover:text-blue-400
+            hover:border-blue-400  hover:shadow-amber-200 hover:shadow-md hover:cursor-grab col-start-1 row-start-1 mt-auto"
               >
                 Entries
               </button>
               <button
                 onClick={handleCreateEntry}
-                className="text-center text-lg lg:text-2xl bg-gray-600 text-blue-200 border border-blue-200 p-4 md:mx-2
-           shadow-blue-100 shadow-2xs rounded-b-lg shrink hover:bg-gray-700 hover:text-blue-400
-            hover:border-blue-400 hover:shadow-sm hover:shadow-amber-200 hover:cursor-grab"
+                className="hidden sm:block text-center text-lg lg:text-2xl bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
+           shadow-amber-100 shadow-sm rounded-b-lg shrink  hover:bg-gray-700 hover:text-blue-400
+            hover:border-blue-400  hover:shadow-amber-200 hover:shadow-md hover:cursor-grab col-start-1 row-start-1 mt-auto"
               >
                 Save
               </button>
@@ -228,12 +228,30 @@ export default function JournalOverview() {
             spellCheck={true}
             className={
               sideBarOpened
-                ? "col-start-1 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center text-sm md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
-                : "col-start-1 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md  md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
+                ? "col-start-1 mb-4 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center text-sm md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
+                : "col-start-1 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
             }
           ></textarea>
-          <button className="col-start-1 row-start-1 mb-auto mt-15 mr-auto ml-10">
-            Button
+
+          <button
+            className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 py-4 ml-5 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
+             px-4 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
+          >
+            Mood
+          </button>
+          <button
+            onClick={openSideBar}
+            className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 border-2 ml-80 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
+            py-4 px-4 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
+          >
+            Entries
+          </button>
+          <button
+            onClick={handleCreateEntry}
+            className="sm:hidden col-start-1 mt-auto  row-start-1 max-w-30 max-h-20 ml-42 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
+            py-4 px-4 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
+          >
+            Save
           </button>
         </div>
       </div>
