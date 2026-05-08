@@ -153,7 +153,9 @@ export function useJournals() {
     async ({ mood, pages, journalId }) => {
       if (!ensureAuth()) return;
       if (!accessToken) return;
-
+      console.log(
+        `received data: mood: ${mood}, pages: ${pages}, journalEntryId: ${journalId}`,
+      );
       try {
         const response = await axios.post(
           `${API_BASE_URL}/journals/createEntry`,
@@ -203,18 +205,6 @@ export function useJournals() {
     async ({ mood, pages, journalEntryId }) => {
       if (!ensureAuth()) return;
       if (!accessToken) return;
-
-      if (!Array.isArray(pages) || pages.length === 0) {
-        setFlashMessage("Entry must have at least one page!");
-        return false;
-      }
-
-      const hasEmptyPage = pages.some((p) => !p || p.trim().length === 0);
-
-      if (hasEmptyPage) {
-        setFlashMessage("Entry cannot be empty");
-        return false;
-      }
 
       try {
         const response = await axios.put(

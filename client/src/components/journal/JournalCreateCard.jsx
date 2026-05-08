@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import LunarButton from "../layout/LunarButton";
 import HoverButton from "../layout/HoverButton";
 /**
@@ -8,22 +8,11 @@ import HoverButton from "../layout/HoverButton";
 export default function JournalCreateCard({
   onSubmit,
   className = "",
-  journals,
+  createCollapsed,
+  setCollapse,
 }) {
   const [title, setTitle] = useState("");
   const [showError, setShowError] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
-
-  useEffect(() => {
-    function manageCollapse() {
-      if (journals.length > 0) {
-        setCollapsed(true);
-      } else {
-        setCollapsed(false);
-      }
-    }
-    manageCollapse();
-  }, [journals]);
 
   // Memoize submit handler to prevent recreation on every render
   const handleSubmit = useCallback(async () => {
@@ -53,17 +42,18 @@ export default function JournalCreateCard({
   };
 
   const cancelCreate = () => {
-    setCollapsed(true);
+    setCollapse(true);
+    setTitle("");
   };
 
   return (
     <div className="flex-row items-center">
-      {collapsed ? (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+      {createCollapsed ? (
+        <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-10">
           <button
-            className="hover:shadow-2xl hover:shadow-amber-100 hover:border-amber-100 hover:-translate-1 border-4 text-white text-shadow-black font-medium border-blue-200 bg-linear-60 from-blue-600  to-blue-200 rounded-2xl mt-8 p-4 text-lg hover:bg-linear hover:from-blue-200 hover:to-blue-600"
+            className="hover:shadow-2xl text-md py-4 hover:shadow-amber-100 max-w-40 min-w-40 hover:border-amber-100 hover:-translate-1 border-4 text-white text-shadow-black font-medium border-blue-200 bg-linear-60 from-blue-600  to-blue-200 rounded-2xl mt-8 p-4 hover:bg-linear hover:from-blue-200 hover:to-blue-600"
             onClick={() => {
-              setCollapsed(false);
+              setCollapse(false);
             }}
           >
             Create journal
@@ -71,14 +61,14 @@ export default function JournalCreateCard({
         </div>
       ) : (
         <div
-          className={`flex relative place-items-center group border-4 bg-opacity-75
-             border-blue-200 px-12 py-48 bg-linear-90 from-gray-700 to-gray-900 items-center max-w-80 max-h-60
+          className={`flex absolute z-20 top-1/2 transform -translate-x-1/2 left-1/2 place-items-center group border-4 bg-opacity-75
+             border-blue-200 px-10 py-48 bg-linear-90 from-gray-700 to-gray-900 items-center max-w-80 max-h-60
              text-amber-100 font-medium rounded-lg  hover:shadow-2xl
-             hover:shadow-blue-400 transition-shadow m-0 ${className} `}
+             hover:shadow-blue-400 transition-shadow m-0 ${className}`}
         >
           <div
             name="interactionButtons"
-            className="md:group-hover:opacity-100 md:opacity-10 transition-opacity duration-2200 ease-out group-hover:duration-300 group-hover:ease-in"
+            className=" transition-opacity duration-2200 ease-out group-hover:duration-300 group-hover:ease-in"
           >
             <h3 className="relative justify-self-center mb-auto text-lg sm:text-xl">
               Create Journal

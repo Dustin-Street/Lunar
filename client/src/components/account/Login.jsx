@@ -85,7 +85,8 @@ export default function Login() {
 
   return (
     <div>
-      <div className="min-h-screen w-full flex items-center justify-center bg-[url('/images/starrysky2.jpg')] bg-cover bg-center bg-no-repeat">
+      <img src="/images/starrysky2.webp" alt="" className="hidden" fetchPriority="high"/>
+      <div className="min-h-screen w-full flex items-center justify-center bg-[url('/images/starrysky2.webp')] bg-cover bg-center bg-no-repeat">
         <form
           onSubmit={handleSubmit}
           id="formLogin"
@@ -174,7 +175,7 @@ export default function Login() {
             type="submit"
             disabled={isSubmitting}
           >
-            
+            Login
           </button>
 
           <p className="mt-4 text-amber-100 text text-center">

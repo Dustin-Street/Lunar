@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import JournalCard from "./JournalCard";
 import JournalCreateCard from "./JournalCreateCard";
 
@@ -12,26 +13,54 @@ export default function JournalGrid({
   Create,
   Upload,
 }) {
+  const [createCollapsed, setCollapse] = useState(false);
+
+  useEffect(() => {
+    function manageCollapse() {
+      if (journals.length > 0) {
+        setCollapse(true);
+      } else {
+        setCollapse(false);
+      }
+    }
+    manageCollapse();
+  }, [journals]);
+
   return (
     //passing down from Journal Select -> journalCard
-    <div className="fixed inset-0 bg-[url('/images/journaldeepnight2.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-lg">
-      <div className="relative z-10 grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 place-items-center px-6 py-10 gap-2 overflow-y-auto h-screen">
+    <div>
+      <img
+        src="/images/journaldeepnight2.webp"
+        alt=""
+        className="hidden"
+        fetchPriority="high"
+      />
+      <div
+        className={`fixed inset-0 bg-[url('/images/journaldeepnight2.webp')] bg-cover bg-center bg-no-repeat ${createCollapsed ? "" : null}`}
+      >
+        {!createCollapsed && (
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-20 pointer-events-auto"></div>
+        )}
+
+        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 place-items-center px-6 py-10 gap-3 overflow-y-auto h-screen">
+          {journals.map((journal) => (
+            <JournalCard
+              key={journal._id}
+              journal={journal}
+              onDelete={Delete}
+              onEdit={Edit}
+              onImageUpload={Upload}
+              className={"mt-6"}
+            />
+          ))}
+        </div>
         <JournalCreateCard
           onSubmit={Create}
-          className="justify-self-center"
+          className="sm:min-w-80 min-w-80"
           journals={journals}
+          createCollapsed={createCollapsed}
+          setCollapse={setCollapse}
         />
-        <div className="mt-15 sm:absolute"></div>
-        {journals.map((journal) => (
-          <JournalCard
-            key={journal._id}
-            journal={journal}
-            onDelete={Delete}
-            onEdit={Edit}
-            onImageUpload={Upload}
-            className={"mt-6"}
-          />
-        ))}
       </div>
     </div>
   );

@@ -23,7 +23,8 @@ export default function JournalOverview() {
 
   const [pages, setPages] = useState([""]);
   const [pageImages, setPageImages] = useState([""]);
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+
+  let currentPageIndex = 0;
 
   //mood is an enumeration that accepts - ['happy', 'sad', 'neutral', 'angry', 'excited']
   const [mood, setMood] = useState("neutral");
