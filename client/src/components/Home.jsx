@@ -84,7 +84,7 @@ export default function Home() {
           <div className=" text-white">
             {/* HERO SECTION */}
 
-            <div className="bg-gray-800/70  md:rounded-2xl pt-90 md:pt-0 p-8 max-w-3xl mx-0 lg:my-4 mb-0 max-h-screen md:max-h-200 h-screen w-screen sm:h-3/4 shadow-md shadow-amber-100 space-y-2">
+            <div className="bg-gray-800/70  md:rounded-2xl pt-80 pb-15 md:pt-0 p-8 max-w-3xl mx-0 lg:my-4 mb-0 max-h-screen md:max-h-200 h-screen w-screen sm:h-3/4 shadow-md shadow-amber-100 space-y-2">
               <section className="flex flex-col items-center text-center ">
                 {!isAuthenticated ? (
                   <LoginSignupCard />
