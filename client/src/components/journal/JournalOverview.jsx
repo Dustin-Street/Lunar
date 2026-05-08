@@ -232,27 +232,29 @@ export default function JournalOverview() {
                 : "col-start-1 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md md:mx-40 mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
             }
           ></textarea>
-
-          <button
-            className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 py-4 ml-5 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
-             px-4 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
-          >
-            Mood
-          </button>
-          <button
-            onClick={openSideBar}
-            className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 border-2 ml-80 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
-            py-4 px-4 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
-          >
-            Entries
-          </button>
-          <button
-            onClick={handleCreateEntry}
-            className="sm:hidden col-start-1 mt-auto  row-start-1 max-w-30 max-h-20 ml-42 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
-            py-4 px-4 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
-          >
-            Save
-          </button>
+          <section className="col-start-1 row-start-1 mt-auto space-x-15 justify-self-center mr-5">
+            {" "}
+            <button
+              className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 py-4 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
+             px-6 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
+            >
+              Mood
+            </button>
+            <button
+              onClick={openSideBar}
+              className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
+            py-4 px-6 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
+            >
+              Entries
+            </button>
+            <button
+              onClick={handleCreateEntry}
+              className="sm:hidden col-start-1 mt-auto  row-start-1 max-w-30 max-h-20 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
+            py-4 px-6 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
+            >
+              Save
+            </button>
+          </section>
         </div>
       </div>
     </div>
