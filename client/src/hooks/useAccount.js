@@ -7,7 +7,6 @@ import { useAuth } from "../components/context/AuthContext";
 import { API_BASE_URL } from "../utils/api";
 import logger from "../utils/logger";
 
-
 export default function useAccount() {
   const [loading, setLoading] = useState(false);
   const { login, logout } = useAuth();
@@ -39,11 +38,10 @@ export default function useAccount() {
       if (response.data.success) {
         setUserAccountSettings(response.data);
       } else {
-       logger("Failed to fetch user account settings:", response.data.message);
+        logger("Failed to fetch user account settings:", response.data.message);
       }
     } catch (err) {
-      ;
-      logger.error("Error fetching user account settings:", err);
+      logger("error","Error fetching user account settings:", err);
     } finally {
       setLoading(false);
     }
@@ -71,11 +69,7 @@ export default function useAccount() {
         axiosOptions,
       );
 
-      login(
-        response.data.user,
-        response.data.token,
-        response.data.expiresIn,
-      );
+      login(response.data.user, response.data.token, response.data.expiresIn);
 
       navigate("/").then(() => {
         setFlashMessage(
@@ -144,8 +138,10 @@ export default function useAccount() {
           },
         },
       );
-
-      setFlashMessage(response.data.message);
+      if (response.data.success) {
+        setFlashMessage(response.data.message);
+        return { success: true };
+      }
     } catch (error) {
       const serverMsg =
         error?.response?.data?.message || error?.response?.data?.error;
@@ -153,6 +149,7 @@ export default function useAccount() {
       setFlashMessage(
         serverMsg || error?.message || "Password change failed...try again",
       );
+      return { success: false, error: serverMsg || error?.message };
     } finally {
       setLoading(false);
     }

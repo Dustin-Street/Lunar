@@ -1,85 +1,116 @@
 import { useState } from "react";
 
-export default function PasswordChangeForm({
-  changePassword,
-  buttonState,
-  setButtonState,
-}) {
+export default function PasswordChangeForm({ changePassword, setButtonState }) {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [showoldpassword, setShowoldPassword] = useState(false);
-  const [shownewpassword, setShownewPassword] = useState(false);
+  const [showOldpassword, setShowOldPassword] = useState(false);
+  const [showNewpassword, setShowNewPassword] = useState(false);
+  const [errorPulse, setErrorPulse] = useState(false);
 
   const clearForm = () => {
     setOldPassword("");
     setNewPassword("");
   };
 
-  //placeholder for more robust front-end check before sending to backend - pair with backend validation on password strength and validation
-  const checkIfValidPassword = () => {};
+  const triggerPulse = () => {
+    setErrorPulse(true);
+    setTimeout(() => {
+      setErrorPulse(false);
+    }, 3000);
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+
+    const result = await changePassword(oldPassword, newPassword);
+    console.log(result);
+    if (result?.success === true) {
+      clearForm();
+      setButtonState((prev) => ({
+        ...prev,
+        [0]: false,
+      }));
+    } else {
+      triggerPulse();
+    }
+  };
 
   return (
     <div>
       <form
+        className="flex flex-col items-center"
         onSubmit={(e) => {
-          e.preventDefault();
-          changePassword(oldPassword, newPassword);
-          clearForm();
-          setButtonState((prev) => ({
-            ...prev,
-            [0]: false,
-          }));
+          handleChangePassword(e);
         }}
       >
         <h2 className="text-2xl mb-4">Change Password</h2>
 
-        <div className="relative ">
-          <label htmlFor="current-password" className="sr-only">
-            Current password
+        <div
+          className={`
+          grid items-center mb-4 bg-gray-800 rounded-lg p-3 w-full lg:w-1/2
+          border border-gray-300
+         focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-200
+        ${errorPulse ? "border-red-500 animate-pulse" : ""}
+       `}
+        >
+          <label htmlFor="login-password" className="sr-only">
+            Current Password
           </label>
+
           <input
-            id="current-password"
-            type={showoldpassword ? "text" : "password"}
-            placeholder="Current Password"
+            type={showOldpassword ? "text" : "password"}
             autoComplete="current-password"
-            className="w-full p-3 mb-4 lg:ms-20 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200 lg:w-1/2"
+            placeholder="Current Password"
+            name="old password"
+            id="old-password"
             value={oldPassword}
-            onChange={(e) => {
-              setOldPassword(e.target.value);
-            }}
+            className="bg-gray-800  flex-1 outline-none col-start-1 row-start-1 w-full"
+            onChange={(event) => setOldPassword(event.target.value)}
+            maxLength={128}
+            aria-invalid={!!errorPulse}
+            aria-describedby={errorPulse ? "old-password-error" : undefined}
           />
+
           <button
             type="button"
-            className="inline p-4 items-center text-gray-500 hover:text-amber-100 mb-4"
-            onClick={() => setShowoldPassword(!showoldpassword)}
-            aria-label={showoldpassword ? "Hide current password" : "Show current password"}
+            className="text-gray-300 ml-auto col-start-1 row-start-1"
+            onClick={() => setShowOldPassword(!showOldpassword)}
+            aria-label={showOldpassword ? "Hide password" : "Show password"}
           >
-            {showoldpassword ? "Hide" : "Show"}
+            {showOldpassword ? "hide" : "show"}
           </button>
         </div>
 
-        <div className="relative">
-          <label htmlFor="new-password" className="sr-only">
-            New password
+        <div
+          className={`grid items-center mb-4 bg-gray-800 rounded-lg p-3
+          border border-gray-300 w-full lg:w-1/2
+         focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-200
+        ${errorPulse ? "border-red-500 animate-pulse" : ""}`}
+        >
+          <label htmlFor="login-password" className="sr-only">
+            New Password
           </label>
           <input
-            id="new-password"
-            type={shownewpassword ? "text" : "password"}
-            placeholder="New Password"
+            type={showNewpassword ? "text" : "password"}
             autoComplete="new-password"
-            className="w-full p-3 mb-4 rounded-lg border lg:ms-20 border-gray-300 focus:outline-none focus:ring-2 focus:to-blue-200 lg:w-1/2"
+            placeholder="New Password"
+            name="new password"
+            id="new-password"
             value={newPassword}
-            onChange={(e) => {
-              setNewPassword(e.target.value);
-            }}
+            className={`bg-gray-800 col-start-1 row-start-1 flex-1 outline-none w-full`}
+            onChange={(event) => setNewPassword(event.target.value)}
+            maxLength={128}
+            aria-invalid={!!errorPulse}
+            aria-describedby={errorPulse ? "new-password-error" : undefined}
           />
+
           <button
             type="button"
-            className="inline p-4 items-center text-gray-500 hover:text-amber-100 mb-4"
-            onClick={() => setShownewPassword(!shownewpassword)}
-            aria-label={shownewpassword ? "Hide new password" : "Show new password"}
+            className="text-gray-300 ml-auto col-start-1 row-start-1"
+            onClick={() => setShowNewPassword(!showNewpassword)}
+            aria-label={showNewpassword ? "Hide password" : "Show password"}
           >
-            {shownewpassword ? "Hide" : "Show"}
+            {showNewpassword ? "hide" : "show"}
           </button>
         </div>
 

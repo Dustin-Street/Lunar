@@ -32,7 +32,7 @@ export default function logger(level, message, meta = {}) {
     timestamp: new Date().toISOString()
   };
 
-  if (process.env.NODE_ENV !== "production") {
+  if (import.meta.env.NODE_ENV !== "production") {
     console.log(`[${log.level.toUpperCase()}]`, log);
     
   }

@@ -63,7 +63,7 @@ export default function Account() {
           </h1>
           <div
             name="account-info"
-            className="text-amber-100 lg:text-xl text-lg mb-12 lg:w-3/4 w-full px-4 text-center"
+            className="text-amber-100 lg:text-xl text-lg mb-12 lg:w-1/2 w-full px-4 text-center"
           >
             <ul
               name="account-info-list"
@@ -107,7 +107,7 @@ export default function Account() {
                 </div>
               </li>
               {/* buttonState[2] */}
-              <li>
+              {/* <li>
                 <div
                   className={`hover:bg-blue-400 text-black  bg-blue-200 hover:shadow-md hover:shadow-amber-100 p-4 rounded-2xl md:px-20 ${buttonState[2] === true ? "hover:bg-gray-800 bg-gray-800 shadow-sm shadow-amber-100m text-white" : null}`}
                   onClick={
@@ -116,7 +116,7 @@ export default function Account() {
                 >
                   {buttonState[2] ? <></> : "Manage Profile"}
                 </div>
-              </li>
+              </li> */}
               <li>
                 {/* buttonState[3] */}
                 <div

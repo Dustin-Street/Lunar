@@ -23,6 +23,7 @@ export default function JournalOverview() {
 
   const [pages, setPages] = useState([""]);
   const [pageImages, setPageImages] = useState([""]);
+  const [openMoodPanel, setOpenMoodPanel] = useState(false);
 
   let currentPageIndex = 0;
 
@@ -110,6 +111,14 @@ export default function JournalOverview() {
     );
   };
 
+  const handleMoodPanel = () => {
+    if (openMoodPanel === false) {
+      setOpenMoodPanel(true);
+    } else {
+      setOpenMoodPanel(false);
+    }
+  };
+
   //creation logic
   const handleCreateEntry = useCallback(() => {
     createEntry(JournalCreateEntryPayload());
@@ -188,6 +197,14 @@ export default function JournalOverview() {
                 Save
               </button>
               <button
+                className="hidden sm:block text-center text-lg lg:text-2xl bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
+           shadow-amber-100 shadow-sm rounded-b-lg shrink  hover:bg-gray-700 hover:text-blue-400
+            hover:border-blue-400  hover:shadow-amber-200 hover:shadow-md hover:cursor-grab col-start-1 row-start-1 mt-auto"
+                onClick={handleMoodPanel}
+              >
+                Mood
+              </button>
+              <button
                 onClick={handledeleteEntry}
                 className="hidden sm:block text-center text-lg bg-red-300 text-white border border-red-400 p-4 md:mx-2
            shadow-red-200 shadow-sm rounded-b-lg shrink hover:bg-red-400 hover:text-white
@@ -214,6 +231,14 @@ export default function JournalOverview() {
               >
                 Save
               </button>
+              <button
+                className="hidden sm:block text-center text-lg lg:text-2xl bg-gray-600 md:mx-2 text-blue-200 border border-blue-200 p-4
+           shadow-amber-100 shadow-sm rounded-b-lg shrink  hover:bg-gray-700 hover:text-blue-400
+            hover:border-blue-400  hover:shadow-amber-200 hover:shadow-md hover:cursor-grab col-start-1 row-start-1 mt-auto"
+                onClick={handleMoodPanel}
+              >
+                Mood
+              </button>
             </>
           )}
         </div>
@@ -229,14 +254,24 @@ export default function JournalOverview() {
             className={
               sideBarOpened
                 ? "col-start-1 mb-4 row-start-1 border-2 border-amber-200 rounded-lg w-14/16 lg:w-7/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 justify-self-center mt-2 md:mt-10  text-sm md:text-md lg:my-20 my-20 mx-8 text-amber-100 shadow-amber-200 shadow-md"
-                : "col-start-1 row-start-1 border-2 border-amber-200 h-7/8 rounded-lg lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md md:mx-40 mt-2 md:mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
+                : "col-start-1 row-start-1 border-2 border-amber-200  rounded-lg lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md md:mx-40 mt-10 md:mt-10 mb-20 mx-5 text-amber-100 shadow-amber-200 shadow-md"
             }
           ></textarea>
-          <section className="col-start-1 row-start-1 mt-auto space-x-10 justify-self-center mx-10">
+          {openMoodPanel ? (
+            <div
+              className="col-start-1 row-start-1 border-2 mb-22 rounded-lg mt-auto lg:mt-15 w-7/8 justify-self-center h-30
+             bg-linear-180 from-gray-800 to-gray-900  border-blue-200 max-w-1/2 transition -translate-2"
+            ></div>
+          ) : (
+            ""
+          )}
+
+          <section className="col-start-1 row-start-1 mt-auto space-x-2 justify-self-center">
             {" "}
             <button
               className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 py-4 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
              px-6 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
+              onClick={handleMoodPanel}
             >
               Mood
             </button>
@@ -249,7 +284,7 @@ export default function JournalOverview() {
             </button>
             <button
               onClick={handleCreateEntry}
-              className="sm:hidden col-start-1 mt-auto mb-10  row-start-1 max-w-30 max-h-20 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
+              className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
             py-4 px-6 text-blue-200 hover:text-blue-400 hover:cursor-grab bg-gray-600"
             >
               Save

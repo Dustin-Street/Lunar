@@ -1,14 +1,11 @@
 import { useState } from "react";
-import { useFlashMessage } from "../context/FlashMessageContext";
 
 export default function PasswordChangeForm({
   changeEmail,
-  buttonState,
   setButtonState,
 }) {
   const [oldEmail, setOldEmail] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const { setFlashMessage } = useFlashMessage;
+  const [newEmail, setNewEmail] = useState("")
 
   const clearForm = () => {
     setNewEmail("");
