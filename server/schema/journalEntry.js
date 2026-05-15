@@ -28,31 +28,59 @@ const PageSchema = new Schema(
   { strict: true },
 );
 
-const JournalEntrySchema = new Schema({
-  dateCreated: {
-    type: String,
-    default: () => {
-      const date = new Date();
-      return date.toLocaleString("en-US", {
-        month: "numeric",
-        day: "numeric",
-        year: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true, // Ensures 12-hour format with AM/PM
-      });
-      // Example output: "2/22/2026, 2:30 PM"
+const JournalEntrySchema = new Schema(
+  {
+    dateCreated: {
+      type: String,
+      default: () => {
+        const date = new Date();
+        return date.toLocaleString("en-US", {
+          month: "numeric",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true, // Ensures 12-hour format with AM/PM
+        });
+        // Example output: "2/22/2026, 2:30 PM"
+      },
     },
+    rawDate: {
+      type: Date,
+      default: Date.now,
+    },
+    mood: {
+      type: String,
+      enum: [
+        "happy",
+        "sad",
+        "neutral",
+        "angry",
+        "excited",
+        "anxious",
+        "confused",
+        "content",
+        "frustrated",
+        "hopeful",
+        "lonely",
+        "grateful",
+        "bored",
+        "tired",
+        "motivated",
+        "overwhelmed",
+        "calm",
+        "nervous",
+        "proud",
+        "disappointed",
+        "curious",
+      ],
+    },
+    pages: { type: [PageSchema], default: [], required: true },
+    journalID: { type: mongoose.Schema.Types.ObjectId, ref: "Journal" },
+    userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
-  rawDate: {
-    type: Date,
-    default: Date.now,
-  },
-  mood: { type: String, enum: ["happy", "sad", "neutral", "angry", "excited"] },
-  pages: { type: [PageSchema], default: [], required: true },
-  journalID: { type: mongoose.Schema.Types.ObjectId, ref: "Journal" },
-  userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-}, {strict : true});
+  { strict: true },
+);
 
 JournalEntrySchema.plugin(mongoosePaginate);
 const JournalEntry = mongoose.model("JournalEntry", JournalEntrySchema);
