@@ -277,12 +277,13 @@ export default function JournalOverview() {
         </div>
 
         <div name="JournalEntry" className="h-7/8 grid">
-          <p
-            className="row-start-1 z-30 col-start-1 mb-auto mt-33 md:mt-13 justify-self-start ms-8 md:ms-43
+          <div
+            className="row-start-1 z-30 col-start-1 mb-auto mt-31 md:mt-11 justify-self-start ms-8 md:ms-43
            lg:ms-73 bg-gray-800 py-2 px-4 border-2 rounded-lg text-amber-100 border-blue-200 hover:border-blue-400"
+          onClick={handleMoodPanel}
           >
             {mood}
-          </p>
+          </div>
           <textarea
             value={pages[currentPageIndex]}
             onChange={handleChange}

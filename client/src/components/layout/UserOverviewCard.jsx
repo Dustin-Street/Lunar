@@ -12,7 +12,7 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
 
   if (statsLoading && stats?.hasStatistics === true) {
     return (
-      <div className="">
+      <div className=" space-x-0 space-y-4 md:space-x-4 md:space-y-0 flex flex-col md:flex-row items-center justify-center">
         <div className="bg-gray-700/10 rounded-lg p-6 max-w-2xl text-center justify-self-center text-amber-100 md:text-xl lg:text-lg font-mono animate-pulse mb-4">
           {/* Username skeleton */}
           <div className="h-12 w-40 bg-gray-800/40 rounded-lg mx-auto mb-4 animate-pulse"></div>
@@ -51,7 +51,7 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
   return (
     <div>
       {stats?.hasStatistics === true ? (
-        <div className=" bg-gray-700/10 rounded-lg p-6 max-w-2xl text-center justify-self-center text-amber-100  animate-fadeIn md:text-xl lg:text-lg font-sans">
+        <div className=" bg-gray-700/10 rounded-lg p-6 max-w-2xl text-center justify-self-center text-amber-100 animate-fadeIn md:text-xl lg:text-lg font-sans space-y-4 space-x-0">
           <h2 className=" text-sm md:text-lg ">{user?.username}</h2>
           <h2 className=" text-sm md:text-lg ">Activity Report</h2>
           <ul className="mt-2 space-y-2">
@@ -59,7 +59,7 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
               <span className="text-sm  min-w-45  bg-linear-150 from-gray-800/70 to-gray-900/70 rounded-lg px-5 py-3 ">
                 Entries this month
               </span>
-              <span className="text-blue-200 text-sm border px-3 py-2 rounded-lg bg-linear-60 from-gray-700 to-gray-900 ms-5 me-3 ">
+              <span className="text-blue-200 text-sm border px-3 py-2 rounded-lg bg-linear-60 from-gray-700 to-gray-900 ms-7 me-4 ">
                 {stats?.statistics.monthlyEntries}
               </span>
             </li>
@@ -68,7 +68,7 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
               <span className="text-sm  me-2 min-w-45 bg-linear-150 from-gray-800/70 to-gray-900/70 rounded-lg px-5 py-3">
                 Most common day
               </span>
-              <span className="text-blue-200 text-sm border px-3 py-2 rounded-lg bg-linear-60 from-gray-700 to-gray-900 mx-3">
+              <span className="text-blue-200 text-sm border px-3 py-2 rounded-lg bg-linear-60 from-gray-700 to-gray-900 ms-2 me-6">
                 {stats?.statistics.commonDay}
               </span>
             </li>
@@ -77,7 +77,7 @@ export default function UserOverviewCard({ stats, user, statisticsloading }) {
               <span className=" text-sm  me-2 min-w-45 bg-linear-150 from-gray-800/70 to-gray-900/70 rounded-lg px-5 py-3">
                 Most common mood{" "}
               </span>
-              <span className="text-blue-200 text-sm border px-3 py-2 rounded-lg  bg-linear-60 from-gray-700 to-gray-900 mx-3">
+              <span className="text-blue-200 text-sm border px-3 py-2 rounded-lg  bg-linear-60 from-gray-700 to-gray-900 ms-5 me-4">
                 {stats?.statistics.commonMood}
               </span>
             </li>
