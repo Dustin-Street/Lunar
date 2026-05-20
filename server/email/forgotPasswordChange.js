@@ -1,4 +1,5 @@
 import { getTransporter } from "./transporter.js";
+import { createHttpError } from "../utils/httpError.js";
 import User from "../schema/user.js";
 
 /**
@@ -6,43 +7,65 @@ import User from "../schema/user.js";
  *
  * @param {string} userEmailAddress - The email address of the user requesting a password reset.
  * @param {string} userId - The MongoDB ObjectId of the user.
- * @returns {Promise<void>}
  */
 const forgotPasswordChange = async function (userEmailAddress, userId) {
   try {
+    if (!userEmailAddress) {
+      throw createHttpError(400, "Email is required");
+    }
+
+    const normalizedEmail = userEmailAddress.trim().toLowerCase();
+
     // 1. Find the user
     const foundUser = await User.findById(userId);
-    if (!foundUser) throw new Error("User not found");
+    if (!foundUser) {
+      // Prevent account enumeration
+      console.log("Password reset requested for non-existent user");
+      return;
+    }
 
-    // 2. Generate a raw token + store hashed version in DB for 20 minutes
+    // 2. Generate a raw token + store hashed version in DB
     const resetCode = foundUser.createVerificationCode();
     await foundUser.save();
 
     // 3. Build the magic link URL
-    const resetURL = `http://localhost:5050/forgot-password-form?token=${resetCode}`;
+    const resetURL = `${process.env.FRONTEND_URL}/resetPassword?token=${resetCode}`;
 
-    // 4. Get the email transporter (dev or prod)
+    // 4. Get the email transporter
     const transporter = await getTransporter();
-
     // 5. Send the email
     const info = await transporter.sendMail({
-      from: '"Lunar Journaling" <no-reply@lunar.dev>',
-      to: userEmailAddress,
+      from: '"Lunar Journaling" <onboarding@resend.dev>',
+      to: normalizedEmail,
       subject: "Your password reset link",
       html: `
-        <div style="space-between; font-family: Arial, sans-serif; color: #333;">
-          <h2 style="color: #007BFF;">Password Reset Request</h2>
-          <p>Hi ${foundUser.username},</p>
-          <p>You have requested to reset your password. Please click the link below to proceed:</p>
-          <a href="${resetURL}" style="background-color: #007BFF; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Change My Password</a>
-          <p>If you did not request this, please ignore this email and send a report to our support team.</p> <a href="mailto:support@lunar.dev">Contact Support</a>q
-        </div>
+    <div style="font-family: Arial, sans-serif; background-color:#374151; color:#fef3c7; padding:20px;">
+      <h2 style="color:#bfdbfe; margin-bottom:16px;">Password Reset Request</h2>
 
-      `,
+      <p>Hi ${foundUser.username},</p>
+      <p>You requested to reset your password. Click the button below:</p>
+
+      <a href="${resetURL}"
+         style="
+           background-color:#bfdbfe;
+           color:#1e3a8a;
+           padding:10px 20px;
+           text-decoration:none;
+           border-radius:5px;
+           display:inline-block;
+           margin:16px 0;
+           font-weight:bold;
+         ">
+        Change My Password
+      </a>
+
+      <p>If you did not request this, you can safely ignore this email.</p>
+      <p>Need help? <a href="mailto:support@lunarjournaling.net" style="color:#bfdbfe;">Contact Support</a></p>
+    </div>
+  `,
     });
-
-    console.log("Password reset email sent:", info.messageId);
   } catch (error) {
+    throw createHttpError(500, "error sending reset email try again");
     console.log(`Password authentication mailing error -> ${error}`);
   }
 };

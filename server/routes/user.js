@@ -391,48 +391,98 @@ router.post(
 );
 
 router.post(
-  "/password-reset-request",
+  "/password-reset-request/:userEmail",
   asyncHandler(async (req, res, next) => {
-    const { userEmail } = req.body;
+    const { userEmail } = req.params;
 
-    if (!userEmail) {
-      return next(
-        createHttpError(
-          400,
-          "You must enter a valid email to receive password reset instructions.",
-        ),
-      );
-    }
+    try {
+      if (!userEmail) {
+        return next(
+          createHttpError(
+            400,
+            "Password reset instructions have been sent to the associated email.",
+          ),
+        );
+      }
 
-    // Look up user by email
-    const user = await User.findOne({ email: userEmail });
+      const normalizeEmail = userEmail.toLowerCase();
+      // Look up user by email
+      const user = await User.findOne({ email: normalizeEmail });
+      // Always send the same response to avoid account enumeration
+      if (!user) {
+        console.error(`not user for : ${userEmail}`);
+        return res.json({
+          message:
+            "Password reset instructions have been sent to the associated email.",
+        });
+      }
 
-    // Always send the same response to avoid account enumeration
-    if (!user) {
+      await forgotPasswordChange(user.email, user._id);
+
       return res.json({
         message:
-          "If that email is associated with an account, password reset instructions have been sent.",
+          "Password reset instructions have been sent to the associated email.",
+        success: true,
       });
+    } catch (error) {
+      throw createHttpError(400, "Could not complete the request try again");
     }
-
-    // If user exists, send the reset email
-    await forgotPasswordChange(user.email, user._id);
-
-    return res.json({
-      message:
-        "If that email is associated with an account, password reset instructions have been sent.",
-    });
   }),
 );
 
-//this route will verify token from email link and then allowing th euser to be directly logged in and taken to the change password form, where they can enter a new password without needing to enter their old
-//  password since they have verified ownership of the email through the reset link. does not give to much information and only send the request if the email was valid and associated with an account, otherwis
-// just send no email as to not give away which emails are associated with accounts
+router.post(
+  "/email-reset-request",
+  asyncHandler(async (req, res, next) => {
+    const { username, password } = req.body;
 
-router.get("/forgot-password-form", async (req, res, next) => {
-  const { token } = req.query;
+    try {
+      if (!username || !password) {
+        return next(
+          createHttpError(
+            400,
+            "Missing credentials make sure to enter username and password",
+          ),
+        );
+      }
 
-  if (!token) {
+      const userUsername = await User.findOne({ username: username });
+
+      if (!userUsername) {
+        return res.json({
+          message:
+            "Password reset instructions have been sent to the associated email.",
+        });
+      }
+
+      const userPassword = username.comparePassword(password);
+
+      if (!userPassword) {
+        return res.json({
+          message:
+            "Password reset instruction have been sent to the associated email",
+        });
+      }
+
+      // If user exists, send the reset email
+      await forgotPasswordChange(user.email, user._id);
+
+      return res.json({
+        message:
+          "Password reset instructions have been sent to the associated email.",
+        success: true,
+      });
+    } catch (error) {
+      throw createHttpError(400, "Could not complete the request try again");
+    }
+  }),
+);
+
+//verifies and route the user on the front end
+router.post("/check-reset-token", async (req, res, next) => {
+  const { token } = req.body;
+  console.log(`reset token : ${token}`)
+  try{
+     if (!token) {
     return next(
       createHttpError(400, "Invalid or expired link, try to get another one"),
     );
@@ -461,9 +511,14 @@ router.get("/forgot-password-form", async (req, res, next) => {
     message: "Token verified. Redirecting to Password Reset.",
     success: true,
   });
+  }catch(error){
+    return next (createHttpError(500, "error accepting link for reset try again later"))
+   
+  }
+  
 });
 
-//chnage password in user access through user settings while logged in
+//change password in user access through user settings while logged in
 router.patch(
   "/change-password",
   body("newPassword").isStrongPassword(),
@@ -551,6 +606,33 @@ router.patch(
   }),
 );
 
+//routes to check if username or email is valid or not
+router.get("/check-username/:username", async (req, res) => {
+  const { username } = req.params;
+
+  const user = User.findOne({ username: username });
+
+  if (!user) {
+    throw createHttpError(
+      400,
+      "Password reset instructions have been sent to the associated email",
+    );
+  }
+});
+
+router.get("/check-email/:email", async (req, res) => {
+  const { email } = req.params;
+
+  const user = User.findOne({ email: email });
+
+  if (!user) {
+    throw createHttpError(
+      400,
+      "Password reset instructions have been sent to the associated email",
+    );
+  }
+});
+
 // delete account route and remember to delete all journals associated with the user as well as tokens and cookies
 
 router.delete("/requestDeleteAccount", authenticateToken, async (req, res) => {
@@ -561,7 +643,6 @@ router.delete("/requestDeleteAccount", authenticateToken, async (req, res) => {
       throw createHttpError(404, "User not found");
     }
 
-    //also delete all jornals and images in r2 associated with the user here as well
     for (const journalId of user.journals) {
       // 1. Delete all entries belonging to this journal
       await JournalEntry.deleteMany({ journalID: journalId });

@@ -41,7 +41,7 @@ export default function useAccount() {
         logger("Failed to fetch user account settings:", response.data.message);
       }
     } catch (err) {
-      logger("error","Error fetching user account settings:", err);
+      logger("error", "Error fetching user account settings:", err);
     } finally {
       setLoading(false);
     }
@@ -124,6 +124,7 @@ export default function useAccount() {
     }
   };
 
+  //change password if old password available / logged in
   const changePassword = async (oldPassword, newPassword) => {
     try {
       setLoading(true);
@@ -136,6 +137,35 @@ export default function useAccount() {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
+        },
+      );
+      if (response.data.success) {
+        setFlashMessage(response.data.message);
+        return { success: true };
+      }
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      setFlashMessage(
+        serverMsg || error?.message || "Password change failed...try again",
+      );
+      return { success: false, error: serverMsg || error?.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //changes password from email link
+  const changePasswordReset = async (newPassword) => {
+    try {
+      setLoading(true);
+
+      const response = await axios.patch(
+        `${API_BASE_URL}/account/change-password-reset`,
+        { newPassword: newPassword },
+        {
+          withCredentials: true,
         },
       );
       if (response.data.success) {
@@ -185,6 +215,7 @@ export default function useAccount() {
   //still need to finish this logic !
   const resetPassword = async () => {
     try {
+      setLoading(true);
       const response = await axios.post(
         `${API_BASE_URL}/account/request-password-reset`,
       );
@@ -234,19 +265,126 @@ export default function useAccount() {
     }
   };
 
-  //pull user data to view and update profile information READ
+  //Account recovery
 
-  //delete account DELETE
+  const sendPasswordReset = async (email) => {
+    try {
+      setLoading(true);
+      const request = await axios.post(
+        `${API_BASE_URL}/account/password-reset-request/${email}`,
+      );
+
+      setFlashMessage(request.data.message);
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      setFlashMessage(
+        serverMsg ||
+          error?.message ||
+          "Failed to send the password reset request try again",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendEmailRecovery = async (username, password) => {
+    try {
+      setLoading(true);
+
+      const request = await axios.post(
+        `${API_BASE_URL}/account/email-reset-request`,
+        { username: username, password: password },
+        { withCredentials: true },
+      );
+
+      setFlashMessage(request.data.message);
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      setFlashMessage(
+        serverMsg ||
+          error?.message ||
+          "Failed to send the email reset request try again",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkResetToken = async (resetToken) => {
+    try {
+      logger("info", `reset token : ${resetToken}`);
+      const response = await axios.post(
+        `${API_BASE_URL}/account/check-reset-token`,
+        { token: resetToken },
+        { withCredentials: true },
+      );
+      logger("info", response.data);
+      return response.data.exists;
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      setFlashMessage(
+        serverMsg ||
+          error?.message ||
+          "Failed to send the email reset request try again",
+      );
+      return false;
+    }
+  };
+  const checkIfUsernameExists = async (username) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${API_BASE_URL}/account/check-username/${username}`,
+      );
+      console.log(`respose from function ${response.data}`);
+      return response.data.exists;
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      logger("error", serverMsg);
+
+      return false;
+    }
+  };
+
+  const checkIfEmailExists = async (email) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/account/check-email/${email}`,
+      );
+      return response.data.exists;
+    } catch (error) {
+      const serverMsg =
+        error?.response?.data?.message || error?.response?.data?.error;
+
+      logger("error", serverMsg);
+
+      return false;
+    }
+  };
 
   return {
     user,
     loading,
+    checkResetToken,
     resetPassword,
+    changePasswordReset,
     requestDeleteAccount,
     setLoading,
     changePassword,
     changeEmail,
     userSignup,
     userLogin,
+    sendPasswordReset,
+    sendEmailRecovery,
+    checkIfUsernameExists,
+    checkIfEmailExists,
   };
 }

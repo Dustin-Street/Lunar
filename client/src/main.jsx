@@ -9,7 +9,6 @@ import "./index.css";
 //routes
 import JournalSelect from "./components/journal/JournalSelect.jsx";
 import JournalOverview from "./components/journal/JournalOverview.jsx";
-
 import Signup from "./components/account/Signup.jsx";
 import Home from "./components/Home";
 import Login from "./components/account/Login.jsx";
@@ -17,8 +16,12 @@ import AppPolicy from "./components/AppPolicy.jsx";
 import App from "./App.jsx";
 import ErrorPage from "./components/error/ErrorPage.jsx";
 import Account from "./components/account/Account.jsx";
-import { AuthProvider } from "./components/context/AuthContext.jsx";
 import AccountRecovery from "./components/account/AccountRecovery.jsx";
+import ResetPassword from "./components/account/ResetPassword.jsx";
+
+
+//context providers
+import { AuthProvider } from "./components/context/AuthContext.jsx";
 import { FlashMessageProvider } from "./components/context/FlashMessageContext";
 
 // Security utilities
@@ -123,6 +126,16 @@ const router = createBrowserRouter([
       {
         path: "/Account",
         element: <Account />,
+      },
+    ],
+  },
+  {
+    path: `/resetPassword`,
+    element: <App />,
+    children: [
+      {
+        path: `/resetPassword`,
+        element: <ResetPassword />,
       },
     ],
   },
