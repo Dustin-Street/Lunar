@@ -85,7 +85,12 @@ export default function Login() {
 
   return (
     <div>
-      <img src="/images/starrysky2.webp" alt="" className="hidden" fetchPriority="high"/>
+      <img
+        src="/images/starrysky2.webp"
+        alt=""
+        className="hidden"
+        fetchPriority="high"
+      />
       <div className="min-h-screen w-full flex items-center justify-center bg-[url('/images/starrysky2.webp')] bg-cover bg-center bg-no-repeat">
         <form
           onSubmit={handleSubmit}
@@ -103,7 +108,7 @@ export default function Login() {
               </label>
               <input
                 id="login-email"
-                className={`bg-gray-200 shrink rounded p-1.5 text-black ${emailError ? "border-red-500" : ""}`}
+                className={`bg-gray-200 shrink   rounded p-1.5 text-black ${emailError ? "border-red-500" : ""}`}
                 type="email"
                 autoComplete="email"
                 placeholder="Email"
@@ -140,7 +145,7 @@ export default function Login() {
                 name="password"
                 id="login-password"
                 value={password}
-                className={`bg-gray-200 max-w-36 flex-1 outline-none ${passwordError ? "border-red-500" : ""}`}
+                className={`bg-gray-200 shrink max-w-36  outline-none ${passwordError ? "border-red-500" : ""}`}
                 onChange={(event) => setPassword(event.target.value)}
                 disabled={isSubmitting}
                 maxLength={128}

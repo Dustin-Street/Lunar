@@ -194,7 +194,7 @@ export default function Signup() {
                 name="password"
                 id="signup-password"
                 value={password}
-                className={`bg-gray-200 max-w-36 flex-1 outline-none ${passwordError ? "border-red-500" : ""}`}
+                className={`bg-gray-200 max-w-36 outline-none ${passwordError ? "border-red-500" : ""}`}
                 onChange={(event) => {
                   setPassword(event.target.value);
                   if (passwordError) setPasswordError("");
