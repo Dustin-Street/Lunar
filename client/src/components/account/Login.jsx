@@ -122,7 +122,7 @@ export default function Login() {
             {emailError && (
               <p
                 id="login-email-error"
-                className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse "
+                className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-start"
               >
                 {emailError}
               </p>
@@ -166,7 +166,7 @@ export default function Login() {
           {passwordError && (
             <p
               id="login-password-error"
-              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse"
+              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-start"
             >
               {passwordError}
             </p>

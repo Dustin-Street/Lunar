@@ -394,7 +394,7 @@ router.post(
   "/password-reset-request/:userEmail",
   asyncHandler(async (req, res, next) => {
     const { userEmail } = req.params;
-    console.log(`email received ${email}`);
+    console.log(`email received ${userEmail}`);
 
     try {
       if (!userEmail) {

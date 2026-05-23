@@ -140,7 +140,7 @@ export default function Signup() {
           {emailError && (
             <p
               id="signup-email-error"
-              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-center"
+              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-start"
             >
               {emailError}
             </p>
@@ -175,7 +175,7 @@ export default function Signup() {
           {usernameError && (
             <p
               id="signup-username-error"
-              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-center"
+              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-start"
             >
               {usernameError}
             </p>
@@ -220,7 +220,7 @@ export default function Signup() {
           {passwordError && (
             <p
               id="signup-password-error"
-              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-center"
+              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-start"
             >
               {passwordError}
             </p>
