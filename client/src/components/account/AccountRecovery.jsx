@@ -32,15 +32,15 @@ export default function AccountRecovery() {
   };
 
   return (
-    <div className="h-dvh flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat bg-[url(/images/starrysky2.jpg)]">
-      <h1 className="text-3xl text-amber-100 mb-6 font-semibold font-serif border-b-2 border-amber-100 mt-6 p-2 w-3/4 max-w-md text-center bg-gray-700/98 rounded-lg shadow-lg">
+    <div className="min-h-dvh w-full flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat bg-[url(/images/starrysky2.jpg)] py-6 px-4 sm:px-0">
+      <h1 className="text-2xl sm:text-3xl text-amber-100 mb-4 sm:mb-6 font-semibold font-serif border-b-2 border-amber-100 mt-4 sm:mt-6 p-2 w-full sm:w-3/4 max-w-md text-center bg-gray-700/98 rounded-lg shadow-lg">
         Account Recovery
       </h1>
       <div
         name="emailRecoveryCard"
-        className="bg-gray-700/98 p-8 rounded-2xl shadow-lg text-center text-amber-100 w-3/4 max-w-md m-4 border-2 border-amber-100"
+        className="bg-gray-700/98 p-4 sm:p-8 rounded-2xl shadow-lg text-center text-amber-100 w-full sm:w-3/4 max-w-md m-2 sm:m-4 border-2 border-amber-100"
       >
-        <p className="text-2xl text-blue-200 border-b p-2">
+        <p className="text-lg sm:text-2xl text-blue-200 border-b p-2">
           Forgot your Email?
         </p>
         Enter the username and password associated with your account, and we'll
@@ -83,9 +83,9 @@ export default function AccountRecovery() {
       </div>
       <div
         name="PasswordRecoveryCard"
-        className="bg-gray-700/98 p-8 rounded-2xl shadow-lg text-center text-amber-100 w-3/4 max-w-md m-4 mb-2 border-2 border-amber-100"
+        className="bg-gray-700/98 p-4 sm:p-8 rounded-2xl shadow-lg text-center text-amber-100 w-full sm:w-3/4 max-w-md m-2 sm:m-4 sm:mb-2 border-2 border-amber-100"
       >
-        <p className="text-2xl text-blue-200 border-b p-2">
+        <p className="text-lg sm:text-2xl text-blue-200 border-b p-2">
           Forgot your Password?
         </p>
         Enter the email associated with your account, and we'll send you a link
