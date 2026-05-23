@@ -394,6 +394,7 @@ router.post(
   "/password-reset-request/:userEmail",
   asyncHandler(async (req, res, next) => {
     const { userEmail } = req.params;
+    console.log(`email received ${email}`);
 
     try {
       if (!userEmail) {
@@ -425,7 +426,10 @@ router.post(
         success: true,
       });
     } catch (error) {
-      throw createHttpError(400, "Could not complete the request try again");
+      console.error(error);
+      return next(
+        createHttpError(400, "Could not complete the request try again"),
+      );
     }
   }),
 );
@@ -434,6 +438,7 @@ router.post(
   "/email-reset-request",
   asyncHandler(async (req, res, next) => {
     const { username, password } = req.body;
+    console.log(`username sent : ${username}, password send: ${password}`);
 
     try {
       if (!username || !password) {
@@ -480,42 +485,42 @@ router.post(
 //verifies and route the user on the front end
 router.post("/check-reset-token", async (req, res, next) => {
   const { token } = req.body;
-  console.log(`reset token : ${token}`)
-  try{
-     if (!token) {
-    return next(
-      createHttpError(400, "Invalid or expired link, try to get another one"),
-    );
-  }
-  await User.findOne({ verificationCode: token })
-    .then((user) => {
-      if (!user) {
+  console.log(`reset token : ${token}`);
+  try {
+    if (!token) {
+      return next(
+        createHttpError(400, "Invalid or expired link, try to get another one"),
+      );
+    }
+    await User.findOne({ verificationCode: token })
+      .then((user) => {
+        if (!user) {
+          return next(
+            createHttpError(
+              400,
+              "Invalid or expired link, try to get another one",
+            ),
+          );
+        }
+      })
+      .catch((err) => {
+        console.error("Error during token verification:", err);
         return next(
           createHttpError(
             400,
-            "Invalid or expired link, try to get another one",
+            "Server error during authenication process, try again later",
           ),
         );
-      }
-    })
-    .catch((err) => {
-      console.error("Error during token verification:", err);
-      return next(
-        createHttpError(
-          400,
-          "Server error during authenication process, try again later",
-        ),
-      );
+      });
+    return res.status(200).json({
+      message: "Token verified. Redirecting to Password Reset.",
+      success: true,
     });
-  return res.status(200).json({
-    message: "Token verified. Redirecting to Password Reset.",
-    success: true,
-  });
-  }catch(error){
-    return next (createHttpError(500, "error accepting link for reset try again later"))
-   
+  } catch (error) {
+    return next(
+      createHttpError(500, "error accepting link for reset try again later"),
+    );
   }
-  
 });
 
 //change password in user access through user settings while logged in

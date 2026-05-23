@@ -72,7 +72,7 @@ export default function AccountRecovery() {
           />
           <button
             type="submit"
-            className="mt-4 p-2 text-black bg-blue-300 rounded w-full  hover:shadow-md transform hover:-translate-y-px hover:shadow-cyan-100"
+            className="mt-4 p-2 text-black bg-blue-300 rounded w-full  hover:shadow-md transform hover:-translate-y-px hover:shadow-cyan-100 hover:bg-blue-400"
           >
             Send Reset Link
           </button>
@@ -105,7 +105,7 @@ export default function AccountRecovery() {
           />
           <button
             type="submit"
-            className="mt-4 p-2 text-black bg-blue-300 rounded w-full  hover:shadow-md transform hover:-translate-y-px hover:shadow-cyan-100"
+            className="mt-4 p-2 text-black bg-blue-300 rounded w-full  hover:shadow-md transform hover:-translate-y-px hover:shadow-cyan-100 hover:bg-blue-400"
           >
             Send Reset Link
           </button>
