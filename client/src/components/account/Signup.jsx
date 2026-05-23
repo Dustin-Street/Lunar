@@ -182,8 +182,8 @@ export default function Signup() {
           )}
 
           {/* PASSWORD */}
-          <div className="mt-10 border-3 border-blue-200 py-3 px-4 sm:px-12 rounded-2xl shadow-2xl justify-self-center">
-            <div className="flex items-center bg-gray-200 rounded p-1.5">
+          
+            <div className="grid mt-10 border-3 border-blue-200 py-3 px-4 sm:px-12 rounded-2xl shadow-2xl justify-self-center">
               <label htmlFor="signup-password" className="sr-only">
                 Password
               </label>
@@ -194,7 +194,7 @@ export default function Signup() {
                 name="password"
                 id="signup-password"
                 value={password}
-                className={`bg-gray-200 max-w-36 outline-none ${passwordError ? "border-red-500" : ""}`}
+                className={`bg-gray-200 shrink rounded p-1.5 row-start-1 col-start-1 text-black ${passwordError ? "border-red-500" : ""}`}
                 onChange={(event) => {
                   setPassword(event.target.value);
                   if (passwordError) setPasswordError("");
@@ -209,14 +209,14 @@ export default function Signup() {
 
               <button
                 type="button"
-                className="text-gray-600 ml-2"
+                className="text-gray-600 ml-2 hover:text-amber-100"
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? "hide" : "show"}
               </button>
             </div>
-          </div>
+          
 
           {passwordError && (
             <p
