@@ -140,7 +140,7 @@ export default function Signup() {
           {emailError && (
             <p
               id="signup-email-error"
-              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse"
+              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-center"
             >
               {emailError}
             </p>
@@ -175,53 +175,52 @@ export default function Signup() {
           {usernameError && (
             <p
               id="signup-username-error"
-              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse"
+              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-center"
             >
               {usernameError}
             </p>
           )}
 
           {/* PASSWORD */}
-          
-            <div className="grid mt-10 border-3 border-blue-200 py-3 px-4 sm:px-12 rounded-2xl shadow-2xl justify-self-center">
-              <label htmlFor="signup-password" className="sr-only">
-                Password
-              </label>
-              <input
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                placeholder="Password"
-                name="password"
-                id="signup-password"
-                value={password}
-                className={`bg-gray-200 shrink rounded p-1.5 row-start-1 col-start-1 text-black ${passwordError ? "border-red-500" : ""}`}
-                onChange={(event) => {
-                  setPassword(event.target.value);
-                  if (passwordError) setPasswordError("");
-                }}
-                disabled={isSubmitting}
-                maxLength={128}
-                aria-invalid={!!passwordError}
-                aria-describedby={
-                  passwordError ? "signup-password-error" : undefined
-                }
-              />
 
-              <button
-                type="button"
-                className="text-gray-600 ml-2 hover:text-amber-100"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? "hide" : "show"}
-              </button>
-            </div>
-          
+          <div className="grid mt-10 border-3 border-blue-200 py-3 px-4 sm:px-12 rounded-2xl shadow-2xl justify-self-center">
+            <label htmlFor="signup-password" className="sr-only">
+              Password
+            </label>
+            <input
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder="Password"
+              name="password"
+              id="signup-password"
+              value={password}
+              className={`bg-gray-200 shrink rounded p-1.5 row-start-1 col-start-1 text-black ${passwordError ? "border-red-500 " : ""}`}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                if (passwordError) setPasswordError("");
+              }}
+              disabled={isSubmitting}
+              maxLength={128}
+              aria-invalid={!!passwordError}
+              aria-describedby={
+                passwordError ? "signup-password-error" : undefined
+              }
+            />
+
+            <button
+              type="button"
+              className="text-blue-200 ml-2 mt-2 hover:text-amber-100"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? "hide" : "show"}
+            </button>
+          </div>
 
           {passwordError && (
             <p
               id="signup-password-error"
-              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse"
+              className="text-red-400 text-sm mt-1 ml-10 justify-self-start animate-pulse text-center"
             >
               {passwordError}
             </p>

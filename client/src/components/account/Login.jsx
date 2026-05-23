@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useAccount from "../../hooks/useAccount";
 import {
   validateEmail,
@@ -10,24 +10,17 @@ import {
 
 export default function Login() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
+
+  const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { userLogin } = useAccount();
+
+   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { userLogin} = useAccount();
 
   // Rate limiter for login attempts (5 attempts per minute)
   const loginLimiter = new RateLimiter(5, 60000);
-
-  // Clear errors when inputs change
-  useEffect(() => {
-    if (emailError && email) setEmailError("");
-  }, [email, emailError]);
-
-  useEffect(() => {
-    if (passwordError && password) setPasswordError("");
-  }, [password, passwordError]);
 
   const validateForm = () => {
     let isValid = true;
@@ -55,6 +48,8 @@ export default function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (emailError) setEmailError("");
+    if (passwordError) setPasswordError("");
 
     if (!validateForm()) return;
 
@@ -114,9 +109,10 @@ export default function Login() {
                 placeholder="Email"
                 value={email}
                 name="email"
-                onChange={(event) =>
-                  setEmail(sanitizeInput(event.target.value))
-                }
+                onChange={(event) => {
+                  setEmail(sanitizeInput(event.target.value));
+                  if (emailError) setEmailError("");
+                }}
                 disabled={isSubmitting}
                 maxLength={254}
                 aria-invalid={!!emailError}
@@ -133,38 +129,40 @@ export default function Login() {
             )}
           </div>
 
-          <div className="mt-10 border-3  border-blue-200 py-3 px-4 sm:px-12 rounded-2xl shadow-2xl justify-self-center">
-            <div className="flex items-center bg-gray-200 rounded p-1.5">
-              <label htmlFor="login-password" className="sr-only">
-                Password
-              </label>
-              <input
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                placeholder="Password"
-                name="password"
-                id="login-password"
-                value={password}
-                className={`bg-gray-200 shrink max-w-36  outline-none ${passwordError ? "border-red-500" : ""}`}
-                onChange={(event) => setPassword(event.target.value)}
-                disabled={isSubmitting}
-                maxLength={128}
-                aria-invalid={!!passwordError}
-                aria-describedby={
-                  passwordError ? "login-password-error" : undefined
-                }
-              />
+          <div className="grid mt-10 border-3 border-blue-200 py-3 px-4 sm:px-12 rounded-2xl shadow-2xl justify-self-center">
+            <label htmlFor="login-password" className="sr-only">
+              Password
+            </label>
+            <input
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder="Password"
+              name="password"
+              id="login-password"
+              value={password}
+              className={`bg-gray-200 shrink rounded p-1.5 row-start-1 col-start-1 text-black ${passwordError ? "border-red-500 " : ""}`}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                if (passwordError) setPasswordError("");
+              }}
+              disabled={isSubmitting}
+              maxLength={128}
+              aria-invalid={!!passwordError}
+              aria-describedby={
+                passwordError ? "login-password-error" : undefined
+              }
+            />
 
-              <button
-                type="button"
-                className="text-gray-600 ml-2"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? "hide" : "show"}
-              </button>
-            </div>
+            <button
+              type="button"
+              className="text-blue-200 ml-2 mt-2 hover:text-amber-100"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? "hide" : "show"}
+            </button>
           </div>
+
           {passwordError && (
             <p
               id="login-password-error"
