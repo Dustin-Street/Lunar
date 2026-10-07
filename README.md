@@ -1,217 +1,141 @@
-# Lunar - Personal Journaling Application
+# Lunar
 
-A modern, secure full-stack web application for personal journaling and reflection. Built with React, Node.js, and MongoDB, Lunar provides users with a reactive interface to create, manage, and reflect on their personal journals while maintaining privacy and security, still in super early state.
+Lunar is a full-stack journaling application built to practice and demonstrate web development fundamentals. It lets users create journals, write entries with mood labels, and review basic activity statistics.
 
-**Check it out yourself here**
-Render deployment link : https://lunar-xycw.onrender.com  **(note this could take a up to a minute to load)**
+**Live application:** [https://lunar-xycw.onrender.com](https://lunar-xycw.onrender.com)
 
-## ✨ Features
+The hosted application runs on Render's free tier and may take a little while to respond after being idle.
 
-- **🔐 Secure Authentication**: JWT-based authentication with automatic token refresh and secure password hashing
-- **📖 Journal Management**: Create, view, and delete personal journals with full CRUD operations
-- **📝 Rich Journal Entries**: Write and manage journal entries
-- **📊 User Statistics**: Track journaling activity and insights with computed statistics
-- **🎨 Modern UI**: Responsive design built with Tailwind CSS and React
+## Features
 
-- ** Features ** are in a early state and are basic hopefully to be expanded in the future to add images to pages, and further customization to the application
-  when I have time between other projects to improve the experience.
+- Create an account, sign in, refresh authentication, and recover an account
+- Create, edit, view, and delete journals and journal entries
+- Add a mood to journal entries
+- View activity statistics, including monthly entry count, most common day, and most common mood
+- Use a responsive React interface
 
-## 📸 Screenshots
+## Screenshots
 
-### Login Interface
+### Desktop
 
-![Lunar Login](docs/assets/images/LunarLoginFull.png)
+![Lunar desktop login screen](docs/assets/images/LunarLoginFull.png)
 
-### Mobile Login View
+### Mobile
 
-![Lunar Mobile Login](docs/assets/images/LunarLoginSmall.png)
+![Lunar mobile login screen](docs/assets/images/LunarLoginSmall.png)
 
-## 🔒 Security Features
+## Technology
 
-### Frontend Security
+### Client
 
-- **Input Sanitization**: All user inputs are sanitized to prevent XSS attacks
-- **Form Validation**: Client-side validation with comprehensive error messages
-- **Rate Limiting**: Login and signup attempts are rate-limited to prevent brute force
-- **Secure Storage**: Sensitive data never stored in localStorage/sessionStorage
-- **Clickjacking Protection**: Automatic detection and prevention of iframe-based attacks
-- **CSP Headers**: Content Security Policy implementation (backend)
-- **Request Interceptors**: Automatic request validation and sanitization
-- **Error Sanitization**: Error messages sanitized to prevent information leakage
-- **Secure Random Generation**: Cryptographically secure random values for nonces and IDs
+- React 19
+- React Router
+- Vite
+- Tailwind CSS
+- Axios
 
-### Authentication Security
+### Server
 
-- **JWT Tokens**: Short-lived access tokens (15 minutes) with automatic refresh
-- **HTTP-Only Cookies**: Refresh tokens stored securely in HTTP-only cookies
-- **Password Policies**: Strong password requirements with validation
-- **Account Lockout**: Rate limiting prevents brute force attacks
-- **Secure Logout**: Complete token cleanup on logout
+- Node.js and Express
+- MongoDB with Mongoose
+- Passport, JSON Web Tokens, and bcrypt
+- Express Validator, Helmet, CORS, and Express Rate Limit
+- Sentry for error monitoring
 
-### Data Protection
+## Run locally
 
-- **Input Validation**: Comprehensive validation for all user inputs
-- **XSS Prevention**: HTML encoding and sanitization of all dynamic content
-- **CSRF Protection**: Request headers and origin validation
-- **Secure Headers**: Helmet.js provides comprehensive security headers
-- **CORS Policy**: Strict cross-origin resource sharing controls
+### Requirements
 
-## 🔍 Security Monitoring & Auditing
+- Node.js 20.6 or newer (the startup command uses Node's `--env-file` option)
+- npm
+- A MongoDB database, such as MongoDB Atlas
 
-### Automated Security Checks
+### Configure the server
 
-- **Dependency Auditing**: Regular security audits of npm packages
-- **Vulnerability Scanning**: Automated detection of known security issues
-- **Sentry Integration**: Real-time error monitoring and alerting
-- **Input Validation**: Comprehensive client and server-side validation
+Create `server/.env` and add the server's configuration. The database connection reads `ATLAS_URI`.
 
-### Security Scripts
+```env
+ATLAS_URI=mongodb+srv://<username>:<password>@<cluster>/<database>
+JWT_SECRET=replace-with-a-long-random-secret
+REFRESH_TOKEN_SECRET=replace-with-another-long-random-secret
+REFRESH_TOKEN_EXPIRY=2592000
+SESSION_EXPIRY=900
+JWT_TOKEN_EXPIRY=900
+COOKIE_SECRET=replace-with-a-long-random-secret
+WHITELISTED_DOMAINS=http://localhost:5173
+FRONTEND_URL=http://localhost:5173
+API_URL=http://localhost:5050
+PORT=5050
+```
+
+Replace the example values with your own. Keep secrets and database credentials private; do not commit `.env` files.
+
+### Install dependencies and start the server
+
+```powershell
+cd server
+npm install
+node --env-file=.env server.js
+```
+
+### Configure and start the client
+
+Create `client/.env` with the URL of the local API:
+
+```env
+VITE_API_URL=http://localhost:5050
+```
+
+Then run the client in a separate terminal:
+
+```powershell
+cd client
+npm install
+npm run dev
+```
+
+Open the local address printed by Vite (usually `http://localhost:5173`).
+
+## Available scripts
+
+Run client commands from `client/`:
 
 ```bash
-# Run security audit
+npm run dev
+npm run build
+npm run preview
+npm run lint
 npm run security-audit
+```
 
+Run the server with `node --env-file=.env server.js` from `server/`. Its `npm test` script is currently a placeholder; the project does not yet have an automated test suite.
 
-### Content Security Policy
+## Project structure
 
-CSP is implemented **server-side** via Helmet.js middleware in the backend, providing comprehensive protection against XSS and injection attacks.
+```text
+client/
+  src/components/    React pages and UI components
+  src/hooks/         Shared client-side data and state logic
+  src/utils/         Client utilities
+server/
+  authentication/    Authentication strategies and token helpers
+  database/          Database connection
+  middleware/        Express middleware
+  routes/            API routes
+  schema/            Mongoose models
+  utils/             Server utilities
+docs/                Setup, API, troubleshooting, and error-handling guides
+```
 
-### Security Implementation Status
+## Security note
 
-✅ **Active Security Features**: Input sanitization, form validation, rate limiting, secure HTTP interceptors, and dependency auditing are fully implemented and working.
-
-⚠️ **Build Compatibility**: The SecurityInitializer component is temporarily disabled to ensure build compatibility. Security checks are still performed through other implemented measures.
-
-- **📱 Mobile Friendly**: Responsive design that works on all devices
-- **⚡ Fast Development**: Vite-powered frontend with hot module replacement
-- **🛡️ Error Monitoring**: Sentry integration for production error tracking
-- **📧 Account Recovery**: Email-based password reset functionality
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-- **React 19** - Modern React with hooks and concurrent features
-- **Vite** - Fast build tool and development server
-- **Tailwind CSS** - Utility-first CSS framework
-- **React Router** - Client-side routing
-- **Axios** - HTTP client for API calls
-- **Context API** - State management for authentication and messaging
-
-### Backend
-
-- **Node.js** - JavaScript runtime
-- **Express.js** - Web framework for REST API
-- **MongoDB** - NoSQL database with Mongoose ODM
-- **Passport.js** - Authentication middleware
-- **JWT** - JSON Web Tokens for secure authentication
-- **bcrypt** - Password hashing
-- **Helmet** - Security headers
-- **CORS** - Cross-origin resource sharing
-- **Express Rate Limit** - API rate limiting
-
-### DevOps & Monitoring
-
-- **Sentry** - Error tracking and monitoring
-- **Nodemailer** - Email service for account recovery
-- **Multer** - File upload handling
-- **Express Mongo Sanitize** - NoSQL injection protection
-
-## 📋 Prerequisites
-
-- **Node.js** 16+ ([Download](https://nodejs.org/))
-- **MongoDB** (local installation or [MongoDB Atlas](https://www.mongodb.com/atlas) cloud)
-- **npm** (comes with Node.js)
-- **Git** for cloning the repository
-
-## Usage
-
-1. **Sign Up**: Create a new account with email and password
-2. **Login**: Authenticate with your credentials
-3. **Create Journal**: Start your first journal
-4. **Write Entries**: Add reflections and thoughts
-5. **View Statistics**: Track your journaling activity
-6. **Manage Account**: Update profile and security settings
+The project includes authentication, password hashing, HTTP-only refresh-token cookies, request validation, rate limiting, CORS configuration, security headers, and MongoDB input sanitization. These measures are part of a learning project and are not a substitute for a professional security review. Do not use the application to store sensitive personal information.
 
 ## Documentation
 
-## Quick Start Guide
+- [Setup guide](docs/SETUP.md)
+- [API reference](docs/API.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [Error handling](docs/ERROR_HANDLING.md)
 
-- **[Quick Start](docs/QUICKSTART.md)** if you want to try to run it youself on your machine
-- **[Setup Guide](docs/SETUP.md)** - Detailed installation and configuration
-- **[API Reference](docs/API.md)** - Complete REST API documentation
-- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
-- **[Error Handling](docs/ERROR_HANDLING.md)** - Understanding error responses
-
-## Project Structure
-
-```
-
-Lunar/
-├── client/ # React frontend
-│ ├── src/
-│ │ ├── components/ # Reusable React components
-│ │ │ ├── account/ # Authentication pages
-│ │ │ ├── journal/ # Journal management
-│ │ │ ├── layout/ # Navigation & UI components
-│ │ │ └── context/ # React context providers
-│ │ ├── hooks/ # Custom React hooks
-│ │ ├── utils/ # Helper functions
-│ │ └── assets/ # Static assets
-│ ├── package.json
-│ └── vite.config.js
-├── server/ # Express backend
-│ ├── routes/ # API route handlers
-│ ├── schema/ # MongoDB schemas
-│ ├── authentication/ # Passport strategies
-│ ├── middleware/ # Express middleware
-│ ├── database/ # Database connection
-│ ├── utils/ # Server utilities
-│ ├── package.json
-│ └── server.js
-├── docs/ # Documentation
-└── README.md
-
-````
-
-## 🔧 Development
-
-### Available Scripts
-
-#### Frontend
-
-```bash
-cd client
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build
-npm run lint     # Run ESLint
-````
-
-#### Backend
-
-```bash
-node --env-file=.env server.js       # Start production server
-.env can be the name of your ENV file the ENV file
-
-```
-
-### Testing
-
-Currently, the project focuses on development and learning. Testing frameworks can be added in future iterations.
-
-## ⚠️ Disclaimer
-
-This is a work-in-progress application developed for educational purposes. While it implements security best practices, it may contain bugs and is not recommended for production use without thorough testing and security audits.
-
-## 📞 Support
-
-For questions or issues:
-
-1. Check the [Troubleshooting Guide](docs/TROUBLESHOOTING.md)
-2. Review server logs for error details
-3. Check browser developer tools for client-side errors
-
----
-
-_Built for myself for personal growth and reflection_
+Lunar was built as a personal project for learning and reflection.
