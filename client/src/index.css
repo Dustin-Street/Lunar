@@ -3,3 +3,14 @@
     background-color: #2563eb; /* Tailwind's blue-600 */
     transition: background-color 0.3s ease;
 }
+
+@media (max-width: 39.999rem) {
+    .mood-menu-scrollbar {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .mood-menu-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+}

@@ -178,7 +178,7 @@ export default function JournalOverview() {
   const renderMoodPanel = (anchor) =>
     moodPanelAnchor === anchor ? (
       <div
-        className="absolute left-0 top-full z-50 mt-2 max-h-[60vh] w-64 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border-2 border-blue-200 bg-linear-180 from-gray-800 to-gray-900 text-md text-amber-100 shadow-lg"
+        className="mood-menu-scrollbar absolute left-0 top-full z-50 mt-2 max-h-[60vh] w-64 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border-2 border-blue-200 bg-linear-180 from-gray-800 to-gray-900 text-md text-amber-100 shadow-lg"
       >
         <ul name="moodList" id={`moodList-${anchor}`} className="text-center">
           {moods.map((element) => (
