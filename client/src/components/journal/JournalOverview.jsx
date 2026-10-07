@@ -23,7 +23,7 @@ export default function JournalOverview() {
 
   const [pages, setPages] = useState([""]);
   const [pageImages, setPageImages] = useState([""]);
-  const [openMoodPanel, setOpenMoodPanel] = useState(false);
+  const [moodPanelAnchor, setMoodPanelAnchor] = useState(null);
 
   let currentPageIndex = 0;
 
@@ -112,12 +112,10 @@ export default function JournalOverview() {
     );
   };
 
-  const handleMoodPanel = () => {
-    if (openMoodPanel === false) {
-      setOpenMoodPanel(true);
-    } else {
-      setOpenMoodPanel(false);
-    }
+  const handleMoodPanel = (anchor) => {
+    setMoodPanelAnchor((currentAnchor) =>
+      currentAnchor === anchor ? null : anchor,
+    );
   };
 
   //creation logic
@@ -148,7 +146,7 @@ export default function JournalOverview() {
   const handleMoodSelection = useCallback(
     (mood) => {
       setMood(mood);
-      setOpenMoodPanel(false);
+      setMoodPanelAnchor(null);
     },
     [setMood],
   );
@@ -176,6 +174,27 @@ export default function JournalOverview() {
     "disappointed",
     "curious",
   ];
+
+  const renderMoodPanel = (anchor) =>
+    moodPanelAnchor === anchor ? (
+      <div
+        className="absolute left-0 top-full z-50 mt-2 max-h-[60vh] w-64 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border-2 border-blue-200 bg-linear-180 from-gray-800 to-gray-900 text-md text-amber-100 shadow-lg"
+      >
+        <ul name="moodList" id={`moodList-${anchor}`} className="text-center">
+          {moods.map((element) => (
+            <li key={element} className="m-2">
+              <button
+                type="button"
+                className="w-full rounded-lg border-2 border-blue-200 bg-gray-700 px-4 py-2 shadow shadow-blue-200 hover:border-amber-100 hover:bg-blue-200 hover:text-black hover:shadow-md"
+                onClick={() => handleMoodSelection(element)}
+              >
+                {element}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : null;
 
   return (
     <div className="flex h-[calc(100vh-3rem)] justify-items-center overflow-hidden">
@@ -229,14 +248,18 @@ export default function JournalOverview() {
               >
                 Save
               </button>
-              <button
-                className="hidden sm:block text-center text-lg lg:text-lg bg-gray-600 md:mx-2 text-amber-100 border border-blue-200 p-4
+              <div className="relative hidden sm:block">
+                <button
+                  className="text-center text-lg lg:text-lg bg-gray-600 md:mx-2 text-amber-100 border border-blue-200 p-4
            shadow-amber-100 shadow-sm rounded-b-lg shrink  hover:bg-gray-700 hover:text-amber-200
             hover:border-blue-400  hover:shadow-amber-200 hover:shadow-md hover:cursor-grab col-start-1 row-start-1 mt-auto"
-                onClick={handleMoodPanel}
-              >
-                Mood
-              </button>
+                  onClick={() => handleMoodPanel("edit-toolbar")}
+                  aria-expanded={moodPanelAnchor === "edit-toolbar"}
+                >
+                  Mood
+                </button>
+                {renderMoodPanel("edit-toolbar")}
+              </div>
               <button
                 onClick={handledeleteEntry}
                 className="hidden sm:block text-center text-lg bg-red-300 text-white border border-red-400 p-4 md:mx-2
@@ -264,25 +287,33 @@ export default function JournalOverview() {
               >
                 Save
               </button>
-              <button
-                className="hidden sm:block text-center text-lg lg:text-2xl bg-gray-600 md:mx-2 text-amber-100 border border-blue-200 p-4
+              <div className="relative hidden sm:block">
+                <button
+                  className="text-center text-lg lg:text-2xl bg-gray-600 md:mx-2 text-amber-100 border border-blue-200 p-4
            shadow-amber-100 shadow-sm rounded-b-lg shrink  hover:bg-gray-700 hover:text-amber-200
             hover:border-blue-400  hover:shadow-amber-200 hover:shadow-md hover:cursor-grab col-start-1 row-start-1 mt-auto"
-                onClick={handleMoodPanel}
-              >
-                Mood
-              </button>
+                  onClick={() => handleMoodPanel("create-toolbar")}
+                  aria-expanded={moodPanelAnchor === "create-toolbar"}
+                >
+                  Mood
+                </button>
+                {renderMoodPanel("create-toolbar")}
+              </div>
             </>
           )}
         </div>
 
         <div name="JournalEntry" className="h-7/8 grid">
-          <div
-            className="row-start-1 z-30 col-start-1 mb-auto mt-31 md:mt-11 justify-self-start ms-8 md:ms-43
-           lg:ms-73 bg-gray-800 py-2 px-4 border-2 rounded-lg text-amber-100 border-blue-200 hover:border-blue-400"
-          onClick={handleMoodPanel}
-          >
-            {mood}
+          <div className="relative col-start-1 row-start-1 z-30 mb-auto mt-31 justify-self-start ms-8 md:mt-11 md:ms-43 lg:ms-73">
+            <button
+              type="button"
+              className="bg-gray-800 py-2 px-4 border-2 rounded-lg text-amber-100 border-blue-200 hover:border-blue-400"
+              onClick={() => handleMoodPanel("current-mood")}
+              aria-expanded={moodPanelAnchor === "current-mood"}
+            >
+              {mood}
+            </button>
+            {renderMoodPanel("current-mood")}
           </div>
           <textarea
             value={pages[currentPageIndex]}
@@ -297,42 +328,19 @@ export default function JournalOverview() {
                 : "col-start-1 row-start-1 border-2 border-amber-200 z-20 rounded-lg lg:w-5/8 lg:h-13/16 bg-linear-60 from-gray-700 to-gray-800 p-3 lg:mx-70 text-md md:mx-40 mb-10 md:mt-20 mt-40 mx-5 text-amber-100 shadow-amber-200 shadow-md"
             }
           ></textarea>
-          {openMoodPanel ? (
-            <div
-              className="col-start-1 row-start-1 border-2 mt-40 rounded-lg mb-auto lg:mt-15 w-7/8 justify-self-center
-             bg-linear-180 from-gray-800 to-gray-900 z-30  border-blue-200 max-w-65 max-h-200 transition -translate-2 text-md
-              text-amber-100 scroll-auto justify-items-center "
-            >
-              <ul name="moodList" id="moodList" className="text-center">
-                {moods.map((element, index) => {
-                  return (
-                    <li
-                      id={index}
-                      className=" bg-gray-700 rounded-lg m-2 shadow border-2 border-blue-200 shadow-blue-200 hover:bg-blue-200 hover:text-black hover:border-2 hover:border-amber-100 hover:shadow-md px-18 z-10"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleMoodSelection(element);
-                      }}
-                    >
-                      <p>{element}</p>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ) : (
-            ""
-          )}
-
           <section className="col-start-1 row-start-1 mb-auto space-x-2 mt-10 justify-self-center">
             {" "}
-            <button
-              className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 py-4 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
+            <div className="relative sm:hidden">
+              <button
+                className="col-start-1 mt-auto row-start-1 max-w-30 max-h-20 py-4 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
              px-6 text-amber-100 hover:text-amber-200 hover:cursor-grab hover:border-blue-400 bg-gray-600"
-              onClick={handleMoodPanel}
-            >
-              Mood
-            </button>
+                onClick={() => handleMoodPanel("mobile-toolbar")}
+                aria-expanded={moodPanelAnchor === "mobile-toolbar"}
+              >
+                Mood
+              </button>
+              {renderMoodPanel("mobile-toolbar")}
+            </div>
             <button
               onClick={openSideBar}
               className="sm:hidden col-start-1 mt-auto row-start-1 max-w-30 max-h-20 border-2 border-blue-200 rounded-lg hover:shadow-amber-100 hover:shadow-md
