@@ -1,6 +1,6 @@
 # Lunar
 
-Lunar is a full-stack journaling application built to practice and demonstrate web development fundamentals. It lets users create journals, write entries with mood labels, and review basic activity statistics.
+Lunar is a full-stack journaling application built to practice and demonstrate web development fundamentals. It lets users create journals, write entries with mood labels, and review basic activity statistics. While is a really basic state I plan to improve the design overtime as my abilities improve. 
 
 **Live application:** [https://lunar-xycw.onrender.com](https://lunar-xycw.onrender.com)
 
