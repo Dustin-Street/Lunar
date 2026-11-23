@@ -23,9 +23,9 @@ router.get(
       const { journalId } = req.params;
 
       //query the journal object
-      const journal = await Journal.findById(journalId);
+      const journal = await Journal.findOne({ _id: journalId, userID: req.user.id });
       if (!journal) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "Journal not found" });
       }
 
       //then query the journal paginated pages assosiated
@@ -104,16 +104,15 @@ router.post(
 router.post("/createEntry", authenticateToken, async (req, res, next) => {
   try {
     const { pages, mood, journalId } = req.body;
-    console.log("Received createEntry request with data:", {
-      pages,
-      mood,
-      journalId,
-    });
-
     const userId = req.user.id;
 
-    if (!Array.isArray(pages)) {
+    if (!Array.isArray(pages) || pages.length === 0) {
       throw createHttpError(400, "Entry must contain at least one page");
+    }
+
+    const ownedJournal = await Journal.findOne({ _id: journalId, userID: userId });
+    if (!ownedJournal) {
+      return res.status(404).json({ message: "Journal not found" });
     }
 
     const hasEmptyPage = pages.some(
@@ -133,16 +132,15 @@ router.post("/createEntry", authenticateToken, async (req, res, next) => {
     const newEntry = new JournalEntry({
       pages: sanitizedPages,
       mood,
-      userId,
+      userID: userId,
       journalID: journalId,
     });
 
     const savedEntry = await newEntry.save();
 
-    await Journal.findByIdAndUpdate(
-      journalId,
+    await Journal.updateOne(
+      { _id: journalId, userID: userId },
       { $push: { entries: savedEntry._id } },
-      { new: true },
     );
 
     res.status(200).json({ savedEntry });
@@ -175,9 +173,14 @@ router.put("/editEntry", authenticateToken, async (req, res, next) => {
       images: Array.isArray(p.images) ? p.images : [],
     }));
 
-    const updatedEntry = await JournalEntry.findByIdAndUpdate(
-      journalEntryId,
-      { pages: sanitizedPages, mood: mood, userID: userId },
+    const entry = await JournalEntry.findById(journalEntryId);
+    if (!entry || !(await Journal.exists({ _id: entry.journalID, userID: userId }))) {
+      return res.status(404).json({ message: "Journal or Entry not found" });
+    }
+
+    const updatedEntry = await JournalEntry.findOneAndUpdate(
+      { _id: journalEntryId, journalID: entry.journalID },
+      { pages: sanitizedPages, mood: mood },
       { new: true },
     );
 
@@ -205,8 +208,8 @@ router.put(
         throw createHttpError(400, "title cannot be empty");
       }
 
-      const updatedJournal = await Journal.findByIdAndUpdate(
-        id,
+      const updatedJournal = await Journal.findOneAndUpdate(
+        { _id: id, userID: req.user.id },
         { title: title },
         { new: true },
       );
@@ -225,14 +228,20 @@ router.put(
 router.delete("/:id", authenticateToken, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const deleteEntires = await JournalEntry.deleteMany({ journalID: id });
-    const deletedJournal = await Journal.findByIdAndDelete(id);
-    await User.updateMany({ journals: id }, { $pull: { journals: id } });
+    const deletedJournal = await Journal.findOneAndDelete({
+      _id: id,
+      userID: req.user.id,
+    });
     if (!deletedJournal) {
       return res
         .status(404)
         .json({ error: "Journal not found", success: false });
     }
+    await JournalEntry.deleteMany({ journalID: id });
+    await User.updateOne(
+      { _id: req.user.id },
+      { $pull: { journals: id } },
+    );
     res
       .status(200)
       .json({ message: "Journal deleted successfully", success: true });
@@ -248,7 +257,18 @@ router.delete(
     try {
       const { journalEntryId } = req.params;
 
-      const deletedEntry = await JournalEntry.findByIdAndDelete(journalEntryId);
+      const entry = await JournalEntry.findById(journalEntryId);
+      if (!entry || !(await Journal.exists({
+        _id: entry.journalID,
+        userID: req.user.id,
+      }))) {
+        return res.status(404).json({ error: "Journal Entry not found", success: false });
+      }
+
+      const deletedEntry = await JournalEntry.findOneAndDelete({
+        _id: journalEntryId,
+        journalID: entry.journalID,
+      });
 
       if (!deletedEntry) {
         return res
@@ -256,10 +276,9 @@ router.delete(
           .json({ error: "Journal Entry not found", success: false });
       }
 
-      await Journal.findByIdAndUpdate(
-        deletedEntry.journalID,
+      await Journal.updateOne(
+        { _id: deletedEntry.journalID, userID: req.user.id },
         { $pull: { entries: deletedEntry._id } },
-        { new: true },
       );
       res
         .status(200)
@@ -273,7 +292,7 @@ router.delete(
 router.get("/:id", authenticateToken, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const journal = await Journal.findById(id);
+    const journal = await Journal.findOne({ _id: id, userID: req.user.id });
     if (!journal) {
       return res.status(404).json({ message: "No journals found" });
     }
