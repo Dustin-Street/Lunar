@@ -14,7 +14,7 @@ const client = new MongoClient(uri, {
 async function mongooseMongoAtlasConnect() {
   try {
     await mongoose.connect(uri, {});
-    console.log()
+    console.log('Server connected.')
   } catch (err) {
     console.log(err);
   }
