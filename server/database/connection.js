@@ -14,6 +14,7 @@ const client = new MongoClient(uri, {
 async function mongooseMongoAtlasConnect() {
   try {
     await mongoose.connect(uri, {});
+    console.log()
   } catch (err) {
     console.log(err);
   }
@@ -21,6 +22,6 @@ async function mongooseMongoAtlasConnect() {
 
 mongooseMongoAtlasConnect().catch((err) => console.log(err));
 
-let database = client.db("Lunar");
+let database = client.db("lunar_dev");
 
 export default database;
