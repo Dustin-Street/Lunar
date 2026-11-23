@@ -21,6 +21,6 @@ async function mongooseMongoAtlasConnect() {
 
 mongooseMongoAtlasConnect().catch((err) => console.log(err));
 
-let database = client.db("Lunar");
+let database = client.db("lunar_test");
 
 export default database;

@@ -1,8 +1,27 @@
 #backend
+
+# Environment configuration
 .env
-node_modules
+.env.*
+**/.env
+**/.env.*
 
+# Allow safe example templates
+!.env.example
+!**/.env.example
+!**/.env.test.example
 
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build artifacts
+dist/
+dist-ssr/
+
+# Logs
+*.log
+logs/
 
 #Frontend
 #images
